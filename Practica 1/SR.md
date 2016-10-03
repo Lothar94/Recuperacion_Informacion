@@ -22,12 +22,13 @@ header-includes:
 
 
 # Práctica 1: Búsqueda.
-##### Recuperación de información, Universidad de Granada, 2016/2017
 
 Búsqueda a realizar: Sistemas de Recomendación.
+
 ## Datos para el Timeline
+
 * **Motor:** _Google_
-    * **Búsqueda:** Sistemas de Recomendación
+  * **Búsqueda:** Sistemas de Recomendación
         * Web: https://es.wikipedia.org/wiki/Sistema_de_recomendación Tiempo: X minutos Conocimiento: Definición del concepto.
         * Web: https://es.wikipedia.org/wiki/Sistema_de_filtrado_de_informaci%C3%B3n Tiempo: X minutos Conocimiento: Definición del concepto.
         * Web: https://www.upf.edu/hipertextnet/numero-2/recomendacion.html Tiempo: X minutos Conocimiento: Definición del concepto, Estructura de los SR, Ejemplos de SR.

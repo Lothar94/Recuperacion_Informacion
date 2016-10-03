@@ -1,9 +1,32 @@
+---
+title: "Prácticas - Recuperación de Información"
+subtitle: "Práctica 1 - Sistemas de Recomendación"
+author:
+  - Lothar Soto Palma
+
+toc: true
+toc-depth: 2
+numbersections: true
+
+mainfont: Droid Serif
+monofont: Source Code Pro
+
+geometry: "a4paper, top=2.5cm, bottom=2.5cm, left=3cm, right=3cm"
+
+header-includes:
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \usepackage[spanish]{babel}
+---
+\pagebreak
+
+
 # Práctica 1: Búsqueda.
 ##### Recuperación de información, Universidad de Granada, 2016/2017
 
 Búsqueda a realizar: Sistemas de Recomendación.
 ## Datos para el Timeline
-* **Motor:** _Google_ 
+* **Motor:** _Google_
     * **Búsqueda:** Sistemas de Recomendación
         * Web: https://es.wikipedia.org/wiki/Sistema_de_recomendación Tiempo: X minutos Conocimiento: Definición del concepto.
         * Web: https://es.wikipedia.org/wiki/Sistema_de_filtrado_de_informaci%C3%B3n Tiempo: X minutos Conocimiento: Definición del concepto.
@@ -11,23 +34,23 @@ Búsqueda a realizar: Sistemas de Recomendación.
         * Web: http://jarroba.com/que-son-los-sistemas-de-recomendacion/ Tiempo: X minutos Conocimiento: Definición del concepto, Tipos de SR.
     * **Búsqueda:** Estructura sistemas de recomendación
         * Web: http://decsai.ugr.es/~lci/proceedings-pdf/compumat07.pdf. Tiempo: X minutos Conocimiento: Modelado de un SR
-* **Motor:** _Bing_ 
+* **Motor:** _Bing_
     *  **Búsqueda:** Estructura sistema recomendación
         * Web: https://es.wikipedia.org/wiki/Sistema_de_recomendación Tiempo: X minutos Conocimiento: Concepto.
         * Web: https://www.upf.edu/hipertextnet/numero-6/recomendacion.html Tiempo: X minutos Conocimiento: Concepto.
         * Web: https://www.researchgate.net/publication/237680987_USO_DE_CONOCIMIENTO_ESTRUCTURADO_EN_UN_SISTEMA_DE_RECOMENDACION_BASADO_EN_CONTENIDO1 Tiempo: X minutos Conocimiento: Concepto.
-* **Motor:** _Google_ 
+* **Motor:** _Google_
     * **Búsqueda:** Recommender system
         * Web: https://en.wikipedia.org/wiki/Recommender_system Tiempo: X minutos Conocimiento: Modelado de un SR  
         * Web: https://es.coursera.org/learn/recommender-systems Tiempo: 0 minutos Conocimiento: Error 404  
-        * Web: https://www.quora.com/Which-algorithms-are-used-in-recommender-systems Tiempo: X minutos Conocimiento: Algoritmos. 
+        * Web: https://www.quora.com/Which-algorithms-are-used-in-recommender-systems Tiempo: X minutos Conocimiento: Algoritmos.
         * Web: http://infolab.stanford.edu/~ullman/mmds/ch9.pdf Tiempo: X minutos Conocimiento: Algoritmos.
-* **Motor:** _Bing_ 
+* **Motor:** _Bing_
     * **Búsqueda:** Types of recommender system
         * Web: https://bluepiit.com/blog/classifying-recommender-systems/  Tiempo: X minutos Conocimiento: Concepto.
     * **Búsqueda:** examples recommender system
         * Web: http://infolab.stanford.edu/~ullman/mmds/ch9.pdf Tiempo: X minutos Conocimiento: Concepto.
-* **Motor:** _Yahoo_ 
+* **Motor:** _Yahoo_
     *  **Búsqueda:** Ejemplos sistema de recomendación
         * Web: https://es.noticias.yahoo.com/netflix-importancia-sistemas-recomendaci%C3%B3n-063504652.html Tiempo: X minutos Conocimiento: Concepto.  
 

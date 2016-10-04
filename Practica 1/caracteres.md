@@ -1,6 +1,6 @@
 ﻿---
 title: "Prácticas - Recuperación de Información"
-subtitle: "Práctica 1 - Sistemas de Recomendación"
+subtitle: "Práctica 1 - Codificacin de Caracteres"
 author:
   - Daniel Lopez Garcia
 
@@ -33,11 +33,11 @@ aplicando normas o reglas de codificación.
 
 #Unicode
 
-Unicode es un set de caracteres universal, es decir, un estándar en el que se definen todos los caracteres necesarios 
-para la escritura de la mayoría de los idiomas hablados en la actualidad que se usan en la computadora. 
+Unicode es un set de caracteres universal, es decir, un estándar en el que se definen todos los caracteres necesarios
+para la escritura de la mayoría de los idiomas hablados en la actualidad que se usan en la computadora.
 Su objetivo es ser, y, en gran medida, ya lo ha logrado, un superconjunto de todos los sets de caracteres que se hayan codificado.
 
-Generalmente resulta imposible combinar distintas codificaciones en la misma página web o en una base de datos, 
+Generalmente resulta imposible combinar distintas codificaciones en la misma página web o en una base de datos,
 por lo que siempre es muy difícil soportar páginas plurilingües si se aplican enfoques "antiguos" cuando se trata de tareas de codificación.
 El Consorcio Unicode proporciona un único y extenso set de caracteres que pretende incluir todos los caracteres necesarios para cualquier sistema de escritura del mundo,
 incluyendo sistemas ancestrales.

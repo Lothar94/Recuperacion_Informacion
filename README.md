@@ -5,5 +5,6 @@ Miembros del grupo:
 - Lothar Soto Palma
 - Daniel López García
 - José Carlos Entrena Jiménez
+- Iván Calle Gil
 
 Universidad de Granada, curso 2016/2017. 

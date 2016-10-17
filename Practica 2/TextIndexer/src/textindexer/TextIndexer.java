@@ -22,7 +22,7 @@ public class TextIndexer {
     */
     public String removePunctuation(String t){
         String newText = new String();
-        Pattern p = Pattern.compile("[^a-zA-P0-9]");
+        Pattern p = Pattern.compile("[^a-zA-P0-9áéíóúQqñ]");
         Matcher m = p.matcher(t);
         newText = m.replaceAll(" ");
         return newText;

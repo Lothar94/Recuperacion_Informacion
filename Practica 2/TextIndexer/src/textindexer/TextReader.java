@@ -25,7 +25,7 @@ public class TextReader {
             BufferedReader br = new BufferedReader(fr);
             String line;
             while((line = br.readLine()) != null){
-               text = text.concat(line);
+               text = text.concat(" "+line);
             }
             fr.close(); 
         }catch(Exception e){

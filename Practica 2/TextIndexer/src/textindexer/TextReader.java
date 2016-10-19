@@ -35,15 +35,15 @@ public class TextReader {
          return text;
     }
     
-    public Hashtable<Integer,String> readEmptyWords(String filepath) throws IOException{
-        Hashtable<Integer,String> emptyWords = new Hashtable();
+    public Hashtable<String,Boolean> readEmptyWords(String filepath) throws IOException{
+        Hashtable<String,Boolean> emptyWords = new Hashtable();
         try{
             File file = new File(filepath);
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
             String line;
             for(int i = 0; (line = br.readLine()) != null; i++){
-                emptyWords.put(i, line);
+                emptyWords.put(line, true);
             }
             fr.close(); 
         }catch(Exception e){

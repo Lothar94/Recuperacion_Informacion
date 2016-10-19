@@ -75,12 +75,12 @@ public class TextIndexer {
                 if(!emptyWords.containsKey(nw)){ 
                     stemmer.setCurrent(nw);
                     if(stemmer.stem()){
-                        String stemerWord=stemmer.getCurrent();
-                       if(numberOfOcurrences.containsKey(stemerWord)){
-                           int n=numberOfOcurrences.get(stemerWord);
-                           numberOfOcurrences.put(stemerWord,n+1);
+                        String stemmerWord = stemmer.getCurrent();
+                       if(numberOfOcurrences.containsKey(stemmerWord)){
+                           int n = numberOfOcurrences.get(stemmerWord);
+                           numberOfOcurrences.put(stemmerWord,n+1);
                        }else{
-                           numberOfOcurrences.put(stemerWord,1);
+                           numberOfOcurrences.put(stemmerWord,1);
                        }
                     }
                 }

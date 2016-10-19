@@ -9,7 +9,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  *
@@ -17,6 +19,17 @@ import java.util.Hashtable;
  */
 
 public class TextReader {
+    public Boolean isDirectory(String filepath) throws IOException{
+        Boolean isDirectory=false;
+        try{
+            File file = new File(filepath);
+            isDirectory=file.isDirectory();
+        }catch(Exception e){
+            System.out.println("Archivo no encontrado.");
+        }        
+   
+         return isDirectory;
+    }
     public String read(String filepath) throws IOException{
         String text = new String();
         try{
@@ -33,6 +46,21 @@ public class TextReader {
         }        
    
          return text;
+    }
+    
+    public ArrayList<String> readDirectory(String filepath) throws IOException{
+        ArrayList<String> paths= new ArrayList();
+        try{
+            File folder = new File(filepath);
+            File[] listOfFiles = folder.listFiles();
+            for (int i = 0; i < listOfFiles.length; i++) {
+                paths.add(listOfFiles[i].getPath());
+            }
+        }catch(Exception e){
+            System.out.println("Directorio no encontrado.");
+        }        
+   
+         return paths;
     }
     
     public Hashtable<String,Boolean> readEmptyWords(String filepath) throws IOException{

@@ -23,9 +23,22 @@ header-includes:
 ---
 \pagebreak
 
+# Introducción
 
 
+# Implementación
 
+## Lectura de datos
+
+Al leer los ficheros de texto que vamos a tratar, y previo a la aplicación del _stemmer_, hemos de eliminar los signos de puntuación del fichero. Para esto, hemos utilizado una función llamada _removePunctuation_, que cambia las mayúsculas por minúsculas y elimina todos los caracteres no alfanuméricos, mediante el uso de una expresión regular. Así, nos aseguramos de que tratamos únicamente con palabras en minúscula sin ningún caracter especial.
+
+Para el fichero con las palabras vacías no necesitamos ningún tipo de tratamiento, así que únicamente lo leemos. Como este fichero será el mismo independientemente del número de documentos que vayamos a indexar, lo leeremos una única vez y lo almacenaremos como variable de clase.
+
+A la hora de leer los ficheros, el programa recibirá un _path_ que, si es un directorio, recorreremos buscando todos los ficheros de texto que contenga, incluyendo aquellos que estén en subcarpetas, y almacenamos todo el texto en un _string_. De proporcionar el _path_ a un fichero, simplemente indexaremos este.
+
+## Indexación
+
+Una vez hemos leído los datos, utilizamos _StringTokenizer_ para obtener los tokens sobre los que ir aplicando el _stemmer_ uno a uno. Antes de llamar al método _stem_, hemos de comprobar que la palabra no esté en el conjunto de palabras vacías, que hemos leído previamente y tenemos almacenado en una tabla hash. Si es así, podemos continuar y obtener la raíz del token, la cual almacenaremos en una tabla hash en caso de ser nueva, o aumentaremos en uno el entero asociado a dicha raíz en la tabla hash. 
 
 # Ley de Zipf
 

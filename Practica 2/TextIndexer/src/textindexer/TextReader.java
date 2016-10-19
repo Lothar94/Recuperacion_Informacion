@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Hashtable;
 
 /**
  *
@@ -30,8 +31,26 @@ public class TextReader {
         }catch(Exception e){
             System.out.println("Archivo no encontrado.");
         }        
-         // Lectura del fichero
    
          return text;
     }
+    
+    public Hashtable<Integer,String> readEmptyWords(String filepath) throws IOException{
+        Hashtable<Integer,String> emptyWords = new Hashtable();
+        try{
+            File file = new File(filepath);
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            for(int i = 0; (line = br.readLine()) != null; i++){
+                emptyWords.put(i, line);
+            }
+            fr.close(); 
+        }catch(Exception e){
+            System.out.println("Archivo no encontrado.");
+        }                
+        
+        return emptyWords;
+    }
+    
 }

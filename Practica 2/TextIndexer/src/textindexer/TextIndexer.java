@@ -18,13 +18,19 @@ import org.tartarus.snowball.ext.spanishStemmer;
  */
         
 public class TextIndexer {
-    
+    TextReader rd;
     Hashtable<String,Boolean> emptyWords;
     StringTokenizer tokens; 
     
-    public TextIndexer(){
+    
+    
+    public TextIndexer(String emptyWordsPath) throws IOException{
         emptyWords = new Hashtable<>();
+        rd = new TextReader();
+        emptyWords = rd.readEmptyWords(emptyWordsPath);
     }
+    
+    
     
     /* Función para eliminar los signos de puntuación con una expresión regular
     * hace falta ajustar el tipo de codificación para que elimine correctamente
@@ -39,9 +45,8 @@ public class TextIndexer {
         return newText;
     }
     
-    public void indexText(String filePath, String emptyWordsPath) throws IOException{
+    public void indexText(String filePath) throws IOException{
         String text = new String();
-        TextReader rd = new TextReader();
         
         //Leemos el documento
         text = rd.read(filePath);
@@ -51,11 +56,7 @@ public class TextIndexer {
 
         //Creamos los tokens con el tokenizer
         tokens = new StringTokenizer(text);
-        
-            
-        //Leemos las palabras vacias
-        emptyWords = rd.readEmptyWords(emptyWordsPath);
-        
+                
         // Stemming
         
         SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer(); 
@@ -78,11 +79,10 @@ public class TextIndexer {
     
     public static void main(String[] args) throws IOException {
         String text = new String();
-        TextIndexer t = new TextIndexer(); 
+        TextIndexer t = new TextIndexer("./palabras_vacias.txt"); 
 
         //Leemos el documento
-        t.indexText("./quijote/cap1.txt", "./palabras_vacias.txt");
-        
+        t.indexText("./quijote/cap1.txt");
     }
     
 }

@@ -17,7 +17,7 @@ import java.util.regex.*;
         
 public class TextIndexer {
     
-    Hashtable<Integer,String> emptyWords;
+    Hashtable<String,Boolean> emptyWords;
     
     public TextIndexer(){
         emptyWords = new Hashtable<>();
@@ -68,7 +68,7 @@ public class TextIndexer {
         TextIndexer t = new TextIndexer(); 
 
         //Leemos el documento
-        t.indexText("./Quijote/Cap1.txt", "./palabras_vacias.txt");
+        t.indexText("./Quijote/cap1.txt", "./palabras_vacias.txt");
         
     }
     

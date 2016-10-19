@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.regex.*;
+import org.tartarus.snowball.SnowballStemmer;
+import org.tartarus.snowball.ext.spanishStemmer;
 
 /**
  *
@@ -18,6 +20,7 @@ import java.util.regex.*;
 public class TextIndexer {
     
     Hashtable<String,Boolean> emptyWords;
+    StringTokenizer tokens; 
     
     public TextIndexer(){
         emptyWords = new Hashtable<>();
@@ -29,7 +32,8 @@ public class TextIndexer {
     */
     public String removePunctuation(String t){
         String newText = new String();
-        Pattern p = Pattern.compile("[^a-zA-Z0-9áéíóúñ]");
+        newText = newText.toLowerCase(); 
+        Pattern p = Pattern.compile("[^a-z0-9áéíóúñ]");
         Matcher m = p.matcher(t);
         newText = m.replaceAll(" ");
         return newText;
@@ -41,24 +45,33 @@ public class TextIndexer {
         
         //Leemos el documento
         text = rd.read(filePath);
-        System.out.println(text);
         
         //Eliminamos los signos de puntuación
         text = removePunctuation(text);
-        System.out.println(text);
 
         //Creamos los tokens con el tokenizer
-        StringTokenizer tokens = new StringTokenizer(text);
+        tokens = new StringTokenizer(text);
+        
+            
+        //Leemos las palabras vacias
+        emptyWords = rd.readEmptyWords(emptyWordsPath);
+        
+        // Stemming
+        
+        SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer(); 
         
         String nw;
         while(tokens.hasMoreTokens()){
             nw = tokens.nextToken();
-            System.out.println(nw);
+            if(!emptyWords.containsKey(nw)){ 
+                stemmer.setCurrent(nw);
+                if(stemmer.stem()){
+                    System.out.println(stemmer.getCurrent());
+                }
+            }
         }
-        
-        //Leemos las palabras vacias
-        emptyWords = rd.readEmptyWords(emptyWordsPath);
-        //Stemming
+    
+       
         //Indexación en tabla hash
     }
     
@@ -68,7 +81,7 @@ public class TextIndexer {
         TextIndexer t = new TextIndexer(); 
 
         //Leemos el documento
-        t.indexText("./Quijote/cap1.txt", "./palabras_vacias.txt");
+        t.indexText("./quijote/cap1.txt", "./palabras_vacias.txt");
         
     }
     

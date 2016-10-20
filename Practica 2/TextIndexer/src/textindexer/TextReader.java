@@ -1,7 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Este archivo implementa los métodos de lectura de ficheros, 
+ * así como la comprobación de directorios.
  */
 package textindexer;
 
@@ -15,21 +14,28 @@ import java.util.Vector;
 
 /**
  *
- * @author lot94
+ * @author Lothar Soto
+ * @author Iván Calle
+ * @author Daniel López
+ * @author José Carlos Entrena
  */
 
 public class TextReader {
+    
+    // Comprueba si el path que pasamos es un directorio. 
     public Boolean isDirectory(String filepath) throws IOException{
-        Boolean isDirectory=false;
+        Boolean isDirectory = false;
         try{
             File file = new File(filepath);
-            isDirectory=file.isDirectory();
+            isDirectory = file.isDirectory();
         }catch(Exception e){
             System.out.println("Archivo no encontrado.");
         }        
    
          return isDirectory;
     }
+    
+    // Lectura del texto del archivo encontrado bajo un path dado. 
     public String read(String filepath) throws IOException{
         String text = new String();
         try{
@@ -48,6 +54,7 @@ public class TextReader {
          return text;
     }
     
+    // Lectura de los archivos en un directorio. 
     public ArrayList<String> readDirectory(String filepath) throws IOException{
         ArrayList<String> paths= new ArrayList();
         try{
@@ -63,6 +70,8 @@ public class TextReader {
          return paths;
     }
     
+    // Lectura del archivo de palabras vacías. 
+    // Usamos una tabla hash con valores booleanos, pues no contamos el número de ocurrencias. 
     public Hashtable<String,Boolean> readEmptyWords(String filepath) throws IOException{
         Hashtable<String,Boolean> emptyWords = new Hashtable();
         try{

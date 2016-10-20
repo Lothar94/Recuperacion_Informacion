@@ -1,7 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Este archivo contiene el tratamiento de los datos leídos,
+ * para realizar un proceso de lexificación. 
  */
 package textindexer;
 
@@ -25,7 +24,10 @@ import org.tartarus.snowball.ext.spanishStemmer;
 
 /**
  *
- * @author lot94
+ * @author Lothar Soto
+ * @author Iván Calle
+ * @author Daniel López
+ * @author José Carlos Entrena
  */
 public class TextIndexer {
 
@@ -39,27 +41,43 @@ public class TextIndexer {
         emptyWords = rd.readEmptyWords(emptyWordsPath);
     }
 
-    /* FunciÃ³n para eliminar los signos de puntuaciÃ³n con una expresiÃ³n regular
-    * hace falta ajustar el tipo de codificaciÃ³n para que elimine correctamente
-    * los acentos y no quite algunas letras del castellano como la Q, q o Ã±.
+    /** 
+     * Función para eliminar los signos de puntuación con una expresión regular.
+     * Hace falta ajustar el tipo de codificación para que elimine correctamente
+     * los acentos y no quite la letra ñ. 
+     * Además, pasamos todas las palabras a minúscula para evitar que se separen 
+     * palabras por la capitalización. 
      */
     public String removePunctuation(String t) {
         String newText = new String();
         newText = newText.toLowerCase();
-        Pattern p = Pattern.compile("[^a-z0-9Ã¡Ã©Ã­Ã³ÃºÃ±]");
+        Pattern p = Pattern.compile("[^a-z0-9áéíóúñ]");
         Matcher m = p.matcher(t);
         newText = m.replaceAll(" ");
         return newText;
     }
 
+<<<<<<< HEAD
     public HashMap<String, Integer> indexText(String filePath, HashMap<String, Integer> numberOfOcurrences) throws IOException {
+=======
+    
+    /**
+     * Método para la lectura y lexificación de los datos obtenidos.
+     */
+ public HashMap<String,Integer> indexText(String filePath,HashMap<String,Integer> numberOfOcurrences) throws IOException{
+>>>>>>> origin/master
         System.out.println(filePath);
         String text = new String();
         if (rd.isDirectory(filePath)) {
             ArrayList<String> paths;
             paths = rd.readDirectory(filePath);
+<<<<<<< HEAD
             for (String file : paths) {
                 numberOfOcurrences = indexText(file, numberOfOcurrences);
+=======
+            for (String file: paths) {
+                numberOfOcurrences=indexText(file,numberOfOcurrences);
+>>>>>>> origin/master
             }
         } else {
             //Leemos el documento
@@ -74,6 +92,7 @@ public class TextIndexer {
             // Stemming
             SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer();
             String nw;
+<<<<<<< HEAD
             while (tokens.hasMoreTokens()) {
                 nw = tokens.nextToken();
                 if (!emptyWords.containsKey(nw)) {
@@ -86,6 +105,25 @@ public class TextIndexer {
                         } else {
                             numberOfOcurrences.put(stemmerWord, 1);
                         }
+=======
+            
+            while(tokens.hasMoreTokens()){
+                nw = tokens.nextToken();
+                
+                if(!emptyWords.containsKey(nw)){ 
+                    stemmer.setCurrent(nw);
+                    
+                    if(stemmer.stem()){
+                        String stemmerWord = stemmer.getCurrent();
+                        
+                       if(numberOfOcurrences.containsKey(stemmerWord)){
+                           int n = numberOfOcurrences.get(stemmerWord);
+                           numberOfOcurrences.put(stemmerWord,n+1);
+                       }
+                       else{
+                           numberOfOcurrences.put(stemmerWord,1);
+                       }
+>>>>>>> origin/master
                     }
                 }
             }
@@ -94,6 +132,12 @@ public class TextIndexer {
         //numberOfOcurrences.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
     }
 
+ 
+    /**
+     * Método para la generación de resultados en un fichero externo. 
+     * Volcamos los resultados en una estructura de datos ordenada para 
+     * poder tratarlos en dicho orden. 
+     */ 
     public void generarResultados(HashMap<String, Integer> resultado) throws IOException {
 
         String sFichero = "resultados.dat";
@@ -124,6 +168,7 @@ public class TextIndexer {
 
     }
 
+    // Main. 
     public static void main(String[] args) throws IOException {
         String text = new String();
         TextIndexer t = new TextIndexer("./palabras_vacias.txt");

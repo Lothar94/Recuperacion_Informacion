@@ -10,12 +10,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -52,51 +49,52 @@ public class TextIndexer {
         return newText;
     }
 
-    public HashMap<String, Integer> indexText(String filePath, HashMap<String, Integer> numberOfOcurrences) throws IOException {
+ public HashMap<String,Integer> indexText(String filePath,HashMap<String,Integer> numberOfOcurrences) throws IOException{
         System.out.println(filePath);
         String text = new String();
-        if (rd.isDirectory(filePath)) {
+        if(rd.isDirectory(filePath)){
             ArrayList<String> paths;
-            paths = rd.readDirectory(filePath);
-            for (String file : paths) {
-                numberOfOcurrences = indexText(file, numberOfOcurrences);
+            paths=rd.readDirectory(filePath);
+            for (String file: paths) {
+                numberOfOcurrences=indexText(file,numberOfOcurrences);
             }
-        } else {
+        }else{
             //Leemos el documento
             text = rd.read(filePath);
 
-            //Eliminamos los signos de puntuaciÃ³n
+            //Eliminamos los signos de puntuación
             text = removePunctuation(text);
 
             //Creamos los tokens con el tokenizer
             tokens = new StringTokenizer(text);
 
             // Stemming
-            SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer();
+
+            SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer(); 
             String nw;
-            while (tokens.hasMoreTokens()) {
+            while(tokens.hasMoreTokens()){
                 nw = tokens.nextToken();
-                if (!emptyWords.containsKey(nw)) {
+                if(!emptyWords.containsKey(nw)){ 
                     stemmer.setCurrent(nw);
-                    if (stemmer.stem()) {
-                        String stemerWord = stemmer.getCurrent();
-                        if (numberOfOcurrences.containsKey(stemerWord)) {
-                            int n = numberOfOcurrences.get(stemerWord);
-                            numberOfOcurrences.put(stemerWord, n + 1);
-                        } else {
-                            numberOfOcurrences.put(stemerWord, 1);
-                        }
+                    if(stemmer.stem()){
+                        String stemmerWord = stemmer.getCurrent();
+                       if(numberOfOcurrences.containsKey(stemmerWord)){
+                           int n = numberOfOcurrences.get(stemmerWord);
+                           numberOfOcurrences.put(stemmerWord,n+1);
+                       }else{
+                           numberOfOcurrences.put(stemmerWord,1);
+                       }
                     }
                 }
             }
         }
-        return numberOfOcurrences;
-        //numberOfOcurrences.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
-    }
-    
-    public void generarResultados(HashMap<String, Integer> resultado) throws IOException{
-        
-        String sFichero = "resultados.txt";
+       return numberOfOcurrences;
+    //numberOfOcurrences.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
+}
+
+    public void generarResultados(HashMap<String, Integer> resultado) throws IOException {
+
+        String sFichero = "resultados.dat";
         File fichero = new File(sFichero);
 
         List keys = new ArrayList(resultado.keySet());
@@ -107,23 +105,23 @@ public class TextIndexer {
         if (!(fichero.exists())) {
             BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
 
-            for (int i = arrayOrdenado.length-1; i>= 0 ; i--) {
+            for (int i = arrayOrdenado.length - 1; i >= 0; i--) {
                 bw.write(keys.get(values.indexOf(arrayOrdenado[i])) + " " + arrayOrdenado[i] + "\n");
             }
-                bw.close();
+            bw.close();
         }
-    
+
     }
-    
+
     public static void main(String[] args) throws IOException {
         String text = new String();
         TextIndexer t = new TextIndexer("./palabras_vacias.txt");
         HashMap<String, Integer> resultado = new HashMap();
         //Leemos el documento
         resultado = t.indexText("./quijote", resultado);
-        
-        resultado.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
-    
+
+        resultado.forEach((k, v) -> System.out.println("Key: " + k + ": Value: " + v));
+
         t.generarResultados(resultado);
-}
+    }
 }

@@ -5,11 +5,20 @@
  */
 package textindexer;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.SortedMap;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.*;
 import org.tartarus.snowball.SnowballStemmer;
 import org.tartarus.snowball.ext.spanishStemmer;
@@ -18,86 +27,103 @@ import org.tartarus.snowball.ext.spanishStemmer;
  *
  * @author lot94
  */
-        
 public class TextIndexer {
+
     TextReader rd;
-    Hashtable<String,Boolean> emptyWords;
-    StringTokenizer tokens; 
-    
-    
-    
-    public TextIndexer(String emptyWordsPath) throws IOException{
+    Hashtable<String, Boolean> emptyWords;
+    StringTokenizer tokens;
+
+    public TextIndexer(String emptyWordsPath) throws IOException {
         emptyWords = new Hashtable<>();
         rd = new TextReader();
         emptyWords = rd.readEmptyWords(emptyWordsPath);
     }
-    
-    
-    
-    /* Función para eliminar los signos de puntuación con una expresión regular
-    * hace falta ajustar el tipo de codificación para que elimine correctamente
-    * los acentos y no quite algunas letras del castellano como la Q, q o ñ.
-    */
-    public String removePunctuation(String t){
+
+    /* FunciÃ³n para eliminar los signos de puntuaciÃ³n con una expresiÃ³n regular
+    * hace falta ajustar el tipo de codificaciÃ³n para que elimine correctamente
+    * los acentos y no quite algunas letras del castellano como la Q, q o Ã±.
+     */
+    public String removePunctuation(String t) {
         String newText = new String();
-        newText = newText.toLowerCase(); 
-        Pattern p = Pattern.compile("[^a-z0-9áéíóúñ]");
+        newText = newText.toLowerCase();
+        Pattern p = Pattern.compile("[^a-z0-9Ã¡Ã©Ã­Ã³ÃºÃ±]");
         Matcher m = p.matcher(t);
         newText = m.replaceAll(" ");
         return newText;
     }
-    
-    public HashMap<String,Integer> indexText(String filePath,HashMap<String,Integer> numberOfOcurrences) throws IOException{
+
+    public HashMap<String, Integer> indexText(String filePath, HashMap<String, Integer> numberOfOcurrences) throws IOException {
         System.out.println(filePath);
         String text = new String();
-        if(rd.isDirectory(filePath)){
+        if (rd.isDirectory(filePath)) {
             ArrayList<String> paths;
-            paths=rd.readDirectory(filePath);
-            for (String file: paths) {
-                numberOfOcurrences=indexText(file,numberOfOcurrences);
+            paths = rd.readDirectory(filePath);
+            for (String file : paths) {
+                numberOfOcurrences = indexText(file, numberOfOcurrences);
             }
-        }else{
+        } else {
             //Leemos el documento
             text = rd.read(filePath);
 
-            //Eliminamos los signos de puntuación
+            //Eliminamos los signos de puntuaciÃ³n
             text = removePunctuation(text);
 
             //Creamos los tokens con el tokenizer
             tokens = new StringTokenizer(text);
 
             // Stemming
-
-            SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer(); 
+            SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer();
             String nw;
-            while(tokens.hasMoreTokens()){
+            while (tokens.hasMoreTokens()) {
                 nw = tokens.nextToken();
-                if(!emptyWords.containsKey(nw)){ 
+                if (!emptyWords.containsKey(nw)) {
                     stemmer.setCurrent(nw);
-                    if(stemmer.stem()){
-                        String stemerWord=stemmer.getCurrent();
-                       if(numberOfOcurrences.containsKey(stemerWord)){
-                           int n=numberOfOcurrences.get(stemerWord);
-                           numberOfOcurrences.put(stemerWord,n+1);
-                       }else{
-                           numberOfOcurrences.put(stemerWord,1);
-                       }
+                    if (stemmer.stem()) {
+                        String stemerWord = stemmer.getCurrent();
+                        if (numberOfOcurrences.containsKey(stemerWord)) {
+                            int n = numberOfOcurrences.get(stemerWord);
+                            numberOfOcurrences.put(stemerWord, n + 1);
+                        } else {
+                            numberOfOcurrences.put(stemerWord, 1);
+                        }
                     }
                 }
             }
         }
-       return numberOfOcurrences;
-    //numberOfOcurrences.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
+        return numberOfOcurrences;
+        //numberOfOcurrences.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
     }
     
+    public void generarResultados(HashMap<String, Integer> resultado) throws IOException{
+        
+        String sFichero = "resultados.txt";
+        File fichero = new File(sFichero);
+
+        List keys = new ArrayList(resultado.keySet());
+        List values = new ArrayList(resultado.values());
+        TreeSet valuesOrded = new TreeSet(values);
+        Object[] arrayOrdenado = valuesOrded.toArray();
+
+        if (!(fichero.exists())) {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
+
+            for (int i = arrayOrdenado.length-1; i>= 0 ; i--) {
+                bw.write(keys.get(values.indexOf(arrayOrdenado[i])) + " " + arrayOrdenado[i] + "\n");
+            }
+                bw.close();
+        }
+    
+    }
     
     public static void main(String[] args) throws IOException {
         String text = new String();
-        TextIndexer t = new TextIndexer("./palabras_vacias.txt"); 
-        HashMap<String,Integer> resultado= new HashMap();
+        TextIndexer t = new TextIndexer("./palabras_vacias.txt");
+        HashMap<String, Integer> resultado = new HashMap();
         //Leemos el documento
-        resultado=t.indexText("./quijote",resultado);
+        resultado = t.indexText("./quijote", resultado);
+        
         resultado.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
-    }
     
+        t.generarResultados(resultado);
+}
 }

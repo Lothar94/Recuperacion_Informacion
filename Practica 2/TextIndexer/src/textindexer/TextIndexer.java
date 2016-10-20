@@ -10,9 +10,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -49,16 +52,16 @@ public class TextIndexer {
         return newText;
     }
 
- public HashMap<String,Integer> indexText(String filePath,HashMap<String,Integer> numberOfOcurrences) throws IOException{
+    public HashMap<String, Integer> indexText(String filePath, HashMap<String, Integer> numberOfOcurrences) throws IOException {
         System.out.println(filePath);
         String text = new String();
-        if(rd.isDirectory(filePath)){
+        if (rd.isDirectory(filePath)) {
             ArrayList<String> paths;
-            paths=rd.readDirectory(filePath);
-            for (String file: paths) {
-                numberOfOcurrences=indexText(file,numberOfOcurrences);
+            paths = rd.readDirectory(filePath);
+            for (String file : paths) {
+                numberOfOcurrences = indexText(file, numberOfOcurrences);
             }
-        }else{
+        } else {
             //Leemos el documento
             text = rd.read(filePath);
 
@@ -69,46 +72,54 @@ public class TextIndexer {
             tokens = new StringTokenizer(text);
 
             // Stemming
-
-            SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer(); 
+            SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer();
             String nw;
-            while(tokens.hasMoreTokens()){
+            while (tokens.hasMoreTokens()) {
                 nw = tokens.nextToken();
-                if(!emptyWords.containsKey(nw)){ 
+                if (!emptyWords.containsKey(nw)) {
                     stemmer.setCurrent(nw);
-                    if(stemmer.stem()){
+                    if (stemmer.stem()) {
                         String stemmerWord = stemmer.getCurrent();
-                       if(numberOfOcurrences.containsKey(stemmerWord)){
-                           int n = numberOfOcurrences.get(stemmerWord);
-                           numberOfOcurrences.put(stemmerWord,n+1);
-                       }else{
-                           numberOfOcurrences.put(stemmerWord,1);
-                       }
+                        if (numberOfOcurrences.containsKey(stemmerWord)) {
+                            int n = numberOfOcurrences.get(stemmerWord);
+                            numberOfOcurrences.put(stemmerWord, n + 1);
+                        } else {
+                            numberOfOcurrences.put(stemmerWord, 1);
+                        }
                     }
                 }
             }
         }
-       return numberOfOcurrences;
-    //numberOfOcurrences.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
-}
+        return numberOfOcurrences;
+        //numberOfOcurrences.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
+    }
 
     public void generarResultados(HashMap<String, Integer> resultado) throws IOException {
 
         String sFichero = "resultados.dat";
         File fichero = new File(sFichero);
 
-        List keys = new ArrayList(resultado.keySet());
-        List values = new ArrayList(resultado.values());
-        TreeSet valuesOrded = new TreeSet(values);
-        Object[] arrayOrdenado = valuesOrded.toArray();
-
         if (!(fichero.exists())) {
             BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
 
-            for (int i = arrayOrdenado.length - 1; i >= 0; i--) {
-                bw.write(keys.get(values.indexOf(arrayOrdenado[i])) + " " + arrayOrdenado[i] + "\n");
+            TreeSet values = new TreeSet(resultado.values());
+            ArrayList listaOrdenada=  new ArrayList(values);
+            System.out.println(listaOrdenada.toString());
+            Collections.reverse(listaOrdenada);
+            
+            Integer tmp;
+            for (int i = 0; i < listaOrdenada.size(); i++) {
+                tmp = (Integer) listaOrdenada.get(i);
+                for (Map.Entry k : resultado.entrySet()) {
+                    if (tmp == k.getValue()) {
+                        bw.write(k.getKey() + " " + k.getValue() + " " + "\n");
+                    }
+                }
+
             }
             bw.close();
+        } else {
+            System.out.println("El fichero ya existe");
         }
 
     }
@@ -119,7 +130,6 @@ public class TextIndexer {
         HashMap<String, Integer> resultado = new HashMap();
         //Leemos el documento
         resultado = t.indexText("./quijote", resultado);
-
         resultado.forEach((k, v) -> System.out.println("Key: " + k + ": Value: " + v));
 
         t.generarResultados(resultado);

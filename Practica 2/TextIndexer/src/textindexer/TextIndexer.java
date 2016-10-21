@@ -12,11 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.*;
 import org.tartarus.snowball.SnowballStemmer;
@@ -74,7 +71,7 @@ public class TextIndexer {
             //Leemos el documento
             text = rd.read(filePath);
 
-            //Eliminamos los signos de puntuaciÃ³n
+            //Eliminamos los signos de puntuación
             text = removePunctuation(text);
 
             //Creamos los tokens con el tokenizer
@@ -124,11 +121,13 @@ public class TextIndexer {
             Collections.reverse(listaOrdenada);
             
             Integer tmp;
+            Integer ranking =1;
             for (int i = 0; i < listaOrdenada.size(); i++) {
                 tmp = (Integer) listaOrdenada.get(i);
                 for (Map.Entry k : resultado.entrySet()) {
                     if (tmp == k.getValue()) {
-                        bw.write(k.getKey() + " " + k.getValue() + " " + "\n");
+                        bw.write(k.getKey() + " " + k.getValue() + " " + ranking+"\n");
+                        ranking++;
                     }
                 }
 

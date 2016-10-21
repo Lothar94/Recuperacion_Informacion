@@ -51,7 +51,7 @@ En los dos siguientes gráficos se muestran las frecuencias de todas las palabra
 
 \begin{figure}[htb]
 \begin{centering}
-\includegraphics[width=0.7\textwidth,keepaspectratio]{img/grafico.png}
+\includegraphics[width=0.8\textwidth,keepaspectratio]{img/grafico.png}
 \caption{Ley de Zipf}
 \end{centering}
 \end{figure}
@@ -59,7 +59,7 @@ En los dos siguientes gráficos se muestran las frecuencias de todas las palabra
 
 \begin{figure}[htb]
 \begin{centering}
-\includegraphics[width=0.7\textwidth,keepaspectratio]{img/grafico100.png}
+\includegraphics[width=0.8\textwidth,keepaspectratio]{img/grafico100.png}
 \caption{Ley de Zipf - 100 primeras palabras}
 \end{centering}
 \end{figure}
@@ -68,7 +68,7 @@ Vemos ahora el gráfico log-log (Figura 3) con el ajuste lineal realizado sobre 
 
 \begin{figure}[htb]
 \begin{centering}
-\includegraphics[width=0.7\textwidth,keepaspectratio]{img/graficolog.png}
+\includegraphics[width=0.85\textwidth,keepaspectratio]{img/graficolog.png}
 \caption{Ley de Zipf - Escala logarítmica con recta de regresión}
 \end{centering}
 \end{figure}

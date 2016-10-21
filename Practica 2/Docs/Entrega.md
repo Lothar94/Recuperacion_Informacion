@@ -58,7 +58,7 @@ En los dos siguientes gráficos se muestran las frecuencias de todas las palabra
 \caption{Ley de Zipf - 100 primeras palabras}
 \end{figure}
 
-Vemos ahora los gráficos anteriores con escala logarítmica.
+Vemos ahora el gráfico log-log y el ajuste lineal realizado sobre el gráfico.
 
 \begin{figure}[htb]
 \includegraphics[width=0.9\textwidth,keepaspectratio]{img/graficolog.png}
@@ -66,7 +66,7 @@ Vemos ahora los gráficos anteriores con escala logarítmica.
 \end{figure}
 
 \begin{figure}[htb]
-\includegraphics[width=0.9\textwidth,keepaspectratio]{img/graficolog100.png}
+\includegraphics[width=0.9\textwidth,keepaspectratio]{img/graficologregresion.png}
 \caption{Ley de Zipf - Escala logarítmica para las 100 primeras palabras}
 \end{figure}
 
@@ -74,7 +74,7 @@ Vemos ahora los gráficos anteriores con escala logarítmica.
 
 En esta práctica hemos intentado que el trabajo de cada uno de los componentes fuera similar en cuanto a carga. El número de tareas a realizar no era numeroso, por lo que el reparto no ha sido demasiado grande, y consideramos que cada uno de los componente ha realizado un trabajo equiparable al de los demás. A continuación detallamos con más profundidad la aportación de cada miembro:
 
-* Lothar Soto: Ha sido el encargado de la creación de los métodos de lectura de archivos y de la mayor parte del tratamiento de datos, como la eliminación de los signos de puntuación.
+* Lothar Soto: Ha sido el encargado de la creación de los métodos de lectura de archivos y de la mayor parte del tratamiento de datos, como la eliminación de los signos de puntuación, además del ajuste lineal del gráfico log-log.
 
 * Iván Calle: Se ha encargado de los métodos de lectura recursiva de un directorio, además de la implementación del proceso de lexificación.
 

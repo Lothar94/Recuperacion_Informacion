@@ -109,7 +109,7 @@ public class TextIndexer {
      */ 
     public void generarResultados(HashMap<String, Integer> resultado) throws IOException {
 
-        String sFichero = "resultados.dat";
+        String sFichero = "resultados.csv";
         File fichero = new File(sFichero);
 
         if (!(fichero.exists())) {
@@ -126,7 +126,7 @@ public class TextIndexer {
                 tmp = (Integer) listaOrdenada.get(i);
                 for (Map.Entry k : resultado.entrySet()) {
                     if (tmp == k.getValue()) {
-                        bw.write(k.getKey() + " " + k.getValue() + " " + ranking+"\n");
+                        bw.write("\""+ k.getKey() + "\"; " + k.getValue() + "; " + ranking+"\n");
                         ranking++;
                     }
                 }

@@ -1,0 +1,13 @@
+#Grafico
+clear
+reset
+unset key
+set xtics rotate out
+set style data histogram
+set style fill solid border
+set style histogram clustered
+set logscale y
+plot for [COL=2:2]'resultados.dat' every ::::100 using COL:xticlabels(1)
+#Ajuste 
+f(x)=log(k)-m*log(x)
+fit f(x) "resultado.dat" using 3:2 via k,m   

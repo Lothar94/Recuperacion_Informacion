@@ -45,30 +45,37 @@ Una vez hemos leído los datos, utilizamos _StringTokenizer_ para obtener los to
 
 # Ley de Zipf
 
-En los dos siguientes gráficos se muestran las frecuencias de todas las palabras del texto (figura 1), y solo las 100 primeras (figura 2).
+En los dos siguientes gráficos se muestran las frecuencias de todas las palabras del texto (Figura 1), y solo las 100 primeras (Figura 2).
+
+\pagebreak
 
 \begin{figure}[htb]
-\includegraphics[width=0.9\textwidth,keepaspectratio]{img/grafico.png}
+\begin{centering}
+\includegraphics[width=0.7\textwidth,keepaspectratio]{img/grafico.png}
 \caption{Ley de Zipf}
+\end{centering}
 \end{figure}
 
 
 \begin{figure}[htb]
-\includegraphics[width=0.9\textwidth,keepaspectratio]{img/grafico100.png}
+\begin{centering}
+\includegraphics[width=0.7\textwidth,keepaspectratio]{img/grafico100.png}
 \caption{Ley de Zipf - 100 primeras palabras}
+\end{centering}
 \end{figure}
 
-Vemos ahora el gráfico log-log y el ajuste lineal realizado sobre el gráfico.
-
-\begin{figure}[htb]
-\includegraphics[width=0.9\textwidth,keepaspectratio]{img/graficolog.png}
-\caption{Ley de Zipf - Escala logarítmica}
-\end{figure}
+Vemos ahora el gráfico log-log (Figura 3) con el ajuste lineal realizado sobre el gráfico, del cual obtenemos las constantes.
 
 \begin{figure}[htb]
-\includegraphics[width=0.9\textwidth,keepaspectratio]{img/graficologregresion.png}
-\caption{Ley de Zipf - Escala logarítmica para las 100 primeras palabras}
+\begin{centering}
+\includegraphics[width=0.7\textwidth,keepaspectratio]{img/graficolog.png}
+\caption{Ley de Zipf - Escala logarítmica con recta de regresión}
+\end{centering}
 \end{figure}
+
+De esta gráfica podemos deducir las constantes de la Ley de Zifp: el valor de m es el de la pendiente de la curva, es decir, _m = -1'3905_, y el valor de k es deshaciendo el cambio logarítmico del término independiente, esto es, _k = 10^5'5063 = 320848'4902_.
+
+\pagebreak
 
 # Trabajo en grupo
 

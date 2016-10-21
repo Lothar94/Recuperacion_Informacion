@@ -25,6 +25,9 @@ header-includes:
 
 # Introducción
 
+En esta práctica hemos realizado un programa en Java que utiliza el _stemmer_ __snowball__ para realizar un proceso de lexificación de un conjunto de ficheros de texto, que en este caso es la obra completa Don Quijote de la Mancha. Con esto, obtendremos un índice básico del texto y podremos comprobar si se cumple la ley de Zipf.
+
+Este documento detalla el proceso de implementación, los resultados obtenidos y el trabajo realizado por todos los miembros del grupo.
 
 # Implementación
 
@@ -42,7 +45,7 @@ Una vez hemos leído los datos, utilizamos _StringTokenizer_ para obtener los to
 
 # Ley de Zipf
 
-Podemos ver dos gráficos en los que se muestran las frecuencias de todas las palabras del texto (figura 1), y solo las 100 primeras (figura 2).
+En los dos siguientes gráficos se muestran las frecuencias de todas las palabras del texto (figura 1), y solo las 100 primeras (figura 2).
 
 \begin{figure}[htb]
 \includegraphics[width=0.9\textwidth,keepaspectratio]{img/grafico.png}
@@ -52,7 +55,19 @@ Podemos ver dos gráficos en los que se muestran las frecuencias de todas las pa
 
 \begin{figure}[htb]
 \includegraphics[width=0.9\textwidth,keepaspectratio]{img/grafico100.png}
-\caption{Ley de Zipf}
+\caption{Ley de Zipf - 100 primeras palabras}
+\end{figure}
+
+Vemos ahora los gráficos anteriores con escala logarítmica.
+
+\begin{figure}[htb]
+\includegraphics[width=0.9\textwidth,keepaspectratio]{img/graficolog.png}
+\caption{Ley de Zipf - Escala logarítmica}
+\end{figure}
+
+\begin{figure}[htb]
+\includegraphics[width=0.9\textwidth,keepaspectratio]{img/graficolog100.png}
+\caption{Ley de Zipf - Escala logarítmica para las 100 primeras palabras}
 \end{figure}
 
 # Trabajo en grupo

@@ -57,80 +57,52 @@ public class TextIndexer {
         return newText;
     }
 
-<<<<<<< HEAD
-    public HashMap<String, Integer> indexText(String filePath, HashMap<String, Integer> numberOfOcurrences) throws IOException {
-=======
     
     /**
      * Método para la lectura y lexificación de los datos obtenidos.
      */
  public HashMap<String,Integer> indexText(String filePath,HashMap<String,Integer> numberOfOcurrences) throws IOException{
->>>>>>> origin/master
         System.out.println(filePath);
         String text = new String();
-        if (rd.isDirectory(filePath)) {
+        if(rd.isDirectory(filePath)){
             ArrayList<String> paths;
-            paths = rd.readDirectory(filePath);
-<<<<<<< HEAD
-            for (String file : paths) {
-                numberOfOcurrences = indexText(file, numberOfOcurrences);
-=======
+            paths=rd.readDirectory(filePath);
             for (String file: paths) {
                 numberOfOcurrences=indexText(file,numberOfOcurrences);
->>>>>>> origin/master
             }
-        } else {
+        }else{
             //Leemos el documento
             text = rd.read(filePath);
 
-            //Eliminamos los signos de puntuación
+            //Eliminamos los signos de puntuaciÃ³n
             text = removePunctuation(text);
 
             //Creamos los tokens con el tokenizer
             tokens = new StringTokenizer(text);
 
             // Stemming
-            SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer();
+
+            SnowballStemmer stemmer = (SnowballStemmer) new spanishStemmer(); 
             String nw;
-<<<<<<< HEAD
-            while (tokens.hasMoreTokens()) {
-                nw = tokens.nextToken();
-                if (!emptyWords.containsKey(nw)) {
-                    stemmer.setCurrent(nw);
-                    if (stemmer.stem()) {
-                        String stemmerWord = stemmer.getCurrent();
-                        if (numberOfOcurrences.containsKey(stemmerWord)) {
-                            int n = numberOfOcurrences.get(stemmerWord);
-                            numberOfOcurrences.put(stemmerWord, n + 1);
-                        } else {
-                            numberOfOcurrences.put(stemmerWord, 1);
-                        }
-=======
-            
             while(tokens.hasMoreTokens()){
                 nw = tokens.nextToken();
-                
                 if(!emptyWords.containsKey(nw)){ 
                     stemmer.setCurrent(nw);
-                    
                     if(stemmer.stem()){
                         String stemmerWord = stemmer.getCurrent();
-                        
                        if(numberOfOcurrences.containsKey(stemmerWord)){
                            int n = numberOfOcurrences.get(stemmerWord);
                            numberOfOcurrences.put(stemmerWord,n+1);
-                       }
-                       else{
+                       }else{
                            numberOfOcurrences.put(stemmerWord,1);
                        }
->>>>>>> origin/master
                     }
                 }
             }
         }
-        return numberOfOcurrences;
-        //numberOfOcurrences.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
-    }
+       return numberOfOcurrences;
+    //numberOfOcurrences.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
+}
 
  
     /**
@@ -146,9 +118,9 @@ public class TextIndexer {
         if (!(fichero.exists())) {
             BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
 
+            //Obtenemos los valores de la tabla hash y los ordenamos en una lista
             TreeSet values = new TreeSet(resultado.values());
             ArrayList listaOrdenada=  new ArrayList(values);
-            System.out.println(listaOrdenada.toString());
             Collections.reverse(listaOrdenada);
             
             Integer tmp;
@@ -176,7 +148,7 @@ public class TextIndexer {
         //Leemos el documento
         resultado = t.indexText("./quijote", resultado);
         resultado.forEach((k, v) -> System.out.println("Key: " + k + ": Value: " + v));
-
+        //Pasamos los resultados a un fichero de texto
         t.generarResultados(resultado);
     }
 }

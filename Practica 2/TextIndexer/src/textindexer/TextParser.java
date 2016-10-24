@@ -85,8 +85,11 @@ public class TextParser {
         } finally {
             stream.close();
      }
+      return handler.getLinks();
+     
+}
     
-      public static Metadata getMetadata(File file) throws Exception{
+    public static Metadata getMetadata(File file) throws Exception{
         
         Parser parser = new AutoDetectParser();
         Metadata metadata = new Metadata();

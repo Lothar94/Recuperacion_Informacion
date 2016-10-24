@@ -38,6 +38,7 @@ public class TextParser {
  * Función para detectar el idioma de un texto.
  * Utiliza LanguageIdentifier y LanguageDetector.
  */
+    
     public static String identifyLanguage(String text) throws IOException {
         LanguageDetector identifier = new OptimaizeLangDetector().loadModels();
         LanguageResult idioma = identifier.detect(text);
@@ -83,11 +84,27 @@ public class TextParser {
 
         } finally {
             stream.close();
-        }
+     }
+      return handler.getLinks();
+     
+}
+    
+    public static Metadata getMetadata(File file) throws Exception{
         
-        List<Link> links  = new LinkedList<Link>();
-        links = handler.getLinks();
-        return  links;
-    }
+        Parser parser = new AutoDetectParser();
+        Metadata metadata = new Metadata();
+        BodyContentHandler handler = new BodyContentHandler();
+        InputStream stream = new FileInputStream(file);
+        ParseContext context = new ParseContext();
+        
+        try {
+            parser.parse(stream, handler, metadata,context);
 
+        } finally {
+            stream.close();
+        }
+        return metadata;
+        
+        
+    }
 }

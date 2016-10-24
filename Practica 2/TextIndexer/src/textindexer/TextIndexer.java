@@ -141,12 +141,15 @@ public class TextIndexer {
 
     // Main. 
     public static void main(String[] args) throws IOException {
+        
         String text = new String();
         TextIndexer t = new TextIndexer("./palabras_vacias.txt");
         HashMap<String, Integer> resultado = new HashMap();
-        //Leemos el documento
+        
+        //Leemos los documentos.
         resultado = t.indexText("./quijote", resultado);
         resultado.forEach((k, v) -> System.out.println("Key: " + k + ": Value: " + v));
+        
         //Pasamos los resultados a un fichero de texto
         t.generarResultados(resultado);
     }

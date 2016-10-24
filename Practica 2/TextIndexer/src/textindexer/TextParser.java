@@ -25,9 +25,18 @@ import org.apache.tika.language.detect.LanguageDetector;
 import org.apache.tika.langdetect.OptimaizeLangDetector;
 import org.apache.tika.language.detect.LanguageResult;
 
-public class Practica2 {
+/**
+ *
+ * @author Lothar Soto
+ * @author Iván Calle
+ * @author Daniel López
+ * @author José Carlos Entrena
+ */
+
+public class TextParser {
 /**
  * Función para detectar el idioma de un texto.
+ * Utiliza LanguageIdentifier y LanguageDetector.
  */
     public static String identifyLanguage(String text) throws IOException {
         LanguageDetector identifier = new OptimaizeLangDetector().loadModels();
@@ -35,6 +44,14 @@ public class Practica2 {
         return idioma.getLanguage();
     }
     
+    /**
+     * Procesa un archivo y extrae sus datos.: 
+     * 
+     * 
+     * @param file archivo a procesar. 
+     * @return string 
+     * @throws Exception 
+     */
     public static String process(File file) throws Exception {
         
         Parser parser = new AutoDetectParser();
@@ -73,7 +90,4 @@ public class Practica2 {
         return  links;
     }
 
-    public static void main(String[] args) throws Exception {
-
-    }
 }

@@ -58,16 +58,22 @@ public class TextIndexer {
     /**
      * Método para la lectura y lexificación de los datos obtenidos.
      */
- public HashMap<String,Integer> indexText(String filePath,HashMap<String,Integer> numberOfOcurrences) throws IOException{
+    public HashMap<String,Integer> indexText(String filePath,HashMap<String,Integer> numberOfOcurrences) 
+           throws IOException{
+        
         System.out.println(filePath);
         String text = new String();
+        
+        // Si es un directorio, leemos sus archivos y los indexamos de forma recursiva. 
         if(rd.isDirectory(filePath)){
             ArrayList<String> paths;
-            paths=rd.readDirectory(filePath);
+            paths = rd.readDirectory(filePath);
+            // Llamada recursiva a la función de indexación
             for (String file: paths) {
-                numberOfOcurrences=indexText(file,numberOfOcurrences);
+                numberOfOcurrences = indexText(file,numberOfOcurrences);
             }
-        }else{
+        }
+        else{
             //Leemos el documento
             text = rd.read(filePath);
 

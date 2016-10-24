@@ -2,9 +2,12 @@ package textindexer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import org.apache.tika.Tika;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.parser.ParseContext;
@@ -53,12 +56,12 @@ public class TextParser {
      * @return string 
      * @throws Exception 
      */
-    public static String process(File file) throws Exception {
+    public static String process(String filename) throws Exception {
         
         Parser parser = new AutoDetectParser();
         Metadata metadata = new Metadata();
         BodyContentHandler handler = new BodyContentHandler();
-        InputStream stream = new FileInputStream(file);
+        InputStream stream = new FileInputStream(filename);
         ParseContext context = new ParseContext();
         //extraer contenido
         try {
@@ -71,12 +74,18 @@ public class TextParser {
         
     }
     
-    public static List<Link> getLinks(File file) throws Exception {
+    /**
+     * Devuelve una lista de los links que aparecen en un archivo. 
+     * @param filename nombre del archivo
+     * @return Lista de links, objeto de la clase Link. 
+     * @throws Exception 
+     */
+    public static List<Link> getLinks(String filename) throws Exception {
         
         Parser parser = new AutoDetectParser();
         Metadata metadata = new Metadata();
         LinkContentHandler handler = new LinkContentHandler();
-        InputStream stream = new FileInputStream(file);
+        InputStream stream = new FileInputStream(filename);
         ParseContext context = new ParseContext();
         
         try {
@@ -88,13 +97,44 @@ public class TextParser {
       return handler.getLinks();
      
 }
+    /**
+     * Escribe los links en el archivo Links.txt. 
+     * @param filenames Lista de archivos. 
+     * @throws Exception 
+     */
+    public static void writeLinks(String filename) throws Exception{
+        // Abrimos el archivo de links. 
+        PrintWriter writer = null; 
+        try {
+            File file = new File("Links.txt"); 
+            FileWriter wr = new FileWriter(file, true); 
+            writer = new PrintWriter(wr);
+            // Extraemos los links. 
+            List<Link> links = getLinks(filename);
+            
+            // Escribimos todos los links del archivo en el fichero.
+            for (int j = 0; j < links.size(); j++){
+                writer.println(links.get(j).toString());
+            }
+        }
+        // Exception.
+        catch (IOException e){
+            e.printStackTrace(); 
+        }
+        // Closing anyways. 
+        finally{
+            if (writer != null){
+                writer.close(); 
+            }
+        }
+    }
     
-    public static Metadata getMetadata(File file) throws Exception{
+    public static Metadata getMetadata(String filename) throws Exception{
         
         Parser parser = new AutoDetectParser();
         Metadata metadata = new Metadata();
         BodyContentHandler handler = new BodyContentHandler();
-        InputStream stream = new FileInputStream(file);
+        InputStream stream = new FileInputStream(filename);
         ParseContext context = new ParseContext();
         
         try {
@@ -104,7 +144,7 @@ public class TextParser {
             stream.close();
         }
         return metadata;
-        
-        
+               
     }
+    
 }

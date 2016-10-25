@@ -5,12 +5,15 @@
 package textindexer;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
+import org.apache.tika.metadata.Metadata;
 
 /**
  *
@@ -52,6 +55,32 @@ public class TextReader {
         }        
    
          return text;
+    }
+    
+    /**
+     * Procesa una serie de archivos y crea una tabla con su tipo 
+     * y codificación.: 
+     * 
+     * @param filePaths Lista de archivos.  
+     * @throws Exception, IOException 
+     */
+    public void writeFileTable(List<String> filePaths) throws IOException, Exception{
+        //Creamos el archivo que tendrá la tabla
+        String sFichero = "Tabla_archivos.csv";
+        File fichero = new File(sFichero);
+        TextParser t = new TextParser();
+        Metadata metadata = new Metadata();
+        
+        BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
+        bw.write("\"Nombre\"; \"Tipo\"; \"Codificación\" \n");
+
+        //Recorremos los archivos obteniendo sus metadatos
+        for(String file : filePaths){
+            metadata = t.getMetadata(file);
+            //Escribimos su nombre codificación y tipo
+            bw.write("\""+file+"\"; \""+metadata.get(Metadata.CONTENT_TYPE)+"\"; \""+metadata.get(Metadata.CONTENT_ENCODING)+"\"\n");
+        }
+        bw.close();
     }
     
     // Lectura de los archivos en un directorio. 

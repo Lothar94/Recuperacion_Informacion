@@ -42,7 +42,7 @@ public class TextParser {
  * Utiliza LanguageIdentifier y LanguageDetector.
  */
     
-    public static String identifyLanguage(String text) throws IOException {
+    public String identifyLanguage(String text) throws IOException {
         LanguageDetector identifier = new OptimaizeLangDetector().loadModels();
         LanguageResult idioma = identifier.detect(text);
         return idioma.getLanguage();
@@ -56,7 +56,7 @@ public class TextParser {
      * @return string 
      * @throws Exception 
      */
-    public static String process(String filename) throws Exception {
+    public String process(String filename) throws Exception {
         
         Parser parser = new AutoDetectParser();
         Metadata metadata = new Metadata();
@@ -80,7 +80,7 @@ public class TextParser {
      * @return Lista de links, objeto de la clase Link. 
      * @throws Exception 
      */
-    public static List<Link> getLinks(String filename) throws Exception {
+    public List<Link> getLinks(String filename) throws Exception {
         
         Parser parser = new AutoDetectParser();
         Metadata metadata = new Metadata();
@@ -102,7 +102,7 @@ public class TextParser {
      * @param filenames Lista de archivos. 
      * @throws Exception 
      */
-    public static void writeLinks(String filename) throws Exception{
+    public void writeLinks(String filename) throws Exception{
         // Abrimos el archivo de links. 
         PrintWriter writer = null; 
         try {
@@ -129,7 +129,7 @@ public class TextParser {
         }
     }
     
-    public static Metadata getMetadata(String filename) throws Exception{
+    public Metadata getMetadata(String filename) throws Exception{
         
         Parser parser = new AutoDetectParser();
         Metadata metadata = new Metadata();

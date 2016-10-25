@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
@@ -31,11 +32,13 @@ public class TextIndexer {
     TextReader rd;
     Hashtable<String, Boolean> emptyWords;
     StringTokenizer tokens;
+    List<String> filePaths;
 
     public TextIndexer(String emptyWordsPath) throws IOException {
         emptyWords = new Hashtable<>();
         rd = new TextReader();
         emptyWords = rd.readEmptyWords(emptyWordsPath);
+        filePaths = new ArrayList<String>();
     }
 
     /** 
@@ -54,7 +57,6 @@ public class TextIndexer {
         return newText;
     }
 
-    
     /**
      * Método para la lectura y lexificación de los datos obtenidos.
      */
@@ -76,7 +78,10 @@ public class TextIndexer {
         else{
             //Leemos el documento
             text = rd.read(filePath);
+            //Guardamos las rutas de los ficheros leidos
+            filePaths.add(filePath);
 
+            
             //Eliminamos los signos de puntuación
             text = removePunctuation(text);
 
@@ -144,9 +149,9 @@ public class TextIndexer {
         }
 
     }
-
+    
     // Main. 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, Exception {
         
         String text = new String();
         TextIndexer t = new TextIndexer("./palabras_vacias.txt");
@@ -158,5 +163,8 @@ public class TextIndexer {
         
         //Pasamos los resultados a un fichero de texto
         t.generarResultados(resultado);
+        
+        TextReader tt = new TextReader();
+        tt.writeFileTable(t.filePaths);
     }
 }

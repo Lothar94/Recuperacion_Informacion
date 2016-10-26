@@ -51,7 +51,6 @@ public class TextParser {
     /**
      * Procesa un archivo y extrae sus datos.: 
      * 
-     * 
      * @param file archivo a procesar. 
      * @return string 
      * @throws Exception 
@@ -102,19 +101,24 @@ public class TextParser {
      * @param filenames Lista de archivos. 
      * @throws Exception 
      */
-    public void writeLinks(String filename) throws Exception{
+    public void writeLinks(List<String> filenames) throws Exception{
         // Abrimos el archivo de links. 
         PrintWriter writer = null; 
+        List<Link> links; 
         try {
             File file = new File("Links.txt"); 
             FileWriter wr = new FileWriter(file, true); 
             writer = new PrintWriter(wr);
-            // Extraemos los links. 
-            List<Link> links = getLinks(filename);
-            
-            // Escribimos todos los links del archivo en el fichero.
-            for (int j = 0; j < links.size(); j++){
-                writer.println(links.get(j).toString());
+            // Extraemos los links de cada archivo. 
+            for (int i = 0; i < filenames.size(); i++){
+                links = getLinks(filenames.get(i));
+
+                // Escribimos todos los links del archivo en el fichero, poniendo antes 
+                // el fichero del que provienen. 
+                writer.println(filenames.get(i)); 
+                for (int j = 0; j < links.size(); j++){
+                    writer.println(links.get(j).toString());
+                }
             }
         }
         // Exception.

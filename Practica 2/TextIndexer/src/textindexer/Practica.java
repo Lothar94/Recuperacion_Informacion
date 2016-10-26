@@ -15,19 +15,25 @@ public class Practica {
     public static void main(String[] args) throws IOException, Exception {
         
         String text = new String();
-        TextIndexer t = new TextIndexer("./palabras_vacias.txt"); 
-        TextReader tr = new TextReader();
+        TextIndexer indexer = new TextIndexer("./palabras_vacias.txt"); 
+        FileIO textReader = new FileIO();
+        TextParser parser = new TextParser(); 
         HashMap<String, Integer> resultado = new HashMap();
         
         //Leemos los documentos.
-        resultado = t.indexText("./quijote", resultado);
+        resultado = indexer.indexText("./quijote", resultado);
         resultado.forEach((k, v) -> System.out.println("Key: " + k + ": Value: " + v));
         
         //Pasamos los resultados a un fichero de texto
-        t.generarResultados(resultado);
+        indexer.generarResultados(resultado);
         
         // Escribimos datos. 
-        tr.writeFileTable(t.filePaths);
+        textReader.writeFileTable(indexer.filePaths);
+        
+        // Escribimos los links. 
+        parser.writeLinks(indexer.filePaths);
+        
+        
     }
     
     

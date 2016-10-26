@@ -180,7 +180,7 @@ public class TextIndexer {
 
                 int ini = filePath.indexOf(rootDirectory.replace('\\','/' ));
                 int fin = ini + rootDirectory.length();
-                crearArchivo("./stems/"+filePath.substring(fin),stemText.toString());
+                crearArchivo("./stems"+filePath.substring(fin),stemText.toString());
             }
         }
         
@@ -220,7 +220,7 @@ public class TextIndexer {
             }
             bw.close();
         } else {
-            System.out.println("El fichero ya existe");
+            System.out.println("El fichero "+ sFichero +" ya existe");
         }
 
     }
@@ -235,7 +235,7 @@ public class TextIndexer {
             bw.write(text);
             bw.close();
         } else {
-            System.out.println("El fichero ya existe");
+            System.out.println("El fichero "+ sFichero +" ya existe");
         }
 
     }

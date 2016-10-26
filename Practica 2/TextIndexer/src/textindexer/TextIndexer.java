@@ -39,7 +39,7 @@ import org.tartarus.snowball.ext.swedishStemmer;
  */
 public class TextIndexer {
 
-    TextReader rd;
+    FileIO fileIO;
     Hashtable<String, Boolean> emptyWords;
     StringTokenizer tokens;
     List<String> filePaths;
@@ -47,10 +47,10 @@ public class TextIndexer {
 
     public TextIndexer(String emptyWordsPath) throws IOException {
         emptyWords = new Hashtable<>();
-        rd = new TextReader();
-        emptyWords = rd.readEmptyWords(emptyWordsPath);
+        fileIO = new FileIO();
+        emptyWords = fileIO.readEmptyWords(emptyWordsPath);
         filePaths = new ArrayList<String>();
-        rootDirectory=null;
+        rootDirectory = null;
     }
 
     /** 
@@ -76,18 +76,18 @@ public class TextIndexer {
      */
     public HashMap<String,Integer> indexText(String filePath,HashMap<String,Integer> numberOfOcurrences) 
            throws IOException{
-        
-        //System.out.println(filePath);
+
         String text = new String();
         
         // Si es un directorio, leemos sus archivos y los indexamos de forma recursiva. 
-        if(rd.isDirectory(filePath)){
+        if(fileIO.isDirectory(filePath)){
             if(rootDirectory == null){
-                // Reemplazamos \ por / ('\\' escapa solo una barra \). 
+                // Reemplazamos \ por / ('\\' escapa solo una barra \).  
+                // Hacemos esto para evitar problemas de path entre Linux, Mac y Windows. 
                 rootDirectory = filePath.replace('\\','/');
             }
             ArrayList<String> paths;
-            paths = rd.readDirectory(filePath);
+            paths = fileIO.readDirectory(filePath);
             // Llamada recursiva a la función de indexación
             for (String file: paths) {
                 numberOfOcurrences = indexText(file,numberOfOcurrences);
@@ -95,7 +95,7 @@ public class TextIndexer {
         }
         else{
             //Leemos el documento
-            text = rd.read(filePath);
+            text = fileIO.read(filePath);
             
             //Identificar lenguaje
             TextParser parser = new TextParser();
@@ -180,7 +180,7 @@ public class TextIndexer {
 
                 int ini = filePath.indexOf(rootDirectory.replace('\\','/' ));
                 int fin = ini + rootDirectory.length();
-                crearArchivo("./stems/"+filePath.substring(fin),stemText.toString());
+                fileIO.crearArchivo("./stems/"+filePath.substring(fin),stemText.toString());
             }
         }
         
@@ -218,21 +218,6 @@ public class TextIndexer {
                 }
 
             }
-            bw.close();
-        } else {
-            System.out.println("El fichero ya existe");
-        }
-
-    }
-    public void crearArchivo(String path,String text) throws IOException {
-        
-        String sFichero = path;
-        File fichero = new File(sFichero);
-        File dir = new File(path.substring(0, path.lastIndexOf("/")));
-        dir.mkdirs();
-        if (!(fichero.exists())) {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
-            bw.write(text);
             bw.close();
         } else {
             System.out.println("El fichero ya existe");

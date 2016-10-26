@@ -23,7 +23,7 @@ import org.apache.tika.metadata.Metadata;
  * @author José Carlos Entrena
  */
 
-public class TextReader {
+public class FileIO {
     
     // Comprueba si el path que pasamos es un directorio. 
     public Boolean isDirectory(String filepath) throws IOException{
@@ -54,12 +54,12 @@ public class TextReader {
             System.out.println("Archivo no encontrado.");
         }        
    
-         return text;
+        return text;
     }
     
     /**
      * Procesa una serie de archivos y crea una tabla con su tipo 
-     * y codificación.: 
+     * y codificación. 
      * 
      * @param filePaths Lista de archivos.  
      * @throws Exception, IOException 
@@ -116,6 +116,23 @@ public class TextReader {
         }                
         
         return emptyWords;
+    }
+    
+    
+    public void crearArchivo(String path, String text) throws IOException {
+        
+        String sFichero = path;
+        File fichero = new File(sFichero);
+        File dir = new File(path.substring(0, path.lastIndexOf("/")));
+        dir.mkdirs();
+        if (!(fichero.exists())) {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
+            bw.write(text);
+            bw.close();
+        } else {
+            System.out.println("El fichero ya existe");
+        }
+
     }
     
 }

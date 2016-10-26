@@ -76,8 +76,12 @@ public class TextReader {
         //Recorremos los archivos obteniendo sus metadatos
         for(String file : filePaths){
             metadata = t.getMetadata(file);
+            String typeEnconding = metadata.get(Metadata.CONTENT_TYPE);
+            String type = typeEnconding.substring(0,typeEnconding.lastIndexOf(";"));
+            String encoding = typeEnconding.substring(typeEnconding.lastIndexOf(";")+1,typeEnconding.length());
+            
             //Escribimos su nombre codificación y tipo
-            bw.write("\""+file+"\"; \""+metadata.get(Metadata.CONTENT_TYPE)+"\"; \""+metadata.get(Metadata.CONTENT_ENCODING)+"\"\n");
+            bw.write("\""+file+"\"; \""+type+"\"; \""+encoding+"\"\n");
         }
         bw.close();
     }

@@ -41,6 +41,7 @@ public class FileIO {
     // Lectura del texto del archivo encontrado bajo un path dado. 
     public String read(String filepath) throws IOException{
         String text = new String();
+        TextParser textParser = new TextParser();
         try{
             File file = new File(filepath);
             FileReader fr = new FileReader(file);
@@ -49,6 +50,7 @@ public class FileIO {
             while((line = br.readLine()) != null){
                text = text.concat(" "+line);
             }
+            text = textParser.getText(text);
             fr.close(); 
         }catch(Exception e){
             System.out.println("Archivo no encontrado.");
@@ -66,11 +68,11 @@ public class FileIO {
      */
     public void writeFileTable(List<String> filePaths) throws IOException, Exception{
         //Creamos el archivo que tendrá la tabla
-        String fichero = "Tabla_archivos.csv";
+        String fichero = "data/Tabla_archivos.csv";
         TextParser t = new TextParser();
         Metadata metadata = new Metadata();
         
-        BufferedWriter bw = new BufferedWriter(new FileWriter(fichero));
+        FileWriter bw = new FileWriter(fichero);
         bw.write("\"Nombre\"; \"Tipo\"; \"Codificación\" \n");
 
         //Recorremos los archivos obteniendo sus metadatos
@@ -125,17 +127,13 @@ public class FileIO {
     
     public void crearArchivo(String path, String text) throws IOException {
         
-        String sFichero = path;
-        File fichero = new File(sFichero);
+        File fichero = new File(path);
         File dir = new File(path.substring(0, path.lastIndexOf("/")));
         dir.mkdirs();
-        if (!(fichero.exists())) {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
-            bw.write(text);
-            bw.close();
-        } else {
-            System.out.println("El fichero ya existe");
-        }
+        
+        FileWriter fw = new FileWriter(fichero);
+        fw.write(text);
+        fw.close();
 
     }
     

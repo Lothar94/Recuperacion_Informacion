@@ -181,7 +181,7 @@ public class TextIndexer {
                 int ini = filePath.indexOf(rootDirectory.replace('\\','/' ));
                 int fin = ini + rootDirectory.length();
 
-                fileIO.crearArchivo("./stems"+filePath.substring(fin),stemText.toString());
+                fileIO.crearArchivo("./data/stems"+filePath.substring(fin),stemText.toString());
             }
         }
         return numberOfOcurrences;
@@ -197,33 +197,27 @@ public class TextIndexer {
      */
     public void generarResultados(HashMap<String, Integer> resultado) throws IOException {
 
-        String sFichero = "resultados.csv";
-        File fichero = new File(sFichero);
+        File fichero = new File("data/resultados.csv");
+        FileWriter fw = new FileWriter(fichero);
 
-        if (!(fichero.exists())) {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
-
-            //Obtenemos los valores de la tabla hash y los ordenamos en una lista
-            TreeSet values = new TreeSet(resultado.values());
-            ArrayList listaOrdenada=  new ArrayList(values);
-            Collections.reverse(listaOrdenada);
+        //Obtenemos los valores de la tabla hash y los ordenamos en una lista
+        TreeSet values = new TreeSet(resultado.values());
+        ArrayList listaOrdenada=  new ArrayList(values);
+        Collections.reverse(listaOrdenada);
             
-            Integer tmp;
-            Integer ranking =1;
-            for (int i = 0; i < listaOrdenada.size(); i++) {
-                tmp = (Integer) listaOrdenada.get(i);
-                for (Map.Entry k : resultado.entrySet()) {
-                    if (tmp == k.getValue()) {
-                        bw.write("\""+ k.getKey() + "\"; " + k.getValue() + "; " + ranking+"\n");
-                        ranking++;
-                    }
+        Integer tmp;
+        Integer ranking =1;
+        for (int i = 0; i < listaOrdenada.size(); i++) {
+            tmp = (Integer) listaOrdenada.get(i);
+            for (Map.Entry k : resultado.entrySet()) {
+                if (tmp == k.getValue()) {
+                    fw.write("\""+ k.getKey() + "\"; " + k.getValue() + "; " + ranking+"\n");
+                    ranking++;
                 }
-
             }
-            bw.close();
-        } else {
-            System.out.println("El fichero "+ sFichero +" ya existe");
+
         }
+        fw.close();
 
     }
     

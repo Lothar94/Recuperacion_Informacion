@@ -2,10 +2,12 @@ package textindexer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.ContentHandler;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import org.apache.tika.Tika;
@@ -23,10 +25,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.tika.detect.AutoDetectReader;
+import org.apache.tika.exception.TikaException;
 
 import org.apache.tika.language.detect.LanguageDetector;
 import org.apache.tika.langdetect.OptimaizeLangDetector;
 import org.apache.tika.language.detect.LanguageResult;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -73,6 +77,22 @@ public class TextParser {
         
     }
     
+    public String getText(String filename) throws FileNotFoundException, IOException, SAXException, TikaException{
+        Parser parser = new AutoDetectParser();
+        Metadata metadata = new Metadata();
+        BodyContentHandler handler = new BodyContentHandler();
+        InputStream stream = new FileInputStream(filename);
+        ParseContext context = new ParseContext();
+        
+        try {
+            parser.parse(stream, handler, metadata, context);
+
+        } finally {
+            stream.close();
+        }
+        return handler.toString();
+    }
+    
     /**
      * Devuelve una lista de los links que aparecen en un archivo. 
      * @param filename nombre del archivo
@@ -88,7 +108,7 @@ public class TextParser {
         ParseContext context = new ParseContext();
         
         try {
-            parser.parse(stream, handler, metadata,context);
+            parser.parse(stream, handler, metadata, context);
 
         } finally {
             stream.close();
@@ -106,8 +126,9 @@ public class TextParser {
         PrintWriter writer = null; 
         List<Link> links; 
         try {
-            File file = new File("Links.txt"); 
-            FileWriter wr = new FileWriter(file, true); 
+            File file = new File("data/Links.txt"); 
+            // Sobrescribe el archivo si ya existe.
+            FileWriter wr = new FileWriter(file); 
             writer = new PrintWriter(wr);
             // Extraemos los links de cada archivo. 
             for (int i = 0; i < filenames.size(); i++){

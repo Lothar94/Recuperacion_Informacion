@@ -21,7 +21,7 @@ public class Practica {
         HashMap<String, Integer> resultado = new HashMap();
         
         //Leemos los documentos.
-        resultado = indexer.indexText("./quijote", resultado);
+        resultado = indexer.indexText("index.html", resultado);
         resultado.forEach((k, v) -> System.out.println("Key: " + k + ": Value: " + v));
         
         //Pasamos los resultados a un fichero de texto
@@ -32,7 +32,6 @@ public class Practica {
         
         // Escribimos los links. 
         parser.writeLinks(indexer.filePaths);
-        
         
     }
     

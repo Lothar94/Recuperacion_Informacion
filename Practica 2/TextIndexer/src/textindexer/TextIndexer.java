@@ -62,10 +62,12 @@ public class TextIndexer {
      */
     public String removePunctuation(String t) {
         String newText = new String();
-        newText = newText.toLowerCase();
-        Pattern p = Pattern.compile("[^a-z0-9áéíóúñ]");
+        Pattern p = Pattern.compile("[^A-Za-z0-9áéíóúñ]");
         Matcher m = p.matcher(t);
+        // Reemplaza lo que coincida con la expresión regular por vacío. 
         newText = m.replaceAll(" ");
+        // Eliminamos mayúsculas. 
+        newText = newText.toLowerCase();
         return newText;
     }
 
@@ -80,8 +82,9 @@ public class TextIndexer {
         
         // Si es un directorio, leemos sus archivos y los indexamos de forma recursiva. 
         if(rd.isDirectory(filePath)){
-            if(rootDirectory==null){
-                rootDirectory=filePath.replace('/','\\' );
+            if(rootDirectory == null){
+                // Reemplazamos \ por / ('\\' escapa solo una barra \). 
+                rootDirectory = filePath.replace('\\','/');
             }
             ArrayList<String> paths;
             paths = rd.readDirectory(filePath);
@@ -93,10 +96,11 @@ public class TextIndexer {
         else{
             //Leemos el documento
             text = rd.read(filePath);
+            
             //Identificar lenguaje
-            TextParser Tp=new TextParser();
-            String leng=Tp.identifyLanguage(text);
-            //System.out.println("lenguaje: "+leng);
+            TextParser parser = new TextParser();
+            String lang = parser.identifyLanguage(text);
+            
             //Guardamos las rutas de los ficheros leidos
             filePaths.add(filePath);
             
@@ -108,8 +112,8 @@ public class TextIndexer {
             tokens = new StringTokenizer(text);
             SnowballStemmer stemmer;
             // Stemming
-            Boolean lengDetected=true;
-            switch(leng){
+            Boolean langDetected = true;
+            switch(lang){
                 case "da":
                     stemmer = (SnowballStemmer) new danishStemmer();
                     break;
@@ -144,40 +148,43 @@ public class TextIndexer {
                     stemmer = (SnowballStemmer) new spanishStemmer();
                     break;
                 default:
-                    stemmer=null;
-                    lengDetected=false;
-                    break;
-                
+                    stemmer = null;
+                    langDetected = false;
+                    break;     
             } 
-            if(lengDetected){
-                String nw;
-                StringBuilder stemText=new StringBuilder();
+            // Si se ha detectado el lenguaje, lexificamos. 
+            if(langDetected){
+                String nextToken;
+                StringBuilder stemText = new StringBuilder();
+                
                 while(tokens.hasMoreTokens()){
-                    nw = tokens.nextToken();
-                    if(!emptyWords.containsKey(nw)){ 
-                        stemmer.setCurrent(nw);
+                    nextToken = tokens.nextToken();
+                    // Si el token no está en las palabras vacías: 
+                    if(!emptyWords.containsKey(nextToken)){ 
+                        stemmer.setCurrent(nextToken);
+                        // Lexificamos. 
                         if(stemmer.stem()){
                             String stemmerWord = stemmer.getCurrent();
                             stemText.append(stemmerWord);
                             stemText.append(" ");
-                           if(numberOfOcurrences.containsKey(stemmerWord)){
+                            // Añadimos a la tabla hash. 
+                            if(numberOfOcurrences.containsKey(stemmerWord)){
                                int n = numberOfOcurrences.get(stemmerWord);
                                numberOfOcurrences.put(stemmerWord,n+1);
-                           }else{
-                               numberOfOcurrences.put(stemmerWord,1);
-                           }
+                            }
+                            else
+                               numberOfOcurrences.put(stemmerWord,1);                       
                         }
                     }
                 }
 
-                int ini=filePath.indexOf(rootDirectory.replace('/','\\' ));
-                int fin=ini+rootDirectory.length();
+                int ini = filePath.indexOf(rootDirectory.replace('\\','/' ));
+                int fin = ini + rootDirectory.length();
                 crearArchivo("./stems/"+filePath.substring(fin),stemText.toString());
             }
         }
         
        return numberOfOcurrences;
-    //numberOfOcurrences.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
 }
 
  
@@ -221,7 +228,7 @@ public class TextIndexer {
         
         String sFichero = path;
         File fichero = new File(sFichero);
-        File dir = new File(path.substring(0, path.lastIndexOf("\\")));
+        File dir = new File(path.substring(0, path.lastIndexOf("/")));
         dir.mkdirs();
         if (!(fichero.exists())) {
             BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
@@ -233,21 +240,4 @@ public class TextIndexer {
 
     }
     
-    // Main. 
-    public static void main(String[] args) throws IOException, Exception {
-        
-        String text = new String();
-        TextIndexer t = new TextIndexer("./palabras_vacias.txt");
-        HashMap<String, Integer> resultado = new HashMap();
-        
-        //Leemos los documentos.
-        resultado = t.indexText("./quijote", resultado);
-        resultado.forEach((k, v) -> System.out.println("Key: " + k + ": Value: " + v));
-        
-        //Pasamos los resultados a un fichero de texto
-        t.generarResultados(resultado);
-        
-        TextReader tt = new TextReader();
-        tt.writeFileTable(t.filePaths);
-    }
 }

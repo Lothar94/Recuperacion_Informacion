@@ -66,12 +66,11 @@ public class TextReader {
      */
     public void writeFileTable(List<String> filePaths) throws IOException, Exception{
         //Creamos el archivo que tendrá la tabla
-        String sFichero = "Tabla_archivos.csv";
-        File fichero = new File(sFichero);
+        String fichero = "Tabla_archivos.csv";
         TextParser t = new TextParser();
         Metadata metadata = new Metadata();
         
-        BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(fichero));
         bw.write("\"Nombre\"; \"Tipo\"; \"Codificación\" \n");
 
         //Recorremos los archivos obteniendo sus metadatos

@@ -180,19 +180,21 @@ public class TextIndexer {
 
                 int ini = filePath.indexOf(rootDirectory.replace('\\','/' ));
                 int fin = ini + rootDirectory.length();
-                fileIO.crearArchivo("./stems/"+filePath.substring(fin),stemText.toString());
+
+                fileIO.crearArchivo("./stems"+filePath.substring(fin),stemText.toString());
             }
         }
-        
-       return numberOfOcurrences;
-}
+        return numberOfOcurrences;
+    }
+    
+    
 
  
     /**
      * Método para la generación de resultados en un fichero externo. 
      * Volcamos los resultados en una estructura de datos ordenada para 
      * poder tratarlos en dicho orden. 
-     */ 
+     */
     public void generarResultados(HashMap<String, Integer> resultado) throws IOException {
 
         String sFichero = "resultados.csv";
@@ -220,7 +222,7 @@ public class TextIndexer {
             }
             bw.close();
         } else {
-            System.out.println("El fichero ya existe");
+            System.out.println("El fichero "+ sFichero +" ya existe");
         }
 
     }

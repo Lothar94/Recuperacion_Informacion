@@ -43,15 +43,7 @@ public class FileIO {
         String text = new String();
         TextParser textParser = new TextParser();
         try{
-            File file = new File(filepath);
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-            while((line = br.readLine()) != null){
-               text = text.concat(" "+line);
-            }
-            text = textParser.getText(text);
-            fr.close(); 
+            text = textParser.getText(filepath);
         }catch(Exception e){
             System.out.println("Archivo no encontrado.");
         }        

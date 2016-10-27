@@ -20,6 +20,7 @@ import java.util.regex.*;
 import org.tartarus.snowball.SnowballStemmer;
 import org.tartarus.snowball.ext.danishStemmer;
 import org.tartarus.snowball.ext.dutchStemmer;
+import org.tartarus.snowball.ext.englishStemmer;
 import org.tartarus.snowball.ext.finnishStemmer;
 import org.tartarus.snowball.ext.germanStemmer;
 import org.tartarus.snowball.ext.hungarianStemmer;
@@ -50,7 +51,7 @@ public class TextIndexer {
         fileIO = new FileIO();
         emptyWords = fileIO.readEmptyWords(emptyWordsPath);
         filePaths = new ArrayList<String>();
-        rootDirectory = null;
+        rootDirectory = "./";
     }
 
     /** 
@@ -81,7 +82,7 @@ public class TextIndexer {
         
         // Si es un directorio, leemos sus archivos y los indexamos de forma recursiva. 
         if(fileIO.isDirectory(filePath)){
-            if(rootDirectory == null){
+            if(rootDirectory == "./"){
                 // Reemplazamos \ por / ('\\' escapa solo una barra \).  
                 // Hacemos esto para evitar problemas de path entre Linux, Mac y Windows. 
                 rootDirectory = filePath.replace('\\','/');
@@ -146,6 +147,9 @@ public class TextIndexer {
                     break;
                 case "es":
                     stemmer = (SnowballStemmer) new spanishStemmer();
+                    break;
+                case "en":
+                    stemmer = (SnowballStemmer) new englishStemmer();
                     break;
                 default:
                     stemmer = null;

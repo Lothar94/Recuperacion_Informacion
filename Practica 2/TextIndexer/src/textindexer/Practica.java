@@ -1,5 +1,6 @@
 package textindexer;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -13,6 +14,8 @@ public class Practica {
     
     // Main. 
     public static void main(String[] args) throws IOException, Exception {
+        File datadir = new File("./data");
+        datadir.mkdir();
         
         String text = new String();
         TextIndexer indexer = new TextIndexer("./palabras_vacias.txt"); 
@@ -21,7 +24,7 @@ public class Practica {
         HashMap<String, Integer> resultado = new HashMap();
         
         //Leemos los documentos.
-        resultado = indexer.indexText("index.html", resultado);
+        resultado = indexer.indexText("./index.html", resultado);
         resultado.forEach((k, v) -> System.out.println("Key: " + k + ": Value: " + v));
         
         //Pasamos los resultados a un fichero de texto

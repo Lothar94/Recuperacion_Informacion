@@ -80,16 +80,18 @@ public class TextParser {
     public String getText(String filename) throws FileNotFoundException, IOException, SAXException, TikaException{
         Parser parser = new AutoDetectParser();
         Metadata metadata = new Metadata();
-        BodyContentHandler handler = new BodyContentHandler();
+        BodyContentHandler handler = new BodyContentHandler(-1);
         InputStream stream = new FileInputStream(filename);
         ParseContext context = new ParseContext();
         
         try {
             parser.parse(stream, handler, metadata, context);
 
-        } finally {
-            stream.close();
+        }catch(Exception e){
+            System.out.println("Error en el parser");
         }
+        
+        stream.close();
         return handler.toString();
     }
     

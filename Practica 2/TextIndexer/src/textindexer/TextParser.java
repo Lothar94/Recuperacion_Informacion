@@ -138,7 +138,8 @@ public class TextParser {
 
                 // Escribimos todos los links del archivo en el fichero, poniendo antes 
                 // el fichero del que provienen. 
-                writer.println(filenames.get(i)); 
+                writer.println("Archivo: " + filenames.get(i)); 
+                writer.println("Links: "); 
                 for (int j = 0; j < links.size(); j++){
                     writer.println(links.get(j).toString());
                 }

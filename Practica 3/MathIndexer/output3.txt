@@ -1,0 +1,2679 @@
+
+Contents lists available at ScienceDirect
+
+Engineering Analysis with Boundary Elements
+
+journal homepage: www.elsevier.com/locate/enganabound
+
+A new direct time integration method for the semi-discrete parabolic
+equations
+
+John T. Katsikadelis
+
+School of Civil Engineering, National Technical University of Athens, Athens GR-15780, Greece
+
+A R T I C L E I N F O
+
+Keywords:
+Semi-discrete parabolic equations
+Analog equation method
+Differential equations
+Integral equation methods
+Numerical solution
+
+A B S T R A C T
+
+A direct time integration method is presented for the solution of systems of first order ordinary differential
+equations, which represent semi-discrete diffusion equations. The proposed method is based on the principle of
+the analog equation, which converts the N coupled equations into a set of N single term uncoupled first order
+ordinary differential equations under fictitious sources. The solution is obtained from the integral representa-
+tion of the solution of the substitute single term equations. The stability and convergence of the numerical
+scheme is proved. The method is simple to implement. It is self-starting, unconditionally stable, accurate, while
+it does not exhibit numerical damping. The stability does not demand symmetrical and positive definite
+coefficient matrices. This is an important advantage, since the scheme can solve semi-discrete diffusion
+equations resulting frommethods that do not produce symmetrical matrices, e.g. the boundary element method.
+The method applies also to equations with variable coefficients as well as to nonlinear ones. It performs well
+when long time durations are considered and it can be used as a practical method for integration of stiff
+parabolic equations in cases where widely used methods may fail. Numerical examples, including linear as well
+as non linear systems, are treated by the proposed method and its efficiency and accuracy are demonstrated.
+
+1. Introduction
+
+The initial value problem for the linear semi-discrete diffusion
+equation is stated as
+
+t t T TCu Ku ṗ + = ( ), ∈ [0, ], > 0 (1)
+
+u u(0) = 0 (2)
+
+where tu u= ( ) represents the vector of the unknown functions, tp( ) the
+external source vector, and u0 a given vector.
+
+Eq. (1) represents the semi-discrete parabolic equations, that is,
+parabolic equations of which the space variables have been discretized
+and the time variable is left continuous. The matrices C and K may be
+symmetrical or not, depending on the method used for the spatial
+discretization.
+
+The most well known and commonly used methods for solving Eq.
+(1) are members of the generalized trapezoidal family or α − family of
+methods, in which the time derivative is approximated by a weighted
+average of the field function at two consecutive time steps. Some well
+known members are identified from the value of the parameter α. Thus
+we have, the forward differences or forward Euler (α = 0), the
+trapezoidal rule or Crank-Nicolson (α = 1/2), and backward difference
+or backward Euler (α = 1). The α − family of approximations is
+unconditionally stable for α ≥ 1/2, while for α < 1/2 the methods are
+
+stable if the condition Δt Δt a λ< ≡ 2/(1 − 2 )cr max , where λmax is the
+largest eigenvalue of the matrix C K−1 , is satisfied with C K, being
+symmetrical and positive definite [1,2].
+
+In this paper a new direct time integration method is presented for
+the numerical solution of the initial value problem (1) and (2). The
+proposed method is based on the principle of the analog equation [3],
+which converts the N coupled equations into a set of N single term
+uncoupled first order ordinary differential equations under fictitious
+sources, unknown in the first instance. The fictitious sources are
+established from the integral representation of the solution of the
+substitute single term equations. The solution procedure is analogous
+to that presented in [4]. But in this case the substitute equation is of the
+first order and the unknown fictitious source represents the first
+derivative. The stability is proved and the convergence is shown
+through well corroborated numerical results. The method is simple to
+implement. It is self starting, unconditionally stable and accurate. The
+stability does not demand symmetrical and positive definite coefficient
+matricesC K, as the widely used methods, but can solve equations with
+non-symmetrical matrices provided that the eigenvalues of the matrix
+C K−1 are nonnegative or have nonnegative real part for the complex
+eigenvalues. This is an important advantage, since the scheme can
+solve semi-discrete diffusion equations resulting from methods that do
+not produce symmetrical matrices, e.g. the boundary element method.
+
+http://dx.doi.org/10.1016/j.enganabound.2016.09.009
+Received 10 May 2016; Received in revised form 15 September 2016; Accepted 15 September 2016
+
+E-mail addresses: jkats@central.ntua.gr.
+
+Engineering Analysis with Boundary Elements 73 (2016) 181–190
+
+0955-7997/ © 2016 Elsevier Ltd. All rights reserved.
+
+crossmark
+
+
+
+
+
+
+
+
+
+Moreover, the method performs well when long time durations are
+considered as it conserves energy and, thus, it can be used as a practical
+method for integration of the parabolic equations in cases where widely
+used methods do not apply or may fail. It applies also to the case of
+time dependent coefficient matrices, i.e., t tC K( ), ( ), as well as for
+nonlinear equations. The method is illustrated by solving several
+equations, including linear as well as non linear systems. The obtained
+results are in excellent agreement with those obtained from exact
+solutions.
+
+2. The linear system
+
+2.1. The AEM solution
+
+We illustrate the AEM (Analog Equation Method) with the linear
+one-degree-of-freedom system
+
+cu ku p t c k̇ + = ( ), , > 0 (3)
+
+u u(0) = 0 (4)
+
+Let u u t= ( ) be the sought solution. Then, if the operator d dt/ is
+applied to it, yields
+
+u q ṫ = ( ) (5)
+
+where q t( ) is a fictitious source, unknown in the first instance. Eq. (5)
+is the analog of Eq. (3) [3]. It indicates that the solution of Eq. (3) can
+be obtained by solving Eq. (5) under the initial condition (4), if q t( ) is
+first established. This is implemented as following.
+
+Taking the Laplace transform of Eq. (5) we obtain
+
+sU s u Q s( ) − (0) = ( )
+
+or
+
+U s
+s
+u
+
+s
+Q s( ) = 1 (0) + 1 ( )
+
+(6)
+
+whereU s Q s( ), ( ) are the Laplace transforms of u t q t( ), ( ). The inverse
+Laplace transform of expression (6) yields the solution of Eq. (5) in
+integral form
+
+∫u t u q τ dτ( ) = (0) + ( )
+t
+
+0 (7)
+
+Thus the initial value problem of Eqs. (3) and (4) is transformed
+into an equivalent Volterra integral equation for q t( ), Eq. (7).
+
+Eq. (7) is solved numerically within a time interval T[0, ]. Following
+a procedure analogous to that presented in [4], the interval T[0, ] is
+divided into N equal intervals t hΔ = , h T N= / (Fig. 1), in which q t( ) is
+assumed to vary according to a certain law, e.g. constant, linear etc.
+
+Hence, Eq. (7) at instant t nh= can be written as
+
+∫ ∫ ∫
+
+∫ ∫∑
+
+u u q τ dτ q τ dτ q τ dτ
+
+u q τ dτ q τ dτ
+
+= + ( ) + ( ) +…+ ( )
+
+= + ( ) + ( )
+
+n
+h
+
+h
+
+h
+
+n h
+
+nh
+
+r
+
+n
+
+r h
+
+rh
+
+n h
+
+nh
+
+0
+0
+
+2
+
+( −1)
+
+0
+=1
+
+−1
+
+( −1) ( −1) (8)
+
+or taking into account that
+
+∫∑u u q τ dτ= + ( )n
+r
+
+n
+
+r h
+
+rh
+−1 0
+
+=1
+
+−1
+
+( −1) (9)
+
+we may write Eq. (8) as
+
+∫u u q τ dτ= + ( )n n
+n h
+
+nh
+−1
+
+( −1) (10)
+
+2.2. Solution procedure for constant fictitious source q t( )
+
+Without excluding higher order variation laws for q t( ), we assume
+that it is constant within the integration interval r h rh[( − 1) , ] and
+equal to the mean value
+
+q
+q q
+
+=
++
+2r
+
+m r r−1
+(11)
+
+Substituting Eq. (11) into Eq. (10) gives
+
+u u h q h q= +
+2
+
++
+2n n n n−1 −1 (12)
+
+Moreover, Eq. (3) at time t nh= is written as
+
+cq ku p+ =n n n (13)
+
+Eqs. (12) and (13) can be combined as
+
+c k q
+u
+
+q
+u p− 1 =
+
+0 0
+1 +
+
+1
+0h
+
+n
+n
+
+h
+n
+n n2 2
+
+−1
+−1
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+⎧⎨⎩
+
+⎫⎬⎭
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+⎧⎨⎩
+
+⎫⎬⎭
+⎧⎨⎩
+
+⎫⎬⎭ (14)
+The coefficient matrix in Eq. (14) is not ill-conditioned for sufficient
+
+small h and the system can be solved successively for n = 1, 2, … to
+yield the solution un and its derivative u q̇ =n n at instant t nh T= ≤ . For
+n = 1, the value q0 appears in the right hand side of Eq. (14). This
+quantity can be readily obtained from Eq. (3) for t = 0. This yields
+
+q p ku c= ( − )/0 0 0 (15)
+
+Eq. (14) can be also written in matrix form
+
+p n NU AU b= + , = 1, 2, …n n n−1 (16)
+
+in which
+
+q
+u
+
+c k c k
+U A b= , = − 1
+
+0 0
+1 , = − 1
+
+1
+0n
+
+n
+n
+
+h h h
+2
+
+−1
+
+2 2
+
+−1⎧⎨⎩
+⎫⎬⎭
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+
+⎧⎨⎩
+⎫⎬⎭ (17a,b,c)
+
+We can readily extend the previous procedure to the problem (1)
+and (2), which represents a system of, say L, first order ordinary
+differential equations. Obviously, the analog equations corresponding
+to Eq. (5) constitute the set of the L uncoupled equations
+
+tu q̇ = ( ) (18)
+
+where tu q̇ , ( ) are L × 1 vectors. Thus, the numerical scheme for the
+solution becomes
+
+n NU AU bp= + , = 1, 2,…,n n n−1 (19)
+
+where
+
+U
+q
+u A
+
+C K
+I I
+
+0 0
+I I= , = −n
+
+n
+n
+
+h h
+2
+
+−1
+
+2
+
+⎧⎨⎩
+⎫⎬⎭
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥ (20a,b)
+
+b
+C K
+I I
+
+1
+0 1= − , = {1 1 ⋯ 1}h
+
+T
+
+2
+
+−1⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+
+⎧⎨⎩
+⎫⎬⎭ (21a,b)
+
+q C p Ku= ( − )0 −1 0 0 (22)
+
+The solution algorithm is shown in Table 1.
+
+( )u t
+
+t
+
+1u
+2u
+
+3u
+0u
+
+Nu
+
+T Nh=
+h h h h h h h hh h h
+
+1Nu -
+
+nu
+
+Fig. 1. Discretization of the interval T[0, ] into N equal intervals h T N= / .
+
+J.T. Katsikadelis Engineering Analysis with Boundary Elements 73 (2016) 181–190
+
+182
+
+
+
+2.3. Stability of the numerical scheme
+
+Applying Eq. (19) for n = 1, 2, … yields
+
+p p p p
+
+p p
+
+p p p
+
+U AU b U AU b A AU b b
+
+A U Ab b
+
+U A U A A A b
+
+= + = + = ( + ) +
+
+= + + ⋯ = ⋯⋯⋯⋯⋯⋯⋯⋯⋯
+
+= + ( + + ⋯ )
+
+o o
+
+o
+
+n
+n
+
+o
+n n
+
+n
+
+1 1 2 1 2 1 2
+2
+
+1 2
+−1
+
+1
+−2
+
+2
+0 (23)
+
+We observe that the last of Eq. (23) gives the solution vector Un at
+instant t nh=n using only the known vector U0 at t = 0. The matrix A
+and the vector b are computed only once.
+
+The matrix A is the amplification matrix. In order that the solution
+is stable, An must be bounded. This is true if the spectral radius ρ A( )
+satisfies the condition
+
+ρ λA( ) = max( ) ≤ 1i (24)
+
+where λi are the eigenvalues of A. If ρ A( ) < 1 the method is strongly
+stable. The condition (24) is satisfied, if all eigenvalues of the matrix
+K C Kˆ = −1 are nonnegative or have nonnegative real part for complex
+eigenvalues. This is proved in what follows.
+
+Proof.
+
+First we write Eq.(1) as
+
+tu Ku C p K C K̇ + ˆ = ( ), ˆ =−1 −1 (25)
+
+Thus the matrix A defined by Eq. (20b) becomes
+
+A
+I K
+I I
+
+0 0
+I I=
+
+ˆ
+
+− h h2
+
+−1
+
+2
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥ (26)
+
+Using the formula for the inverse of a block matrix [5], we find
+
+I K
+I I
+
+I K I K K
+
+I K I K
+
+ˆ
+
+−
+=
+
+( + ˆ ) − ( + ˆ ) ˆ
+
+( + ˆ ) ( + ˆ )
+h
+
+h h
+
+h h h
+2
+
+−1
+2
+
+−1
+2
+
+−1
+
+2 2
+−1
+
+2
+−1
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+
+⎡
+
+⎣
+⎢⎢⎢
+
+⎤
+
+⎦
+⎥⎥⎥ (27)
+
+Hence
+
+A
+I K K I K K
+
+I K I K
+=
+
+− ( + ˆ ) ˆ − ( + ˆ ) ˆ
+
+( + ˆ ) ( + ˆ )
+
+h h h
+
+h h h
+2 2
+
+−1
+2
+
+−1
+
+2 2
+−1
+
+2
+−1
+
+⎡
+
+⎣
+⎢⎢⎢
+
+⎤
+
+⎦
+⎥⎥⎥ (28)
+
+Next we find the eigenvalues of A. For this purpose we write the
+pertinent eigenvalue problem in the form
+
+λ
+λ
+
+A I A
+A A I
+
+x
+x
+
+0
+0
+
+−
+−
+
+=11 12
+21 22
+
+1
+2
+
+⎡
+⎣⎢
+
+⎤
+⎦⎥
+⎧⎨⎩
+
+⎫⎬⎭
+⎧⎨⎩
+
+⎫⎬⎭ (29)
+or
+
+λ
+λ
+
+A I x A x 0
+A x A I x 0
+( − ) + =
+
++ ( − ) =
+11 1 12 2
+
+21 1 22 2
+
+⎫⎬⎭ (30)
+where Aij are the L L× matrices
+
+A I K K A I K K
+
+A I K A I K
+
+= − [ + ˆ ] ˆ , = −[ + ˆ ] ˆ
+
+= [ + ˆ ] , = [ + ˆ ]
+
+h h h
+
+h h h
+
+11 2 2
+−1
+
+12 2
+−1
+
+21 2 2
+−1
+
+22 2
+−1
+
+⎫
+⎬⎪
+⎭⎪ (31)
+
+Eqs. (30) are solved using Gauss elimination. To avoid inversion of
+the singular matrix λA I( − )11 , we reorder these equation as
+
+λ
+λ
+
+A x A I x 0
+A I x A x 0
+
++ ( − ) =
+( − ) + =
+12 2 11 1
+
+22 2 21 1
+
+⎫⎬⎭ (32)
+which after elimination of x2 give
+
+λ
+λ λ
+
+A A I
+0 A I A A I A
+
+x
+x
+
+0
+0
+
+−
+− ( − ) ( − ) +
+
+=12 11
+22 12
+
+−1
+11 21
+
+2
+1
+
+⎡
+⎣⎢
+
+⎤
+⎦⎥
+⎧⎨⎩
+
+⎫⎬⎭
+⎧⎨⎩
+
+⎫⎬⎭ (33)
+The characteristic equation of the matrix in Eq.(33) is
+
+Π λ λ λA A I A A I A( ) = det det[−( − ) ( − ) + ] = 012 22 12−1 11 21 (34)
+
+Taking into account that A I K Kdet = −det([ + ˆ ] ˆ ) ≠ 0h12 2
+−1
+
+, we have
+
+Π λ λ λ
+
+λ λ
+
+A I A A I A
+
+A A A A A A A A A
+
+( ) = det[−( − ) ( − ) + ] = 0
+
+= det( − + ( + ) − ) = 0
+22 12
+
+−1
+11 21
+
+21 22 12
+−1
+
+11 12
+−1
+
+11 22 12
+−1
+
+12
+−1 2 (35)
+
+We can readily show that
+
+A A A A− = 021 22 12−1 11 (36)
+
+Hence, Eq. (35) becomes
+
+λ λA A A A Idet( + − ) = 012−1 11 121 22 (37)
+
+From Eq. (37) we conclude that the L L2 × 2 matrix A has L zero
+eigenvalues, while the other L nonzero eigenvalues are the eigenvalues
+of the matrix
+
+h hA A A A A I K I K* = + = +
+2
+ˆ −
+
+2
+ˆ
+
+12
+−1
+
+11 12
+1
+
+22
+
+−1⎡
+⎣⎢
+
+⎤
+⎦⎥
+
+⎡
+⎣⎢
+
+⎤
+⎦⎥ (38)
+
+Let Λ̂ be the diagonal matrix of the eigenvalues of K̂ and X̂ the
+matrix of its eigenvectors normalized with respect to their measure
+(length). It holds Xdet( ˆ ) ≠ 0, X Xˆ = ˆ T−1 . Using the spectral decomposi-
+tion of K̂, we may write
+
+h h hI K I XΛX X I Λ X+
+2
+ˆ = +
+
+2
+ˆ ˆ ˆ = ˆ +
+
+2
+ˆ ˆ−1 −1⎛
+
+⎝⎜
+⎞
+⎠⎟ (39a)
+
+and
+
+h hI K X I Λ X+
+2
+ˆ = ˆ +
+
+2
+ˆ ˆ
+
+−1 −1
+−1⎡
+
+⎣⎢
+⎤
+⎦⎥
+
+⎡
+⎣⎢
+
+⎤
+⎦⎥ (39b)
+
+Hence
+
+h h h hA I K I K X I Λ I Λ X XΛ X* = +
+2
+ˆ −
+
+2
+ˆ = ˆ +
+
+2
+ˆ −
+
+2
+ˆ ˆ = ˆ * ˆ
+
+−1 −1
+−1 −1⎡
+
+⎣⎢
+⎤
+⎦⎥
+
+⎡
+⎣⎢
+
+⎤
+⎦⎥
+
+⎡
+⎣⎢
+
+⎤
+⎦⎥
+
+⎡
+⎣⎢
+
+⎤
+⎦⎥
+
+(40)
+
+or
+
+X A X Λˆ * ˆ = *−1 (41)
+
+that is Λ* is the diagonal matrix of the eigenvalues λ*i of A*. Hence
+
+λ h λ h λ* = 1 −
+2
+ˆ / 1 +
+
+2
+ˆ
+
+i i i
+⎛
+⎝⎜
+
+⎞
+⎠⎟
+⎛
+⎝⎜
+
+⎞
+⎠⎟ (42)
+
+The stability of the numerical scheme requires that
+
+λ h λ h λ* = 1 −
+2
+ˆ / 1 +
+
+2
+ˆ ≤ 1i i i (43)
+
+or
+
+h λ h λ1 −
+2
+ˆ ≤ 1 +
+
+2
+ˆi i
+
+2 2⎛
+⎝⎜
+
+⎞
+⎠⎟
+
+⎛
+⎝⎜
+
+⎞
+⎠⎟ (44)
+
+which is satisfied
+
+Table 1
+Algorithm for the numerical solution of the semi-discrete linear parabolic equations.
+
+A. Data for tCu Ku p. + = ( )
+Read: C, K, u0, p(t), T
+B. Initial computations
+
+Choose: h t= Δ and compute nmax
+Compute: q C p Ku= ( − )0 −1 0 0
+Formulate U u u= { ̇ }T0 0 0
+
+Compute: A
+C K
+I I
+
+0 0
+I I= − h h
+
+2
+
+−1
+
+2
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+
+⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥, b
+
+C K
+I I
+
+I
+0= − h2
+
+−1⎡
+⎣
+⎢⎢
+
+⎤
+⎦
+⎥⎥
+
+⎡
+⎣⎢
+
+⎤
+⎦⎥
+
+C. Compute the solution
+for n n: =1 to max
+U AU bp= +n n n−1
+end
+
+J.T. Katsikadelis Engineering Analysis with Boundary Elements 73 (2016) 181–190
+
+183
+
+
+
+a) For real λ̂i, if λ̂ ≥ 0i
+b) For complex λ a iβˆ = +i i i, if a ≥ 0i
+
+Hence the stability criterion can be stated as:
+The proposed numerical scheme is stable, that is the stability
+
+condition (24) is satisfied, if the eigenvalues of the matrix K C Kˆ = −1
+are nonnegative or have nonnegative real part for complex eigenva-
+lues.
+
+2.4. Error analysis and convergence
+
+The error is due to the approximation of the integrand in the
+integral of Eq. (8) in the r integration interval r h rh[( − 1) , ]
+
+∫ f τ dτ t r h t rh( ) , = ( − 1) , =
+t
+
+t
+0 1
+
+0
+
+1
+
+(45)
+
+f τ( ) is approximated as
+
+f τ
+q q
+
+q q( ) =
++
+2
+
+= = = constant∼ r r r
+m−1
+
+0 (46)
+
+Hence the error is
+
+∫ f τ f τ dτ[ ( ) − ( )]∼
+t
+
+t
+
+0
+
+1
+
+(47)
+
+Expanding f τ( ) in Taylor series at τ = 0 and evaluating the integral
+of f τ f τ( ) − ( )∼ over the interval t t[ , ]0 1 we find
+
+∫ f τ f τ dτ f hf h f
+
+h q h f q h f h h f
+
+[ ( ) − ( )] = ( + ′ +
+2
+
+″ + ⋯)
+
+− = ( − ) + ′ +
+2
+
+″ + ⋯
+
+∼
+t
+
+t
+
+0 0
+2
+
+0
+
+0 0 0 0
+2
+
+3
+0
+
+0
+
+1
+
+(48)
+
+Taking into account that f q=0 0 we conclude that the convergence
+of the numerical scheme is O h( )2 (see Fig. 4).
+
+2.5. Numerical examples
+
+Matlab codes, based on the developed numerical schemes have
+been written and various example problems have been solved. Note
+that the exact solutions, where no reference is made, have been
+obtained using the inverse method presented by Katsikadelis [4].
+According to this method, a solution is assumed, which yields the
+corresponding source after inserting it in the equation.
+
+Example 1. One-degree of freedom system.
+Eq. (1) has been solved with data: c = 5, k = 50,
+
+p t cω ωt k ωt( ) = − sin + cos , u = 10 , ω = 2. Eq. (1) admits an exact
+solution u ωt= cosex . Fig. 2 shows the computed solution as
+compared with the exact solution for h = 0.05. Fig. 3 shows the
+error u t u tmax ( ) − ( )i ex i and the mean square error MSE=
+
+u t u t∑ [ ( ) − ( )]
+n i
+
+i n
+i ex i
+
+1
+=1
+= 2 , t0 < ≤ 100i versus the time step h, which
+
+validate the convergence of the numerical scheme. Moreover, Fig. 4
+verifies that the convergence is of O h( )2 . Fig. 5 shows the solution for
+long duration t h(0 ≤ ≤ 50000, = 0.01). We observe that the scheme
+remains stable and the error within the same bounds. Finally, Fig. 6
+shows that the quantity u cu u ku u p ṫ + = ( )T T T , that is the total “work”
+remains unchanged during the whole procedure, which means that the
+scheme does not exhibit numerical damping.
+
+Example 2. System of equations. Symmetrical positive definite
+coefficient matrices...
+
+In this example the system of equations
+
+u
+u
+
+u
+u t
+
+t t
+t t
+
+5 4
+4 5
+
+̇
+̇ +
+
+25 20
+20 20 = exp(−0.1 )
+
+57/2 cos + 73/5 sin
+123/5 cos + 31/2 sin
+
+1
+
+2
+
+1
+2
+
+⎡
+⎣⎢
+
+⎤
+⎦⎥
+⎧⎨⎩
+
+⎫⎬⎭
+⎡
+⎣⎢
+
+⎤
+⎦⎥
+⎧⎨⎩
+
+⎫⎬⎭
+⎧⎨⎩
+
+⎫⎬⎭
+(49)
+
+with initial conditions u u= 1, = 01 2 is solved. The matrices C K,
+are symmetrical and positive definite, eig C( ) = {1 9}, eig K( )=
+{2.3444 42.6556} . Eq. (49) admits an exact solution.
+
+u
+u t
+
+t
+t
+
+= exp(−0.1 ) cos )
+sin
+
+1
+2
+
+⎧⎨⎩
+⎫⎬⎭
+
+⎧⎨⎩
+⎫⎬⎭ (50)
+
+The computed solution for T = 10 and h = 0.1 is shown in Fig. 7 as
+compared with the exact one. Moreover Fig. 8 shows the error u u− ex.
+
+Example 3. System of equations. Nonsymmetrical non-positive
+definite coefficient matrices.
+
+In this example the system of equations
+
+u
+u
+
+u
+u
+
+p
+p
+
+0.1493 0.8407
+0.2575 0.2543
+
+̇
+̇ +
+
+0.8909 0.5472
+0.9593 0.1386 =
+
+1
+
+2
+
+1
+2
+
+1
+
+2
+
+⎡
+⎣⎢
+
+⎤
+⎦⎥
+⎧⎨⎩
+
+⎫⎬⎭
+⎡
+⎣⎢
+
+⎤
+⎦⎥
+⎧⎨⎩
+
+⎫⎬⎭
+⎧⎨⎩
+
+⎫⎬⎭ (51)
+
+0 5 10 15 20
+-1
+
+-0.5
+
+0
+
+0.5
+
+1
+
+t
+
+u(
+t)
+
+u computed
+u
+
+ex
+
+Fig. 2. Solution computed and exact in Example 1.
+
+00.020.040.060.080.1
+0
+
+1
+
+2
+
+3
+
+4 x 10
+-3
+
+h
+
+max|u-uex|
+
+MSE
+
+Fig. 3. Error u t u tmax ( ) − ( )i ex i and MSE ( t0 < ≤ 100i ) in Example 1.
+
+00.020.040.060.080.1
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7 x 10
+-4
+
+h
+
+er
+ro
+
+r
+
+computed error
+expected error e=c*h2
+
+Fig. 4. Computed and expected error e e h= ( ); c e h= (1)/ (1) in Example 1.
+
+J.T. Katsikadelis Engineering Analysis with Boundary Elements 73 (2016) 181–190
+
+184
+
+
+
+with initial conditions u u= 1, = 01 2 is solved. The matrices C K, are
+nonsymmetrical and non-positive-definite, eig C( ) = {− 0.2665 0.6770}
+eig K( ) = {− 1.1311 − 0.3016}. However, the nonsymmetrical matrix
+K C Kˆ = −1 has positive eigenvalues, eig K( ˆ ) = {3.2245 0.6973}.
+Therefore, the stability criterion is satisfied.
+
+Eq. (51) for
+
+t t t
+t t
+
+p = exp(−0.1 ) − 0.080543 sin + 1.07556 cos0.42495 sin + 0.48384 cos
+⎧⎨⎩
+
+⎫⎬⎭ (52)
+
+admits an exact solution
+
+t t
+t
+
+u = exp(−0.1 ) sin2 cosex
+⎧⎨⎩
+
+⎫⎬⎭ (53)
+The computed solution for T = 10 and h = 0.01 is shown in Fig. 9 as
+
+compared with the exact one. Moreover, Fig. 10 shows the error
+u u− ex.
+
+Example 4. Large linear systems of equations.
+In this example the heat conduction equation which describes the
+
+10 12 14 16 18 20
+-1
+
+-0.8
+
+-0.6
+
+-0.4
+
+-0.2
+
+0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1
+
+t
+
+u(
+t)
+
+u computed
+uex
+
+10 12 14 16 18 20
+-3
+
+-2
+
+-1
+
+0
+
+1
+
+2
+
+3
+x 10 -5
+
+t
+
+u-
+u e
+
+x
+
+4.999 4.9992 4.9994 4.9996 4.9998 5
+x 10 4
+
+-1
+
+-0.8
+
+-0.6
+
+-0.4
+
+-0.2
+
+0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1
+
+t
+
+u(
+t)
+
+u computed
+uex
+
+4.999 4.9992 4.9994 4.9996 4.9998 5
+x 10 4
+
+-3
+
+-2
+
+-1
+
+0
+
+1
+
+2
+
+3
+x 10-5
+
+t
+
+u-
+u e
+
+x
+
+Fig. 5. Solution for long duration ( t0 ≤ ≤ 50000) in Example 1.
+
+0 2000 4000 6000 8000 10000
+-3
+
+-2
+
+-1
+
+0
+
+1
+
+2
+
+3
+x 10-12
+
+t
+
+uT*c*du/dt+u T*k*u-u T*p(t)
+
+Fig. 6. Variation of the “work” for long duration procedures in Example 1.
+
+0 2 4 6 8 10
+-1
+
+-0.5
+
+0
+
+0.5
+
+1
+
+t
+
+u1
+u2
+u1ex
+u2exu2
+
+u1
+
+Fig. 7. Solution u uu = { }T1 2 in Example 2.
+
+J.T. Katsikadelis Engineering Analysis with Boundary Elements 73 (2016) 181–190
+
+185
+
+
+
+transient temperature distribution u x y t( , , ) in a two-dimensional
+homogeneous orthotropic body occupying the rectangular domain
+Ω x a y b: {0 ≤ ≤ , 0 ≤ ≤ } is studied. The temperature distribution is
+governed by the following initial value problem
+
+ρcu k u k u Ω= , + , inx xx y yy (54)
+
+u y t u x t u a y t u x b t Γ(0, , ) = ( , 0, ) = ( , , ) = ( , , ) = 0 on (55a)
+
+and
+
+u x y u Ω( , , 0) = , in0 (55b)
+
+Eq. (54) admits an analytic solution [6]
+
+∑∑u x y t A nπx
+a
+
+jπy
+b
+
+k n π
+a
+
+k j π
+b
+
+t( , , ) = sin sin exp − +ex
+n j
+
+n
+x y
+
+=1
+
+∞
+
+=1
+
+∞ 2 2
+
+2
+
+2 2
+
+2
+
+⎡
+⎣
+⎢⎢
+
+⎛
+⎝⎜
+
+⎞
+⎠⎟
+⎤
+⎦
+⎥⎥
+(56a)
+
+where
+
+A u
+njπ
+
+= 4 [(−1) − 1][(−1) − 1]n n j02 (56b)
+
+The adopted numerical values are: a b= = 3, k k= = 1.25x y , c = 1,
+ρ = 1, and u = 300 .
+
+The solution was computed using the AEM BEM [7] with N = 200
+constant boundary elements, L = 121 domain nodal points distributed
+uniformly, and shape parameter of the multiquadrics c = 0.2. This
+solution method produces, semi-discrete equations of the form (1) with
+nonsymmetrical and non-positive definite matrices C K, with dimen-
+sions 121 × 121, whereas the matrix C K−1 satisfies the stability criter-
+ion.
+
+Fig. 11 shows the time history of the temperature at point (1.5,1.5)
+as compared with the exact solution, while Fig. 12 shows the relative
+error u t u t u t[ (1.5, 1.5; ) − (1.5, 1.5; )]/ (1.5, 1.5; )ex ex with Δt = 0.005.
+
+3. Linear equation with variable coefficients
+
+So far we have developed the method for the solution of Eq. (1) with
+constant coefficients. Obviously, if the coefficients c and k in Eq.(3) are
+functions of the independent variable t , i.e., c t k t( ), ( ), the previously
+described solution procedure remains the same except that the
+elements c k, in the first row of the coefficient matrix in the left hand
+side of Eq. (14) depend on time. Therefore, this coefficient matrix in the
+respective solution algorithm must be reevaluated in each step. In the
+following, the efficiency of the method is demonstrated by solving an
+equation with variable coefficients.
+
+Example 5. Variable coefficients.
+We consider the initial value problem
+
+t u t u p t u(5 + ) ̇ + (1 + ) = ( ), = 12 0 (57)
+
+Eq. (57) for p t t t t t t t( ) = [(0.5 − 0.1 + )cos − (5 + )sin ]exp(−0.1 )2
+admits an exact solution u t e t( ) = cosex t−0.1 . The computed solution
+for T = 30 and h = 0.01 is shown in Fig. 13 as compared with the exact
+one.
+
+0 2 4 6 8 10
+-4
+
+-3
+
+-2
+
+-1
+
+0
+
+1
+
+2
+
+3
+
+4 x 10
+-4
+
+t
+
+u1-u1ex
+u2-u2ex
+
+Fig. 8. Error u u− ex in Example 2.
+
+0 2 4 6 8 10
+-1.5
+
+-1
+
+-0.5
+
+0
+
+0.5
+
+1
+
+1.5
+
+2
+
+t
+
+u1
+u2
+u1ex
+u2ex
+
+u2
+
+u1
+
+Fig. 9. Solution u uu = { }T1 2 in Example 3.
+
+0 2 4 6 8 10
+-1
+
+-0.5
+
+0
+
+0.5
+
+1
+
+1.5 x 10
+-5
+
+t
+
+u1-u1ex
+u2-u2ex
+
+Fig. 10. Error u u− ex in Example 3.
+
+0 0.5 1 1.5 2 2.5
+0
+
+5
+
+10
+
+15
+
+20
+
+25
+
+30
+
+35
+
+t
+
+u(
+1.
+
+5,
+1.
+
+5)
+
+AEM
+Exact
+
+Fig. 11. Time history of the temperature at point (1.5, 1.5) in Example 4.
+
+J.T. Katsikadelis Engineering Analysis with Boundary Elements 73 (2016) 181–190
+
+186
+
+
+
+4. Nonlinear equations
+
+The solution procedure developed previously for the linear equa-
+tions can be straightforwardly extended to nonlinear equations.
+
+The nonlinear initial value problem for multi-degree of freedom
+systems is described as
+
+tCu F u ṗ + ( ) = ( ) (58)
+
+u u(0) = 0 (59)
+
+where C is L L× known coefficient matrix with Cdet( ) ≠ 0; F u( ) is an
+L × 1 vector, whose elements are nonlinear functions of the compo-
+nents of u; tp( ) is the external source vector and u0 a given constant
+vector.
+
+The solution procedure is similar to that for the linear systems.
+Thus, Eq. (58) for t = 0 gives the vector
+
+q C p F u q u= [ − ( )], = ̇0 −1 0 0 0 (60)
+
+Subsequently, we apply Eq. (58) for t t= n
+
+Cq F u p+ ( ) =n n n (61)
+
+Apparently, Eq. (12) is valid in this case, too. Thus we may write
+
+h hu u q q= +
+2
+
++
+2n n n n−1 −1 (62)
+
+Eqs. (61) and (62) are combined and solved for q u,n n with
+n = 1, 2, …. The solution can be obtained using an iterative procedure
+in each step. A simple procedure is to substitute Eq. (62) into Eq. (61).
+This yields a nonlinear equation for qn, which is solved by employing
+any ready-to-use subroutine for nonlinear algebraic equations. In our
+
+examples the functions fsolve of Matlab or the subroutine NEQNF of
+the IMSL have been employed to obtain the numerical results.
+
+Example 6. Nonlinear one-degree of freedom system.
+The numerical scheme is employed to solve the initial value
+
+problem
+
+u u u p t u0.2 ̇ + + = ( ), (0) = 03 (63a,b)
+
+For
+p t e t t t t t
+
+t e t
+
+( ) = [(0.01 sin − 0.2 cos − sin ) − 0.2(0.1 sin − cos )
+
++ sin + (sin ) ]
+
+t
+
+t
+
+−0.1
+
+−0.2 3
+
+, Eq
+
+(63a) admits an exact solution u t e t( ) = sinexact t−0.1 . Fig. 14 shows the
+solution with tΔ = 0.01 as compared with the exact one and Fig. 15
+presents the error u u− ex.
+
+Example 7. Large nonlinear systems of equations.
+In this example we consider the transient heat conduction in a
+
+plane body with temperature dependent conductivity k k βu= (1 + )0 .
+The temperature distribution u tx( , ) at time t , when the temperature on
+the boundary is kept zero, is described by the following initial boundary
+value problem
+
+ηu k u k β u u f t Ωẋ = ∇ + ( , + , ) + ( , ) inx y2 0 2 2 (64a)
+
+u Γ= 0 on (64b)
+
+u x y Ωx( , 0) = [1 − ( + )] in2 2 (65)
+
+where f tx( , ) is the internal heat source, and k0, β are material
+
+0 0.5 1 1.5 2 2.5
+-3
+
+-2.5
+
+-2
+
+-1.5
+
+-1
+
+-0.5
+
+0 x 10
+-3
+
+t
+
+er
+ro
+
+r=
+(u
+
+-u
+ex
+
+)/u
+ex
+
+Fig. 12. Relative error at point (1.5, 1.5) in Example 4.
+
+0 5 10 15 20 25 30
+-1
+
+-0.5
+
+0
+
+0.5
+
+1
+
+t
+
+u computed
+uex
+error=(u-u ex)x10
+
+5
+
+Fig. 13. Solution u and error u u( − ) × 10ex 5 in Example 5.
+
+0 5 10 15 20 25 30
+-1
+
+-0.5
+
+0
+
+0.5
+
+1
+
+t
+
+u computed 
+uex
+
+Fig. 14. Solution u in Example 6.
+
+0 5 10 15 20 25 30
+-3
+
+-2.5
+
+-2
+
+-1.5
+
+-1
+
+-0.5
+
+0
+
+0.5 x 10
+-4
+
+t
+
+Fig. 15. Error u u− ex with Δt = 0.01 in Example 6.
+
+J.T. Katsikadelis Engineering Analysis with Boundary Elements 73 (2016) 181–190
+
+187
+
+
+
+constants.
+The problem is solved for a circular domain Ω of unit circle
+
+with η = 1/2, k = 10 , β = 3, f t x y tx( , ) = (3 + + )exp(−2 ) + 12[1−2 2
+x y t2( + )]exp(−4 )2 2 . The results were obtained using the AEM/BEM
+
+[7] with N = 200 constant boundary elements, L = 129 domain nodal
+points uniformly distributed, and shape parameter of the multiquadrics
+c = 0.1. This solution method produces, a system of 129 semi-discrete
+equations of the form (58), which are solved using the procedure
+described in Section 4. Fig. 16 shows the time variation of the
+computed temperature u and its derivatives u u, , ,x xx at point (0, 0)
+as compared with the exact ones, while Fig. 17 shows the respective
+relative errors for Δt = 0.001.
+
+Example 8. The Rober problem.
+In this example the problem describing the kinetics of an auto-
+
+catalytic reaction given by Robertson [8] is solved. It is governed by the
+nonlinear system of equations
+
+u
+u
+u
+
+k u k u u
+k u k u k u u
+
+k u
+
+̇
+̇
+̇
+
+=
+− +
+− −
+
+1
+
+2
+
+3
+
+1 1 3 2 3
+
+1 1 2 2
+2
+
+3 2 3
+
+2 2
+2
+
+⎧
+⎨⎪
+⎩⎪
+
+⎫
+⎬⎪
+⎭⎪
+
+⎧
+⎨⎪
+
+⎩⎪
+
+⎫
+⎬⎪
+
+⎭⎪ (66)
+with initial conditions u = {1 0 0}T0 . The variables u u u, ,1 2 3 denote
+the concentrations of the three involved chemical species and k k k, ,1 2 3
+are the rate constants.
+
+This problem, known as ROBER problem, is very popular in
+numerical studies and it is often used as a benchmark problem to test
+
+the efficiency of stiff numerical integrators. The numerical values of the
+rate constants used in the test problem are k k= 0, 04, = 3 × 10 ,1 2 7
+k = 103 4 . The large difference among the reaction rate constants is the
+reason for stiffness. It was observed that many integration codes,
+though for small intervals ( t0 ≤ ≤ 40) perform well, fail if t becomes
+very large. In this case, u2 may accidentally become negative, and then
+tends to −∞, causing overflow [9]. A Matlab code has been written
+
+0 0.5 1 1.5 2
+-2.5
+
+-2
+
+-1.5
+
+-1
+
+-0.5
+
+0
+
+0.5
+
+1
+
+t
+
+u    AEM
+u    Exact
+u,x  AEM
+
+u,x  Exact
+
+u,xx AEM
+
+u,xx Exact
+
+u,xx
+
+u
+
+u,x
+
+Fig. 16. Time variation of u and its derivatives u u, , ,x xx at point (0, 0) in Example 7.
+
+0 0.5 1 1.5 2
+-2
+
+-1
+
+0
+
+1
+
+2
+
+3
+
+4 x 10
+-3
+
+t
+
+re
+la
+
+tiv
+e 
+
+er
+ro
+
+r
+
+(u-uex)/uex
+(ux-ux ex)/ux ex
+(uxx-uxx ex)/uxx ex
+
+Fig. 17. Relative error at point (0, 0) with tΔ = 0.001 in Example.
+
+Fig. 18. Behavior of the solution of the Rober problem over the integration interval in
+Example 8.
+
+J.T. Katsikadelis Engineering Analysis with Boundary Elements 73 (2016) 181–190
+
+188
+
+
+
+based on the procedure described in Section 4. The code was run on a
+Toshiba KIRAbook I7 computer. The solution was obtained with
+tΔ = 0.001 in the interval t0 ≤ ≤ 3, and tΔ = 0.1 in the interval
+
+t3 < ≤ 105. Fig. 18 shows the behavior of the solution, which coincides
+with the respective reference figure shown in: http://www.dm.uniba.it/
+~testset/testsetivpsolvers/?page_id=26#ODE.
+
+0 1 2 3 4 5
+0
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+0.9
+
+1
+
+t
+
+u1 on [0,5]
+
+0 1 2 3 4 5
+0
+
+0.02
+
+0.04
+
+0.06
+
+0.08
+
+0.1
+
+0.12
+
+0.14
+
+t
+
+u2 on [0,5]
+
+0 1 2 3 4 5
+0
+
+0.002
+
+0.004
+
+0.006
+
+0.008
+
+0.01
+
+0.012
+
+0.014
+
+0.016
+
+0.018
+
+0.02
+
+t
+
+u3 on [0,5]
+
+0 1 2 3 4 5
+0
+
+0.05
+
+0.1
+
+0.15
+
+0.2
+
+0.25
+
+0.3
+
+0.35
+
+0.4
+
+0.45
+
+0.5
+
+t
+
+u4 on [0,5]
+
+0 100 200 300 400
+0
+
+0.02
+
+0.04
+
+0.06
+
+0.08
+
+0.1
+
+0.12
+
+0.14
+
+0.16
+
+0.18
+
+t
+
+u5 on [0,400]
+
+0 100 200 300 400
+0
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+0.6
+
+0.7
+
+0.8
+
+t
+
+u6 on [0,400]
+
+0 1 2 3 4 5
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6x 10
+-3
+
+t
+
+u7 on [0,5]
+
+0 1 2 3 4 5
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6x 10
+-3
+
+t
+
+u8 on [0,5]
+
+Fig. 19. Behavior of the solution of the HIRES problem over the integration interval in Example 9.
+
+J.T. Katsikadelis Engineering Analysis with Boundary Elements 73 (2016) 181–190
+
+189
+
+
+
+
+
+Example 9. The HIRES problem..
+This initial value problem is another stiff system of 8 non-linear
+
+ordinary differential equations. It was proposed by Schäfer in 1975
+[10]. It refers to ‘High Irradiance RESponse’, which is described by
+this ODE. It is used also as a benchmark problem to test the efficiency
+of stiff numerical integrators (http://www.dm.uniba.it/~testset/
+testsetivpsolvers/?page_id=26#ODE).
+
+The problem is described by the set of equations.
+
+u
+u
+u
+u
+u
+u
+u
+u
+
+u u u
+u u
+
+u u u
+u u u
+u u u
+
+u u u u u u
+u u u
+u u u
+
+̇
+̇
+̇
+̇
+̇
+̇
+̇
+̇
+
+=
+
+− 1.71 + 0.43 + 8.32 + 0.0007
+1.71 − 8.75
+
+− 10.03 + 0.43 + 0.035
+8.32 + 1.71 − 1.12
+
+− 1.745 + 0.43 + 0.43
+− 280 + 0.69 + 1.71 − 0.43 + 0.69
+
+280 − 1.81
+− 280 + 1.81
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+1 2 3
+
+1 2
+
+3 4 5
+
+2 3 4
+
+5 6 7
+
+6 8 4 5 6 7
+
+6 8 7
+
+6 8 7
+
+⎧
+
+⎨
+
+⎪⎪⎪⎪
+
+⎩
+
+⎪⎪⎪⎪
+
+⎫
+
+⎬
+
+⎪⎪⎪⎪
+
+⎭
+
+⎪⎪⎪⎪
+
+⎧
+
+⎨
+
+⎪⎪⎪⎪
+
+⎩
+
+⎪⎪⎪⎪
+
+⎫
+
+⎬
+
+⎪⎪⎪⎪
+
+⎭
+
+⎪⎪⎪⎪
+(67)
+
+with initial conditions u = {1 0 0 0 0 0 0 0.0057}T0 . The solution
+obtained with Δt = 0.01 is shown in Fig. 19. It coincides with the
+respective reference figure shown in: http://www.dm.uniba.it/
+~testset/testsetivpsolvers/?page_id=26#ODE..
+
+5. Conclusions
+
+A direct time integration method has been developed for the
+numerical solution of first order linear and nonlinear parabolic
+differential equations. The developed numerical scheme is applied to
+the solution of the semi-discrete equations arising in diffusion pro-
+blems after spatial discretization using modern computational meth-
+ods. Contrary to the widely used methods, the stability of the scheme
+does not demand symmetrical and positive definite coefficient matrices
+C K, . Thus, it can solve equations with nonsymmetrical and non-
+positive definite matrices provided that the eigenvalues of the matrix
+C K−1 are nonnegative or have nonnegative real part for the complex
+
+eigenvalues. This is an important advantage, since the scheme can
+solve semi-discrete diffusion equations resulting from methods that do
+not produce symmetrical matrices, e.g. the boundary element method.
+It applies also to equations with time dependent coefficient matrices,
+i.e. variable coefficients. The method is simple to implement. It is self-
+starting, unconditionally stable, second order accurate and does not
+exhibit numerical damping. It performs well when long time durations
+are considered. It can be used as a practical method for integration of
+stiff diffusion equations in cases where widely used time integration
+procedures fail. Besides, the present paper highlights the capability of
+the AEM to solve differential equations of any order. The efficiency and
+accuracy of the method is validated through well corroborated exam-
+ples and benchmark problems.
+
+References
+
+[1] Hughes TJR. The finite element method. Englewood Cliffs, NJ, USA: Prentice Hall
+Inc; 1987.
+
+[2] Reddy JN. An introduction to nonlinear finite element analysis. New York: Oxford
+University Press Inc.; 2004.
+
+[3] Katsikadelis JT. The boundary element method for plate analysis. Elsevier, U.K:
+Academic Press; 2014.
+
+[4] Katsikadelis JT. A new direct time integration method for the equations of motion in
+structural dynamics. ZAMM Z Angew Math Mech 2014;94(9):757–74. http://
+dx.doi.org/10.1002/zamm.20120024.
+
+[5] Bierens HJ. The Inverse of a Partitioned Matrix. 2014. 〈http://grizzly.la.psu.edu.
+~hbierens〉.
+
+[6] Bruch JC, jr., Zyvoloski G. Transient two-dimensional heat conduction problems
+solved by the finite element method. Int J Numer Methods Eng 1974;8:481–94.
+
+[7] Katsikadelis JT. The boundary element method for engineers and scientists. Theory
+and applications, 2nd ed. Elsevier, U.K: Academic Press; 2016.
+
+[8] Robertson HH. The solution of a set of reaction rate equations. In: Walsh J, editor.
+Numerical Analysis, An Introduction. London: Academic Press; 1966. p. 178–82.
+
+[9] Hairer E, Wanner G. Solving ordinary differential equations II: stiff and differential-
+algebraic problems, second revised edition. Berlin Heidelberg GmbH: Springer-
+Verlag; 1996.
+
+[10] Schäfer E. A new approach to explain the “high irradiance responses” of photo-
+morphogenesis on the basis of phytochrome. J Math Biol 1975;2:41–56.
+
+J.T. Katsikadelis Engineering Analysis with Boundary Elements 73 (2016) 181–190
+
+190
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	A new direct time integration method for the semi-discrete parabolic equations
+	Introduction
+	The linear system
+	The AEM solution
+	Solution procedure for constant fictitious source q(t)
+	Stability of the numerical scheme
+	Error analysis and convergence
+	Numerical examples
+
+	Linear equation with variable coefficients
+	Nonlinear equations
+	Conclusions
+	References
+
+
+
+

@@ -1,0 +1,974 @@
+
+Journal of Computational and Applied Mathematics 313 (2017) 284–293
+
+Contents lists available at ScienceDirect
+
+Journal of Computational and Applied
+Mathematics
+
+journal homepage: www.elsevier.com/locate/cam
+
+Convergence analysis of general spectral methods
+M. Mohammadi a, R. Schaback b,∗
+a Faculty of Mathematical Sciences and Computer, Kharazmi University, 50 Taleghani Avenue, 1561836314 Tehran, Iran
+b Institut für Numerische und Angewandte Mathematik, Universität Göttingen, Lotzestr. 16-18, D-37083 Göttingen, Germany
+
+a r t i c l e i n f o
+
+Article history:
+Received 13 February 2015
+Received in revised form 27 April 2016
+
+MSC:
+65M12
+65M70
+65N12
+65N35
+65M15
+65M22
+65J10
+65J20
+35D30
+35D35
+35B65
+41A25
+41A63
+
+Keywords:
+Stability
+Partial differential equations
+Tau methods
+Pseudospectral methods
+Collocation
+Discretization
+
+a b s t r a c t
+
+If a spectral numerical method for solving ordinary or partial differential equations is
+written as a biinfinite linear system b = Zawith amap Z : ℓ2 → ℓ2 that has a continuous
+inverse, this paper shows that one can discretize the biinfinite system in such away that the
+resulting finite linear system b̃ = Z̃ ã is uniquely solvable and is unconditionally stable, i.e.
+the stability can bemade to depend on Z only, not on the discretization. Convergence rates
+of finite approximations b̃ of b then carry over to convergence rates of finite approximations
+ã of a. Spectral convergence is a special case. Some examples are added for illustration.
+
+© 2016 Elsevier B.V. All rights reserved.
+
+1. Introduction
+
+In previous papers [1,2], a convergence theory for a fairly general class of linear PDE solving techniques was presented,
+including unsymmetric kernel-based collocation and meshless Petrov–Galerkin methods. Its basic ingredients were as
+follows:
+
+1. a well-posed and solvable PDE problem,
+2. a trial space that approximates the solution well,
+3. a test discretization that is fine enough to guarantee a stability inequality, and finally
+4. an optimization routine serving as a solver.
+
+∗ Corresponding author.
+E-mail addresses:m.mohammadi@khu.ac.ir (M. Mohammadi), schaback@math.uni-goettingen.de (R. Schaback).
+
+http://dx.doi.org/10.1016/j.cam.2016.09.031
+0377-0427/© 2016 Elsevier B.V. All rights reserved.
+
+
+
+
+
+
+
+
+
+
+M. Mohammadi, R. Schaback / Journal of Computational and Applied Mathematics 313 (2017) 284–293 285
+
+The final step is necessary because the arising linear systems are not necessarily square and not necessarily solvable, though
+they have a good approximate solution. This discretization theory was extended to nonlinear problems in a recent paper [3],
+while the extension to spectral methods is the goal of this paper.
+
+To this end, linear PDE problems and the standard versions of spectral methods (Galerkin, Tau, pseudospectral and
+Petrov–Galerkin) are presented in Sections 2 and 3, with a common framework described in Section 3.6 that allows a general
+convergence theory in Section 4 that starts from biinfinite linear systems and considers solvability of discrete subsystems
+along the steps described above. Among other things, it is proven that well-posed biinfinite linear systems have stable and
+consistent discretizations, if the latter are properly chosen. The theory is applied to several numerical examples in Section 6.
+
+2. Linear PDE problems
+
+We consider a standard setup for time-independent problems as
+
+Lu = f in Ω,
+Bu = g in Γ := ∂Ω (1)
+
+with a linear differential operator L and a linear boundary operator B. They map between spaces as
+
+L : U → F
+B : U → G (2)
+
+where U and F are Hilbert spaces of functions on Ω and G is a Hilbert trace space.
+The problem (1) is assumed to bewell-posed in the sense that the operators L and B are bounded maps in (2) and there is
+
+a constant C such that
+
+∥u∥U ≤ C(∥Lu∥F + ∥Bu∥G) for all u ∈ U . (3)
+
+For elliptic problems, this usually holds in scales of Sobolev spaces depending on regularity assumptions, but we assume no
+details here.
+
+3. Spectral methods and others
+
+For all variations of spectral and pseudospectral methods [4–8], the starting point is to write solutions u of (1) as a series
+expansion
+
+u =
+
+j∈N
+
+αjuj (4)
+
+in terms of trial functions uj that in special spectral methods is assumed to be a complete orthonormal system in U . Then,
+
+∥u∥2U =
+
+j∈N
+
+|αj|
+2 < ∞,
+
+and an implicit assumption behind all of this is that the |αj| decay quickly for increasing j.
+If such methods weremeshless, they should express their trial functions ‘‘entirely in terms of values at nodes’’ [9].
+Also, the orthogonality of the trial functions is not essential at this point. One can think of finite elements as trial functions
+
+as well, but then there is no decay of weights. But since at various places we compare expansions, linear independence will
+be necessary. An extension to frames is open.
+
+Another common feature of spectralmethods and others is that they generate conditions on theαj by testing the residuals
+Lu − f and Bu − g for solution candidates u. This can be carried out in various ways that we describe now.
+
+3.1. Galerkin methods
+
+Here, the boundary conditions should be homogeneous, and the trial functions should automatically satisfy them. Then,
+one can drop B completely and change the definition of the spaces U and F accordingly to care for boundary conditions.
+
+Galerkin methods assume U ⊂ B and then they test the residual Lu − f against the uj themselves, i.e.
+
+(Lu − f , uk)F = 0,
+(Lu, uk)F = (f , uk)F ,
+
+j∈N
+
+αj (Luj, uk)F  
+=:Ljk
+
+= (f , uk)F  
+φk
+
+,
+
+leading to a biinfinite linear system
+j∈N
+
+αjLjk = φk, k ∈ N (5)
+
+that will appear also in other methods to follow below.
+
+
+
+286 M. Mohammadi, R. Schaback / Journal of Computational and Applied Mathematics 313 (2017) 284–293
+
+Under coercivity assumptions on L, one can prove that finite subsystems
+
+N
+j=1
+
+αjLjk = φk, 1 ≤ k ≤ N
+
+are uniquely solvable.
+
+3.2. Tau methods
+
+Here, the boundary conditions can be general, and the trial functions do not automatically satisfy them. One can take an
+orthonormal system of functions gk in G and expand the boundary data g as
+
+g =
+
+k∈N
+
+βkgk.
+
+Applying the boundary operator implies
+
+Bu = g,
+j∈N
+
+αjBuj =
+
+k∈N
+
+βkgk
+
+and it is reasonable to expand all Buj into the gk as well, i.e.
+
+Buj =
+
+k∈N
+
+Bjkgk
+
+to get 
+j∈N
+
+αjBjk = βk, k ∈ N. (6)
+
+This gives two simultaneous linear systems
+j∈N
+
+αjLjk = φk,
+j∈N
+
+αjBjk = βk
+(7)
+
+that have to be discretized properly. Unique solvability of finite subsystems now is a nontrivial problem, but if existence of
+a true solution of the PDE problem is assumed, the full biinfinite system is uniquely solvable.
+
+3.3. Pseudospectral methods
+
+Here, the residual Lu − f is evaluated at points xk ∈ Ω to arrive at conditions
+
+(Lu)(xk) = f (xk),
+j∈N
+
+αj(Luj)(xk) = f (xk),
+
+which results in a system (5) again, but with different coefficients now being defined as
+
+Ljk = (Luj)(xk), (8)
+φk = f (xk). (9)
+
+This is a collocation technique, and one can also collocate the boundary conditions by evaluating at points yk on the boundary.
+Then,
+
+(Bu)(yk) = g(xk),
+j∈N
+
+αj(Buj)(yk) = g(xk),
+
+which results in a system (6) again, but with different coefficients now being defined as
+
+Bjk = (Buj)(yk), (10)
+
+βk = g(xk). (11)
+
+
+
+M. Mohammadi, R. Schaback / Journal of Computational and Applied Mathematics 313 (2017) 284–293 287
+
+3.4. Petrov–Galerkin methods
+
+Like in the tau method, one can use an orthonormal basis of functions fk in F to expand
+
+f =
+
+k∈N
+
+φkfk
+
+and to expand
+
+Luj =
+
+k∈N
+
+Lj,kfk, j ∈ N.
+
+This gives another case of the system (5) again, but with different coefficients defined above by expansion.
+
+3.5. General methods
+
+All of these techniques can be subsumed into the general strategy of hitting Lu = f with functionals λk ∈ F∗ and Bu = g
+with functionals µk ∈ G∗. This yields the combined system (7) again, but with
+
+φk := λk(f ),
+βk := µk(g),
+Ljk := λk(Luj),
+Bjk := µk(Luj).
+
+These functionals can be chosen to be orthonormal bases in the dual, or just be total in the sense that the intersection of
+their kernels is zero.
+
+Note that all variations of theMeshless Local Petrov Galerkinmethod of S.N. Atluri [10] and his collaborators are subsumed
+here, if trial functions and test functionals are adequately chosen.
+
+Similarly, extended finite element methods fit into here, and various mixtures of numerical techniques.
+But note that the specific choice of functionals will have a strong influence on the properties of the biinfinite system (7),
+
+and we shall have to care for that.
+
+3.6. Summary
+
+We now assume a general biinfinite coupled system (7) to be given, and we assume that it is a well-posed rewriting of
+(1) in terms of certain coefficients. We can mix both parts into one new biinfinite system
+
+j∈N
+
+αjZjk = βk, k ∈ N (12)
+
+that models (1) and its well-posedness. We write this biinfinite system as
+
+Za = b
+
+and assume that the well-posedness of (1) is built into the system by
+
+∥a∥2 ≤ C∥Za∥2 (13)
+
+such that Z−1 is a bounded linear map ℓ2 → ℓ2.
+In most of what follows, we shall not need that Z itself is bounded as a map ℓ2 → ℓ2. If we take the standard basis in
+
+both instances of ℓ2, the numbers Zjk for varying k are the expansion coefficients of Zej, thus square summable over k. But
+for letting Z be continuous as a map ℓ2 → ℓ2, we would need that all elements Zjk are square summable.
+
+At this point, it is clear that our assumptions on Z are satisfied in case of Galerkin and Tau methods, if the discretizations
+there aremade via orthonormal systems. For pseudospectral techniques, this also follows ifwe can rewrite the discretization
+as one in an orthonormal system. But this is possible if we take the uj orthonormal in U and the fk ∈ F and the gk ∈ G
+to be Newton bases [11] for a positive definite kernel that generates F and G. The functionals λk and µk should then be
+the unique orthonormal data functionals associated to the Newton bases. In that case, they exactly generate the right
+expansion coefficients. Then, the pseudospectral method is just a Tau method, implemented for special bases and special
+functionals.
+
+However, Petrov–Galerkin methods without orthonormal expansions will not directly fit in here, e.g. the variations of
+MLPG. It will need additional arguments to show that certain biinfinite systems arising from meshless local discretizations
+have an associated biinfinite matrix that is a map on ℓ2 to ℓ2 with a continuous inverse.
+
+
+
+288 M. Mohammadi, R. Schaback / Journal of Computational and Applied Mathematics 313 (2017) 284–293
+
+4. Discretization in theory
+
+We assume (12) in the form Za = b to be given, and we want to derive theoretical conditions under which a discretized
+system 
+
+j∈M⊂N
+
+αjZjk = βk, k ∈ N ⊂ N (14)
+
+is solvable for two finite subsets N andM of N, at least in the least-squares sense. We use tildes for truncated matrices and
+vectors throughout, and thus rewrite (14) in matrix form
+
+Z̃ ã = b̃, b̃ ∈ RN , ã ∈ RM , Z̃ ∈ RN×M
+
+with the standard notation of AB for the set of maps B → A.
+
+Lemma 1. Assume that a biinfinite system (12) is well-posed in the sense of (13) with a fixed constant C. Then, for each set
+M ⊂ N there is a set N ⊂ N such that the discrete system (14) is well-posed as well, with
+
+∥α̃∥2 ≤ 2C∥Z̃ ã∥2 for all α̃ ∈ RM . (15)
+
+Furthermore, the truncated matrix Z̃ has full rank and all singular values are bounded below by 1/(4C2).
+
+Proof. For each j ∈ M the numbers Zjk for varying k are the square-summable expansion coefficients of Zej. Thus, we can
+pick a large set N ⊂ N depending onM such that
+
+C2
+
+j∈M
+
+
+k∉N
+
+Z2jk < 3/4. (16)
+
+Now we take an arbitrary truncated vector ã and proceed via
+
+∥ã∥22 ≤ C
+2
+∥Zã∥22
+
+= C2
+
+k∈N
+
+
+j∈M
+
+α̃jZjk
+
+2
+
+= C2
+
+k∈N
+
+
+j∈M
+
+α̃jZjk
+
+2
++ C2
+
+
+k∉N
+
+
+j∈M
+
+α̃jZjk
+
+2
+≤ C2∥Z̃ ã∥22 + C
+
+2
+∥ã∥22
+
+
+j∈M
+
+
+k∉N
+
+Z2jk
+
+to prove (15). The matrix Z̃ clearly has full rank, and its singular values are bounded below by 1/(4C2) due to
+
+∥α̃∥22 ≤ 4C
+2α̃T Z̃T Z̃ α̃ for all α̃ ∈ RM .
+
+Lemma 2. Assume that the hypotheses of Lemma 1 hold and the system (12) is solvable by some a∗. Then, the discrete
+system (14) has a unique least-squares solution ã with the error bound
+
+∥ã − ã∗∥2 ≤ 4C∥Za∗ − Zã∗∥2
+
+where ã∗ is the truncation of a∗. If ϵ is defined via the choice of M by
+
+ϵ2 :=
+
+j∉M
+
+|α∗j |
+2
+
+= ∥a∗ − ã∗∥22 = ∥a
+∗
+∥
+2
+2 − ∥ã
+
+∗
+∥
+2
+2,
+
+then
+
+∥ã − a∗∥2 ≤ 4C∥Za∗ − Zã∗∥2 + ϵ
+
+holds, where the extension of ã by zeros is denoted by ã again.
+
+Proof. By (15) and least-squares minimization, we get
+
+∥ã − ã∗∥2 ≤ 2C∥Z̃(ã − ã∗)∥2
+≤ 2C∥Z̃ ã − b̃∥2 + 2C∥b̃ − Z̃ ã∗∥2
+≤ 4C∥b̃ − Z̃ ã∗∥2
+≤ 4C∥b − Zã∗∥2
+= 4C∥Za∗ − Zã∗∥2,
+
+
+
+M. Mohammadi, R. Schaback / Journal of Computational and Applied Mathematics 313 (2017) 284–293 289
+
+and
+
+∥ã − a∗∥2 ≤ ∥ã − ã∗∥2 + ∥ã∗ − a∗∥2
+≤ 4C∥Za∗ − Zã∗∥2 + ϵ
+
+proceeding like in [2]. �
+
+Note that C is still independent of the discretization.
+The quantity ∥Za∗ − Zã∗∥2 depends on how well Za∗ is approximated the Z-image Zã∗ of the truncation of a∗. In many
+
+cases, this has a very good error bound provided by approximation theory, even if Z models derivatives.
+In applications with specific expansions into orthonormal systems, choosing a large setM results in an arbitrarily small
+
+ϵ, using known results on the rates of approximation by such systems.
+If, in addition, Z is continuous, we get
+
+∥ã − a∗∥2 ≤ (1 + 4C∥Z∥)ϵ.
+
+5. Discretization in practice
+
+If confronted with a PDE problem like in Section 2, users should postpone choosing a numerical method of Section 3.
+Instead, they should first select basis functions uj ∈ U with indices forming a set M such that the true solution u∗ can be
+expected to have a good approximation by these functions. This will later become a selection of columns of Z , but at this
+point users might not have chosen a method yet, and there is no matrix Z yet. Independent of which method is chosen, the
+discretized linear systemwill then be inexactly solvable with small residuals, and the ϵ of the theory in the previous section,
+though not known exactly, can be expected to be small.
+
+Then, a method of Section 3 should be chosen, and this choice may be guided by various reasons, in particular
+computational efficiency. Having chosen a method, one has to choose the equations to set up, i.e. one has to choose the
+set N . The condition (16) is not available in practice, but users can collect more and more test equations until they find
+numerically that an inequality like (15) is valid, i.e. the smallest singular value σ 2N of Z̃ is positive and acts within the theory
+like 1/(4C2). The error bound of the previous section then holds with
+
+∥ã − ã∗∥2 ≤
+2∥Z∥
+|σN |
+
+ϵ
+
+though ∥Z∥ and ϵ are not explicitly known.
+At least, the user can safely calculate the least-squares solution ã of the discretized systemand then form the approximate
+
+solution ũ with these expansion coefficients. As a replacement for a strict error bound on u∗ − ũ, users can then evaluate
+residuals Lũ − f and Bũ − g at fine point sets and thus conclude to have an exact solution ũ of a PDE problem with small
+(and roughly known) perturbations in f and g . If the problem is known to be well-posed, users can be satisfied at that point,
+though they do not know the constant C controlling the well-posedness. The previous section suggests to look at 1/(2|σN |)
+to get a rough estimate of C .
+
+6. Examples
+
+One of the simplest cases are elliptic problems of the type Lu = f with zero boundary conditions moved into the trial
+space U , where the operator L has orthonormal eigenfunctions uj in U with eigenvalues λj > 0 which typically satisfy
+λj → ∞ for j → ∞. The problem
+
+−u′′ = f ∈ [0, 1], u(0) = u(1) = 0
+
+is of this type with uj(x) = sin(π jx).
+The trial function is expanded into (4) and the right-hand side similarly, with coefficients fk. Then, the uniquely solvable
+
+infinite linear system is
+
+αjλj = fj for all j
+
+and practical solutions will use a finite subsystem with indices j ∈ M .
+To account for minimal possible regularity, the range space F should be an L2 space, and then the norm on U should be
+
+defined as
+
+∥u∥U := ∥Lu∥F . (17)
+
+This implies well-posedness with CW = 1.
+A Galerkin method as in Section 3.1 will then use an expansion of f into the orthonormal functions uk with coefficients
+
+φk = (f , uk)F and take a subsetM of these to define αk =
+φk
+λk
+
+, k ∈ M . If we define
+
+ũM :=
+
+k∈M
+
+αkuk, f̃M :=
+
+k∈M
+
+φkuk,
+
+
+
+290 M. Mohammadi, R. Schaback / Journal of Computational and Applied Mathematics 313 (2017) 284–293
+
+we have LũM = f̃M and the error estimate
+
+∥u∗ − ũM∥2U = ∥f − f̃M∥
+2
+F =
+
+
+j∉M
+
+φ2j . (18)
+
+Thus, the convergence speed for increasing M is depending on the expansion of f , and it is a good idea to use nonlinear
+approximation in the sense of choosing indices jwith large φj.
+
+The biinfinite Z matrix of Section 4 will be diagonal with the λj in the diagonal. Any superset N ofM will work, because
+then the double sums in (16) are always zero. The factor 2 in (15) is not necessary. The technique there, if carried out literally,
+would lead to
+
+∥u∗ − ũ∥2U ≤ 4∥f − f̃ ∥
+2
+F .
+
+For a numerical example, consider the operator L as Lu = −u′′ with L2[0, 1]-orthonormal eigenfunctions uk(x) =
+1
+
+√
+2
+sin(πkx), x ∈ [0, 1] satisfying homogeneous boundary conditions, and with eigenvalues λk = k2π2, k ∈ N. Then,
+
+take
+
+f (x) = exp(cos(πx)) · sin(sin(πx)) =
+∞
+k=1
+
+1
+k!
+
+sin(πkx), x ∈ [0, 1]
+
+such that φk = (f , uk)F =
+√
+2/k! with exponential decay. The error in (18) for a trial function ũM that takes the first M
+
+coefficients will then be
+
+∥u∗ − ũM∥2U =
+
+k>M
+
+φ2k = 2
+
+k>M
+
+1
+
+k!2
+
+and decay exponentially like 1M! .
+The functions
+
+f2m(x) :=
+∞
+k=0
+
+(2k + 1)−(2m+1) sin(π(2k + 1)x)
+
+are polynomials of degree 2m ≥ 2 on [0, 1] because f ′′m(x) = −π
+2fm−1 and f1(x) = x(1 − x) up to a factor. If we use these
+
+functions as inputs for a calculation based on the firstM coefficients, the resulting error satisfies
+
+∥u∗ − ũM∥2U =
+
+
+2k+1>M
+
+φ2k = 2
+
+
+2k+1>M
+
+(2k + 1)−2(2m+1)
+
+and thus is of order at leastO(M−2m). Since the above expressions provide the squared error exactly,we refrain fromshowing
+tables of numbers.
+
+To demonstrate a Tau method, we take Ω = [−δ, δ] and pose the problem
+
+−u′′ = f ∈ Ω, u(+δ) = u+, u(−δ) = u−
+
+there.We assume analyticity and use expansions into power series that we assume to be absolutely convergent in [−1, +1].
+Starting from
+
+f (x) =
+∞
+k=0
+
+bk+2xk,
+
+we see that the expansion coefficients of
+
+u(x) =
+∞
+j=0
+
+ajxj
+
+satisfy the biinfinite system
+
+ak+2(k + 1)(k + 2) = bk+2, for all k ≥ 0,
+∞
+j=0
+
+ajδj = u+,
+
+∞
+j=0
+
+aj(−δ)j = u−
+
+which is of the form (12) for biinfinite vectors a and b.
+
+
+
+M. Mohammadi, R. Schaback / Journal of Computational and Applied Mathematics 313 (2017) 284–293 291
+
+The simplest numerical method would be to solve
+
+ak+2 = bk+2/((k + 1)(k + 2)), 0 ≤ k ≤ M − 2,
+
+u+ =
+M
+j=0
+
+ajδj,
+
+u− =
+M
+j=0
+
+aj(−δ)j,
+
+using the two final equations to solve for a0 and a1.
+Of course, one can base a simple error analysis on this toy case, but wewant to show that it fits into this paper by proving
+
+a well-posedness inequality (13). Clearly.
+∞
+k=0
+
+a2k+2 ≤
+∞
+k=0
+
+b2k+2 ≤ ∥b∥
+2
+2
+
+and due to
+
+a1 =
+b1 − b0
+
+2
++
+
+
+j≥2,j odd
+
+ajδj
+
+a0 =
+b1 + b0
+
+2
++
+
+
+j≥2,j even
+
+ajδj
+
+∞
+j=2
+
+|aj|δj ≤ (1 − δ2)−1/2
+
+
+∞
+k=0
+
+a2k+2
+
+1/2
+≤ (1 − δ2)−1/2
+
+
+∞
+k=0
+
+b2k+2
+
+1/2
+we get
+
+|a1| ≤
+1
+2
+|b0| +
+
+1
+2
+|b1| + (1 − δ2)−1/2
+
+
+∞
+k=0
+
+b2k+2
+
+1/2
+
+≤
+
+
+b20 + b
+
+2
+1 + (1 − δ
+
+2)−1/2
+
+
+∞
+k=0
+
+b2k+2
+
+1/2
+≤ (1 − δ2)−1/2∥b∥2
+
+and the same bound for a0. This combines into
+
+∥a∥22 ≤ (1 + 2(1 − δ
+2)−1)∥b∥22
+
+and proves (13).
+If, for some M ≥ 2, we solve for a0, . . . , aM only, we get that the above inequalities also hold for the truncated series
+
+describing the errors. The error in coefficients then has the bound
+j>M
+
+a2j ≤
+
+j>M
+
+b2j ,
+
+i.e. the decay rate of the coefficients bj of f , whatever it is, carries over to the decay rate of the coefficients aj of u.
+The error at x ∈ [−δ, δ] will then be bounded by
+
+∞
+j>M
+
+|aj||x|j ≤ δM+1
+∞
+j>M
+
+|bj|
+
+and this also expresses the solution error in terms of the truncation error of the input function. Spectral convergence of the
+latter implies spectral convergence of the former.
+
+A specific example is f (x) = exp(x) with u+ = u− = 1. Then, bk+2 = 1/k! and ak+2 = k!(k+1)(k+2) for all k ≥ 0, with a0
+and a1 to be solved from a 2 × 2 system. The pointwise error bound when using terms up to bM will then be
+
+∞
+j>M
+
+|aj||x|j ≤ δM+1
+∞
+j>M
+
+1
+(j − 2)!
+
+with spectral convergence.
+For a pseudospectral technique along this line, the simplest possibility is to use collocation in the sense
+
+u′′(xk) = f (xk), 1 ≤ k ≤ N − 1
+
+
+
+292 M. Mohammadi, R. Schaback / Journal of Computational and Applied Mathematics 313 (2017) 284–293
+
+Table 1
+Norm of pseudoinverse of system matrix.
+
+M, N Equidistant Chebyshev
+
+M = N = 5 0.7430e0 0.7535
+M = N = 15 6.4796e0 0.7220
+M = N = 25 1.7266e3 0.7160
+M = N = 35 7.3648e5 0.7134
+
+M = 5, N = 10 0.7260 0.7321
+M = 15, N = 30 0.7134 0.7174
+M = 25, N = 50 0.7151 0.7116
+M = 35, N = 70 0.9289 0.7103
+M = 35, N = 104 0.7091 0.7103
+
+onN−1 ≥ M−1 points−1 ≤ x1 < · · · < xN−1 ≤ 1 togetherwith the two boundary conditions, in order to fix a polynomial
+ũ of degree M via at least M + 1 conditions altogether. Keeping close to the notion of expansions, we can take expansions
+into Legendre polynomials Pj, 0 ≤ M , and then the linear system would be
+
+f (xk) =
+M
+j=0
+
+ajP ′′j (xk), 1 ≤ k ≤ N − 1
+
+u(+1) =
+M
+j=0
+
+ajPj(1),
+
+u(−1) =
+M
+j=0
+
+ajPj(−1).
+
+Table 1 shows that the system for the square case M = N is severely unstable for equidistant points, but stable for points
+distributed like the extrema of the Chebyshev polynomials. Oversampling cures this situation.
+
+If we write everything in terms of Legendre polynomials, the square of the inequality (13) for the discrete system is
+
+M
+j=0
+
+a2j ≤ C
+2
+
+ M
+j=0
+
+ajPj(1)
+
+2
++
+
+
+M
+j=0
+
+ajPj(−1)
+
+2
++
+
+N−1
+k=1
+
+
+M
+j=0
+
+ajP ′′j (xk)
+
+2
+while the infinite system cannot be written down in terms of point evaluations, unless we use the sup norm on the right-
+hand side. This is the approach in [12], but herewe stick to L2 norms.We shall use a standard trick based on norming sets [13]
+to show that for sufficient oversampling we can get the above inequality with a constant that is independent ofM and N .
+
+In short, the above inequality is
+
+∥u∥2L2[−1,+1] ≤ C(M,N)
+
+|u(1)|2 + |u(−1)|2 + ∥u′′∥2ℓ2(XN )
+
+
+for all polynomials of degree at most M , if we use the discrete ℓ2 norm on the set XN = {x1, . . . , xN−1}, and we want to
+show that for eachM we can find an N and a set XN such that C(M,N) ≤ C with a constant C independent ofM and N . By
+standard arguments, we get
+
+∥u∥2L2[−1,+1] ≤ C
+
+|u(1)|2 + |u(−1)|2 + ∥u′′∥2L2[−1,+1]
+
+
+for all functions u ∈ W 22 [−1, +1] via suitable integration by parts. This is close to what we need, and we only have to care
+for inequalities of the form
+
+∥p∥2L2[−1,+1] ≤ C(M,N)∥p∥
+2
+ℓ2(XN )
+
+for all polynomials p of degree up toM − 2 and suitable point sets XN . If XN contains at leastM − 1 different points, such a
+constant C(M,N) always exists, but it depends crucially on M, N and the point distribution. If we have N − 1 equidistant
+points xj = −1 + 2j/N, 1 ≤ j ≤ N − 1 and do not oversample, the constant C(M,M) will grow exponentially withM . To
+see the stabilizing effe

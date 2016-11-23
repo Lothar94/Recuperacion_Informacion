@@ -1,7 +1,10 @@
 ---
-title:
-subtitle:
+title: "Práctica 4"
+subtitle: "Implementación de un Sistema de Recuperación de Información utilizando Lucene"
 author:
+  - Lothar Soto Palma
+  - Daniel López García
+  - Iván Calle Gil
   - José Carlos Entrena Jiménez
 
 toc: true
@@ -18,3 +21,24 @@ header-includes:
   - \usepackage[spanish]{babel}
 ---
 \pagebreak
+
+# Introducción
+
+# Análisis de Requisitos
+
+Hemos considerado los siguientes campos para realizar búsquedas:
+
+* Título
+* Abstract
+* Autores
+* Fechas de publicación y de envío
+* Referencias
+* Universidad
+* Idioma
+* Tamaño del archivo
+* Año
+* Número de palabras
+
+# Diseño de la solución
+
+# Manual de usuario

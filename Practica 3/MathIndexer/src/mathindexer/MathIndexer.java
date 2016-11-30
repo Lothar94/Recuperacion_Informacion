@@ -11,50 +11,55 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.Parser;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.SAXException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.util.Version;
 
 /**
  *
  * @author lot94
  */
 public class MathIndexer {
+   
+    private Directory dir;
+    private Version ver;
+    private Analyzer analizer;
+    private IndexWriterConfig writerConf;
+    private IndexWriter writer;
+    
+    public MathIndexer(String file) throws IOException{
+        Path path = FileSystems.getDefault().getPath("testIndex");
 
+        this.ver = Version.LUCENE_6_2_1;
+        this.dir = FSDirectory.open(path);
+        this.analizer = new StandardAnalyzer();
+        this.writerConf = new IndexWriterConfig(analizer);
+        writerConf.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+        this.writer = new IndexWriter(dir, writerConf);
+    }
+
+    public void indexDocument(){
+        
+    }
+    
+    public void readAndIndex(){
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        Parser parser = new AutoDetectParser();
-        Metadata metadata = new Metadata();
-        BodyContentHandler handler = new BodyContentHandler(-1);
-        InputStream stream = new FileInputStream("../Data/A-new-direct-time-integration-method-for-the-semi-discrete-parabolic-equations_2016_Engineering-Analysis-with-Boundary-Elements.pdf");
-        ParseContext context = new ParseContext();
         
-        try {
-            parser.parse(stream, handler, metadata, context);
-
-        }catch(Exception e){
-            System.out.println("Error en el parser");
-        }
-        
-        stream.close();
-        
-        File f = new File("output3.txt");
-        FileWriter bw = new FileWriter(f);
-        bw.write(handler.toString());
-        
-        bw.close();
-
-        File f2 = new File("metadata.txt");
-        FileWriter bw2 = new FileWriter(f2);
-        bw2.write(metadata.toString());
-        
-        bw2.close();
     }
     
 }

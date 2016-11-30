@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.Scanner;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
@@ -35,10 +36,12 @@ public class MathIndexer {
     private Analyzer analizer;
     private IndexWriterConfig writerConf;
     private IndexWriter writer;
+    private String collectionPath;
     
-    public MathIndexer(String file) throws IOException{
+    public MathIndexer(String collectionPath) throws IOException{
         Path path = FileSystems.getDefault().getPath("testIndex");
-
+        this.collectionPath = collectionPath;
+        
         this.ver = Version.LUCENE_6_2_1;
         this.dir = FSDirectory.open(path);
         this.analizer = new StandardAnalyzer();
@@ -51,15 +54,22 @@ public class MathIndexer {
         
     }
     
-    public void readAndIndex(){
-        
+    public void readAndIndex(String fileName) throws FileNotFoundException{
+        File file = new File(fileName);
+        Scanner inputStream = new Scanner(file);
+        while(inputStream.hasNext()){
+            String data = inputStream.nextLine();
+            System.out.println(data);
+        }
+        inputStream.close();   
     }
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        
+        MathIndexer test = new MathIndexer("../data");
+        test.readAndIndex("../data/Algebra.csv");
     }
     
 }

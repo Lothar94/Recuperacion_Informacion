@@ -60,7 +60,9 @@ public class MathIndexer {
         Scanner inputStream = new Scanner(file);
         while(inputStream.hasNext()){
             String data = inputStream.nextLine();
-            System.out.println(data);
+            String[] parts = data.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); 
+            for(int i = 0; i < parts.length; i++)
+                System.out.println(parts[i]);
         }
         inputStream.close();   
     }
@@ -70,7 +72,7 @@ public class MathIndexer {
      */
     public static void main(String[] args) throws IOException {
         MathIndexer test = new MathIndexer("../Data");
-        test.readAndIndex("../Data/Algebra.csv");
+        test.readAndIndex("../Data/Modified.csv");
     }
     
 }

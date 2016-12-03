@@ -31,18 +31,18 @@ import org.apache.lucene.util.Version;
 public class MathIndexer {
    
     private Directory dir;
-    private Version ver;
-    private Analyzer analizer;
+    private Version version;
+    private Analyzer analyzer;
     private IndexWriterConfig writerConf;
     private IndexWriter writer;
     
     public MathIndexer(String file) throws IOException{
         Path path = FileSystems.getDefault().getPath("testIndex");
 
-        this.ver = Version.LUCENE_6_2_1;
+        this.version = Version.LUCENE_6_2_1;
         this.dir = FSDirectory.open(path);
-        this.analizer = new StandardAnalyzer();
-        this.writerConf = new IndexWriterConfig(analizer);
+        this.analyzer = new StandardAnalyzer();
+        this.writerConf = new IndexWriterConfig(analyzer);
         writerConf.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
         this.writer = new IndexWriter(dir, writerConf);
     }

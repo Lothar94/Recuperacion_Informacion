@@ -24,6 +24,7 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
@@ -34,30 +35,20 @@ import org.apache.lucene.util.Version;
  */
 public class MathIndexer {
    
-    private Directory dir;
     private Version version;
-    private Analyzer analyzer;
-    private IndexWriterConfig writerConf;
-    private IndexWriter writer;
-    private String collectionPath;
     
-    public MathIndexer(String collectionPath) throws IOException{
-        Path path = FileSystems.getDefault().getPath("testIndex");
-
+    public MathIndexer() throws IOException{
         this.version = Version.LUCENE_6_2_1;
-        this.collectionPath = collectionPath;
-        this.dir = FSDirectory.open(path);
-        this.analyzer = new StandardAnalyzer();
-        this.writerConf = new IndexWriterConfig(analyzer);
-        writerConf.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-        this.writer = new IndexWriter(dir, writerConf);
-    }
-
-    public void indexDocument(){
-        
     }
     
-    public void readAndIndex(String fileName) throws FileNotFoundException, IOException{
+    public void readAndIndex(String fileName,String indexPath) throws FileNotFoundException, IOException{
+        Path path = FileSystems.getDefault().getPath(indexPath);
+        Directory dir = FSDirectory.open(path);
+        Analyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig writerConf = new IndexWriterConfig(analyzer);
+        writerConf.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+        IndexWriter writer = new IndexWriter(dir, writerConf);
+        
         File file = new File(fileName);
         Scanner inputStream = new Scanner(file);
         // Saltamos la primera línea. 
@@ -70,7 +61,7 @@ public class MathIndexer {
             String[] parts = data.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); 
             // Creamos nuevo documento vacío
             doc = new Document(); 
-                
+            
             for(int i = 0; i < parts.length; i++){
                 
                 // Eliminamos comillas para aquellos que no se tokenicen. 
@@ -79,10 +70,10 @@ public class MathIndexer {
                 // Switch - case que distingue los campos almacenados en el índice. 
                 switch (i) {
                     case 0: 
-                        doc.add(new StringField("Autor", parts[i], Field.Store.YES)); 
+                        doc.add(new StringField("Autor", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
                     case 1:  
-                        doc.add(new TextField("Título", parts[i], Field.Store.YES)); 
+                        doc.add(new TextField("Titulo", parts[i], Field.Store.YES)); 
                         break;
                     case 2:  
                         // ParseInt no funciona con el string vacío, así que distinguimos casos. 
@@ -95,7 +86,7 @@ public class MathIndexer {
                         
                         break;
                     case 3: 
-                        doc.add(new StringField("Fuente", parts[i], Field.Store.YES)); 
+                        doc.add(new StringField("Fuente", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
                     case 4: 
                         int pageS; 
@@ -114,7 +105,7 @@ public class MathIndexer {
                         doc.add(new IntPoint("Página fin", pageE)); 
                         break; 
                     case 6: 
-                        doc.add(new StringField("Link", parts[i], Field.Store.YES)); 
+                        doc.add(new StringField("Link", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
                     case 7: 
                         doc.add(new TextField("Abstract", parts[i], Field.Store.NO)); 
@@ -126,13 +117,13 @@ public class MathIndexer {
                         doc.add(new TextField("Palabras clave índice", parts[i], Field.Store.YES));
                         break;
                     case 10: 
-                        doc.add(new StringField("Referencias", parts[i], Field.Store.YES)); 
+                        doc.add(new StringField("Referencias", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
-                    case 11: 
-                        doc.add(new StringField("Idioma", parts[i], Field.Store.YES)); 
+                    case 17: 
+                        doc.add(new StringField("Idioma", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
                     case 12: 
-                        doc.add(new StringField("Tipo de documento", parts[i], Field.Store.YES));
+                        doc.add(new StringField("Tipo de documento", parts[i].toLowerCase(), Field.Store.YES));
                         break; 
                     default: 
                         break;                                                                
@@ -141,16 +132,17 @@ public class MathIndexer {
             writer.addDocument(doc); 
         }
         
-        writer.close(); 
+        writer.close();
+        dir.close();
         inputStream.close();   
     }
     
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException {
-        MathIndexer test = new MathIndexer("../Data");
-        test.readAndIndex("../Data/Cortado.csv");
+    public static void main(String[] args) throws IOException, ParseException {
+        MathIndexer test = new MathIndexer();
+        test.readAndIndex("../Data/Cortado.csv","../Index");
     }
     
 }

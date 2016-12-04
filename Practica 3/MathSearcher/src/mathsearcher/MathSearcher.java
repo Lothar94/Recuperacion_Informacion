@@ -168,15 +168,15 @@ public class MathSearcher {
      */
     public static void main(String[] args) throws IOException, FileNotFoundException, ParseException {
         MathSearcher searcher=new MathSearcher("../Index");
-        /*ArrayList<Document> hits=searcher.searchIntExact("Año", 2016, 20);
+        ArrayList<Document> hits=searcher.searchIntExact("Año", 2016, 20);
         for (int i = 0; i < hits.size(); i++) {
             Document hitDoc = hits.get(i);
             System.out.println("salida "+hitDoc.get("Autor").toString());
             System.out.println("salida "+hitDoc.toString());
-         }*/
+         }
         // TODO code application logic here
         
-        ArrayList<Document> hits = searcher.searchBoolean("Titulo", "estimation and spectral", 20);
+        hits = searcher.searchBoolean("Titulo", "estimation and spectral", 20);
         for (int i = 0; i < hits.size(); i++) {
             Document hitDoc = hits.get(i);
             System.out.println("salida "+hitDoc.get("Autor").toString());

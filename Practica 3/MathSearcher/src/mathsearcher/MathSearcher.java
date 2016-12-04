@@ -140,6 +140,28 @@ public class MathSearcher {
         
         return resultado;
     }
+    
+    public ArrayList<Document> searchTerm(String field, String value,int nDocuments) throws FileNotFoundException, IOException, ParseException{
+        Path path = FileSystems.getDefault().getPath(indexPath);
+        
+        Directory dir = FSDirectory.open(path);
+        
+        IndexReader ireader = DirectoryReader.open(dir);
+        IndexSearcher isearcher = new IndexSearcher(ireader);
+        
+        Query query = new TermQuery(new Term(field, value));
+        
+        ScoreDoc[] hits = isearcher.search(query, nDocuments).scoreDocs;
+        ArrayList<Document> resultado=new ArrayList();
+        for (int i = 0; i < hits.length; i++) {
+           resultado.add(isearcher.doc(hits[i].doc));
+        }
+        ireader.close();
+        dir.close();
+        
+        return resultado;
+    }
+
 
     /**
      * @param args the command line arguments

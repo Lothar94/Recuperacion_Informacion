@@ -63,12 +63,16 @@ public class MathIndexer {
         // Saltamos la primera línea. 
         inputStream.nextLine(); 
         
-        Document doc = new Document(); 
+        Document doc;
         
         while(inputStream.hasNext()){
             String data = inputStream.nextLine();
             String[] parts = data.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); 
+            // Creamos nuevo documento vacío
+            doc = new Document(); 
+                
             for(int i = 0; i < parts.length; i++){
+                
                 // Eliminamos comillas para aquellos que no se tokenicen. 
                 parts[i] = parts[i].replace("\"", ""); 
                 
@@ -133,10 +137,10 @@ public class MathIndexer {
                     default: 
                         break;                                                                
                 } 
-               
             }
+            writer.addDocument(doc); 
         }
-        writer.addDocument(doc); 
+        
         writer.close(); 
         inputStream.close();   
     }

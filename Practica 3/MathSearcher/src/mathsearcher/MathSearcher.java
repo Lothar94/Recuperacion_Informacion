@@ -15,6 +15,13 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.IntPoint;
+import org.apache.lucene.facet.FacetResult;
+import org.apache.lucene.facet.Facets;
+import org.apache.lucene.facet.FacetsCollector;
+import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.facet.taxonomy.FastTaxonomyFacetCounts;
+import org.apache.lucene.facet.taxonomy.TaxonomyReader;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -35,6 +42,8 @@ import org.apache.lucene.store.FSDirectory;
  */
 public class MathSearcher {
     private String indexPath;
+    private String taxoPath;
+    
     public MathSearcher(String indexPath){
         this.indexPath=indexPath;
     }
@@ -161,7 +170,29 @@ public class MathSearcher {
         
         return resultado;
     }
+   public ArrayList<FacetResult> searchFacets(String field,String value, int ndocs) throws IOException{
+        Path path = FileSystems.getDefault().getPath(indexPath);
+        Path path2 = FileSystems.getDefault().getPath(taxoPath);
+        Directory dir = FSDirectory.open(path);
+        Directory taxo_dir = FSDirectory.open(path2);
+        
+        IndexReader iReader= DirectoryReader.open(dir);
+        IndexSearcher isearcher = new IndexSearcher(iReader);
+        
+        TaxonomyReader taxoReader = new DirectoryTaxonomyReader(taxo_dir);
+        
+        Query query = new TermQuery(new Term(field, value));
+        
+        FacetsCollector fc = new FacetsCollector();
+        FacetsCollector.search(isearcher, query, ndocs, fc);
+        ArrayList<FacetResult> results = new ArrayList<>();
+        Facets facets = new FastTaxonomyFacetCounts(taxoReader, new FacetsConfig(), fc);
+        results.add(facets.getTopChildren(ndocs, "Idioma"));
 
+        iReader.close();
+        taxoReader.close();
+        return results;
+    } 
 
     /**
      * @param args the command line arguments

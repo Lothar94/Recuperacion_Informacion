@@ -5,6 +5,10 @@
  */
 package mathInterface;
 
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import org.apache.lucene.document.Document;
+
 /**
  *
  * @author lot94
@@ -18,6 +22,28 @@ public class hitsTable extends javax.swing.JPanel {
         initComponents();
     }
 
+    public void refreshTable(){
+        DefaultTableModel model = (DefaultTableModel)Table.getModel();
+        for(int i = 0; i < model.getRowCount(); i++)
+            model.removeRow(i);
+        model.setRowCount(0);
+        Table.setModel(model);
+        
+    }
+    
+    public void updateTable(ArrayList<Document> hits){
+        DefaultTableModel model = (DefaultTableModel)Table.getModel();
+        
+        String data[] = new String[2];
+        for(int i = 0; i < hits.size(); i++){
+            data[0] = ""+i;
+            data[1] = hits.get(i).get("Titulo");
+            model.addRow(data);
+        }
+        
+        Table.setModel(model);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,23 +54,20 @@ public class hitsTable extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        Table = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Rank", "Título"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(Table);
 
         jLabel1.setText("Hits para la búsqueda:");
 
@@ -72,8 +95,8 @@ public class hitsTable extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable Table;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
     // End of variables declaration//GEN-END:variables
 }

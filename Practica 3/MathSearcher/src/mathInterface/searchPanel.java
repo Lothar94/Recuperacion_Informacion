@@ -20,7 +20,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 public class searchPanel extends javax.swing.JPanel {
 
     MathSearcher mainSearcher;
-    int findType;
+    String findType;
     String field;
     
     /**
@@ -29,8 +29,8 @@ public class searchPanel extends javax.swing.JPanel {
     public searchPanel() {
         initComponents();
         mainSearcher = new MathSearcher("../Index");
-        field = "Abstract";
-        findType = 0;
+        field = fieldTypeBox.getSelectedItem().toString();
+        findType = findTypeBox.getSelectedItem().toString();
     }
 
     /**
@@ -139,7 +139,7 @@ public class searchPanel extends javax.swing.JPanel {
             }
         });
 
-        fieldTypeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Abstract", "Título" }));
+        fieldTypeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Abstract", "Titulo" }));
         fieldTypeBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldTypeBoxActionPerformed(evt);
@@ -211,11 +211,11 @@ public class searchPanel extends javax.swing.JPanel {
         ArrayList<Document> hits = null;
         try {
             String value = findTextField.getText();
-            if(findType == 0)
+            if(findType.equals("Términos"))
                 hits = mainSearcher.searchTerm(field, value, 100);
-            else if(findType == 1)
+            else if(findType.equals("Booleana"))
                 hits = mainSearcher.searchBoolean(field, value, 100);
-            else if(findType == 2){
+            else if(findType.equals("Numérica")){
                 int intireValue = Integer.parseInt(value);
                 hits = mainSearcher.searchIntExact(field, intireValue, 100);
             }
@@ -237,21 +237,11 @@ public class searchPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void findTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTypeBoxActionPerformed
-        String selectedType = findTypeBox.getSelectedItem().toString();
-        if(selectedType.equals("Términos"))
-            findType = 0;
-        else if(selectedType.equals("Booleana"))
-            findType = 1;
-        else if(selectedType.equals("Numérica"))
-            findType = 2;
+        findType = findTypeBox.getSelectedItem().toString();
     }//GEN-LAST:event_findTypeBoxActionPerformed
 
     private void fieldTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTypeBoxActionPerformed
-        String selectedField =fieldTypeBox.getSelectedItem().toString();
-        if(selectedField.equals("Abstract"))
-            field = "Abstract";
-        else if(selectedField.equals("Título"))
-            field = "Titulo";
+        field =fieldTypeBox.getSelectedItem().toString();
     }//GEN-LAST:event_fieldTypeBoxActionPerformed
 
 

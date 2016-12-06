@@ -15,13 +15,13 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.IntPoint;
-import org.apache.lucene.facet.FacetResult;
+/*import org.apache.lucene.facet.FacetResult;
 import org.apache.lucene.facet.Facets;
 import org.apache.lucene.facet.FacetsCollector;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.facet.taxonomy.FastTaxonomyFacetCounts;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
-import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;*/
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -170,7 +170,7 @@ public class MathSearcher {
         
         return resultado;
     }
-   public ArrayList<FacetResult> searchFacets(String field,String value, int ndocs) throws IOException{
+   /*public ArrayList<FacetResult> searchFacets(String field,String value, int ndocs) throws IOException{
         Path path = FileSystems.getDefault().getPath(indexPath);
         Path path2 = FileSystems.getDefault().getPath(taxoPath);
         Directory dir = FSDirectory.open(path);
@@ -192,7 +192,7 @@ public class MathSearcher {
         iReader.close();
         taxoReader.close();
         return results;
-    } 
+    } */
 
     /**
      * @param args the command line arguments

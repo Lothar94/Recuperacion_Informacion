@@ -36,7 +36,7 @@ public class hitsTable extends javax.swing.JPanel {
         
         String data[] = new String[2];
         for(int i = 0; i < hits.size(); i++){
-            data[0] = ""+i;
+            data[0] = String.valueOf(i+1);
             data[1] = hits.get(i).get("Titulo");
             model.addRow(data);
         }

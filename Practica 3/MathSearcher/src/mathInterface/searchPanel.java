@@ -105,6 +105,12 @@ public class searchPanel extends javax.swing.JPanel {
                 .addContainerGap(244, Short.MAX_VALUE))
         );
 
+        findTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                findTextFieldKeyPressed(evt);
+            }
+        });
+
         jLabel1.setText("Introduzca la búsqueda:");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -189,7 +195,7 @@ public class searchPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(fieldTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -208,6 +214,24 @@ public class searchPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_advancedButtonActionPerformed
 
     private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
+        search();
+    }//GEN-LAST:event_findButtonActionPerformed
+
+    private void findTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTypeBoxActionPerformed
+        findType = findTypeBox.getSelectedItem().toString();
+    }//GEN-LAST:event_findTypeBoxActionPerformed
+
+    private void fieldTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTypeBoxActionPerformed
+        field =fieldTypeBox.getSelectedItem().toString();
+    }//GEN-LAST:event_fieldTypeBoxActionPerformed
+
+    private void findTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextFieldKeyPressed
+        if(evt.getKeyCode() == 10){
+            search();
+        }
+    }//GEN-LAST:event_findTextFieldKeyPressed
+
+    public void search(){
         ArrayList<Document> hits = null;
         try {
             String value = findTextField.getText();
@@ -232,18 +256,10 @@ public class searchPanel extends javax.swing.JPanel {
             System.out.println("salida "+hitDoc.toString());
          }
         
+        searchInfo1.updateInfo(findTextField.getText() , (String) fieldTypeBox.getSelectedItem(), hits);
         hitsTable1.refreshTable();
         hitsTable1.updateTable(hits);
-    }//GEN-LAST:event_findButtonActionPerformed
-
-    private void findTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTypeBoxActionPerformed
-        findType = findTypeBox.getSelectedItem().toString();
-    }//GEN-LAST:event_findTypeBoxActionPerformed
-
-    private void fieldTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTypeBoxActionPerformed
-        field =fieldTypeBox.getSelectedItem().toString();
-    }//GEN-LAST:event_fieldTypeBoxActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton advancedButton;

@@ -236,12 +236,12 @@ public class searchPanel extends javax.swing.JPanel {
         try {
             String value = findTextField.getText();
             if(findType.equals("Términos"))
-                hits = mainSearcher.searchTerm(field, value, 100);
+                hits = mainSearcher.searchTerm(field, value, 5000);
             else if(findType.equals("Booleana"))
-                hits = mainSearcher.searchBoolean(field, value, 100);
+                hits = mainSearcher.searchBoolean(field, value, 5000);
             else if(findType.equals("Numérica")){
                 int intireValue = Integer.parseInt(value);
-                hits = mainSearcher.searchIntExact(field, intireValue, 100);
+                hits = mainSearcher.searchIntExact(field, intireValue, 5000);
             }
         } catch (IOException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -252,7 +252,7 @@ public class searchPanel extends javax.swing.JPanel {
         /*System.out.println("Búsquedas:");
         for (int i = 0; i < hits.size(); i++) {
             Document hitDoc = hits.get(i);
-            System.out.println("salida "+hitDoc.get("Autor").toString());
+            System.out.println("salida "+hitDoc.get("Abstract").toString());
             System.out.println("salida "+hitDoc.toString());
          }*/
         

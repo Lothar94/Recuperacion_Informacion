@@ -79,7 +79,7 @@ public class MathIndexer {
                 
                 // Eliminamos comillas para aquellos que no se tokenicen. 
                 parts[i] = parts[i].replace("\"", ""); 
-                
+                      
                 // Switch - case que distingue los campos almacenados en el índice. 
                 switch (i) {
                     case 0: 
@@ -132,7 +132,7 @@ public class MathIndexer {
                         doc.add(new StringField("Link", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
                     case 7: 
-                        doc.add(new TextField("Abstract", parts[i], Field.Store.NO)); 
+                        doc.add(new TextField("Abstract", parts[i], Field.Store.YES)); 
                         break; 
                     case 8: 
                         doc.add(new TextField("Palabras clave autor", parts[i], Field.Store.YES));
@@ -148,6 +148,9 @@ public class MathIndexer {
                         break; 
                     case 12: 
                         doc.add(new StringField("Tipo de documento", parts[i].toLowerCase(), Field.Store.YES));
+                        break;
+                    case 13: 
+                        doc.add(new TextField("Abstract", parts[i], Field.Store.YES)); 
                         break; 
                     default: 
                         break;                                                                

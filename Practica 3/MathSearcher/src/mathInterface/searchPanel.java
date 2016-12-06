@@ -249,14 +249,14 @@ public class searchPanel extends javax.swing.JPanel {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        System.out.println("Búsquedas:");
+        /*System.out.println("Búsquedas:");
         for (int i = 0; i < hits.size(); i++) {
             Document hitDoc = hits.get(i);
             System.out.println("salida "+hitDoc.get("Autor").toString());
             System.out.println("salida "+hitDoc.toString());
-         }
+         }*/
         
-        searchInfo1.updateInfo(findTextField.getText() , (String) fieldTypeBox.getSelectedItem(), hits);
+        searchInfo1.updateInfo(findTextField.getText() , (String) findTypeBox.getSelectedItem(), hits);
         hitsTable1.refreshTable();
         hitsTable1.updateTable(hits);
     }

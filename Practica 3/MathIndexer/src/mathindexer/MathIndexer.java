@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
@@ -39,6 +41,17 @@ public class MathIndexer {
     
     public MathIndexer() throws IOException{
         this.version = Version.LUCENE_6_2_1;
+    }
+    
+    public String remove(String t, String regexp) {
+        String newText = new String();
+        Pattern p = Pattern.compile(regexp);
+        Matcher m = p.matcher(t);
+        // Reemplaza lo que coincida con la expresión regular por vacío. 
+        newText = m.replaceAll(" ");
+        // Eliminamos mayúsculas. 
+        newText = newText.toLowerCase();
+        return newText;
     }
     
     public void readAndIndex(String fileName,String indexPath) throws FileNotFoundException, IOException{
@@ -90,18 +103,29 @@ public class MathIndexer {
                         break; 
                     case 4: 
                         int pageS; 
-                            if (!"".equals(parts[i]))
-                                pageS = Integer.parseInt(parts[i]); 
-                            else
-                                pageS = 0; 
+                        parts[i] = remove(parts[i],"[^0-9]");
+                        if(parts[i].contains(" "))
+                            parts[i] = parts[i].substring(0, parts[i].lastIndexOf(" "));
+                        parts[i] = parts[i].replaceAll("\\s", "");                        
+                      
+                        if (!"".equals(parts[i])){
+                            pageS = Integer.parseInt(parts[i]); 
+                        }
+                        else
+                            pageS = 0; 
                         doc.add(new IntPoint("Página inicio", pageS)); 
                         break; 
                     case 5: 
                         int pageE; 
-                            if (!"".equals(parts[i]))
-                                pageE = Integer.parseInt(parts[i]); 
-                            else
-                                pageE = 0; 
+                        parts[i] = remove(parts[i],"[^0-9]");
+                        if(parts[i].contains(" "))
+                            parts[i] = parts[i].substring(0, parts[i].lastIndexOf(" "));
+                        parts[i] = parts[i].replaceAll("\\s", "");                         
+                        if (!"".equals(parts[i])){
+                            pageE = Integer.parseInt(parts[i]); 
+                        }
+                        else
+                            pageE = 0; 
                         doc.add(new IntPoint("Página fin", pageE)); 
                         break; 
                     case 6: 
@@ -142,7 +166,7 @@ public class MathIndexer {
      */
     public static void main(String[] args) throws IOException, ParseException {
         MathIndexer test = new MathIndexer();
-        test.readAndIndex("../Data/Cortado.csv","../Index");
+        test.readAndIndex("../Data/Fourier.csv","../Index");
     }
     
 }

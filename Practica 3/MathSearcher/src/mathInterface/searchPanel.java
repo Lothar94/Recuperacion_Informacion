@@ -11,7 +11,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mathsearcher.MathSearcher;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.facet.DrillDownQuery;
+import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
 
 /**
  *
@@ -28,7 +34,7 @@ public class searchPanel extends javax.swing.JPanel {
      */
     public searchPanel() {
         initComponents();
-        mainSearcher = new MathSearcher("../Index");
+        mainSearcher = new MathSearcher("../Index","../Index/taxo");
         field = fieldTypeBox.getSelectedItem().toString();
         findType = findTypeBox.getSelectedItem().toString();
     }
@@ -47,6 +53,10 @@ public class searchPanel extends javax.swing.JPanel {
         advancedButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        idioma_select = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        tipo_select = new javax.swing.JComboBox<>();
         findTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -88,21 +98,58 @@ public class searchPanel extends javax.swing.JPanel {
 
         jLabel2.setText("Opciones de búsqueda:");
 
+        idioma_select.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "english", "spanish","russian","chinese" }));
+        idioma_select.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idioma_selectActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Idioma:");
+
+        jLabel6.setText("Tipo de documento");
+
+        tipo_select.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Article", "conference paper", "Book Chapter","article in press","review","conference review","book","erratum"}));
+        tipo_select.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tipo_selectActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addContainerGap(83, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(idioma_select, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tipo_select, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addContainerGap(244, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(idioma_select, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tipo_select, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addContainerGap(181, Short.MAX_VALUE))
         );
 
         findTextField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -123,7 +170,7 @@ public class searchPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(searchInfo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(hitsTable1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(hitsTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -161,7 +208,6 @@ public class searchPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(findButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -175,7 +221,8 @@ public class searchPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fieldTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(fieldTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -231,6 +278,32 @@ public class searchPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_findTextFieldKeyPressed
 
+    private void idioma_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idioma_selectActionPerformed
+        Query base = new TermQuery(new Term(field, findTextField.getText()));
+         ArrayList<Document> hits = null;
+        try {
+            hits = mainSearcher.drillDown(base,"Idioma",idioma_select.getSelectedItem().toString(),5000);
+        } catch (IOException ex) {
+            Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        searchInfo1.updateInfo(findTextField.getText() , (String) findTypeBox.getSelectedItem(), hits);
+        hitsTable1.refreshTable();
+        hitsTable1.updateTable(hits);
+    }//GEN-LAST:event_idioma_selectActionPerformed
+
+    private void tipo_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipo_selectActionPerformed
+          Query base = new TermQuery(new Term(field, findTextField.getText()));
+         ArrayList<Document> hits = null;
+        try {
+            hits = mainSearcher.drillDown(base,"Tipo de documento",tipo_select.getSelectedItem().toString().toLowerCase(),5000);
+        } catch (IOException ex) {
+            Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        searchInfo1.updateInfo(findTextField.getText() , (String) findTypeBox.getSelectedItem(), hits);
+        hitsTable1.refreshTable();
+        hitsTable1.updateTable(hits);
+    }//GEN-LAST:event_tipo_selectActionPerformed
+
     public void search(){
         ArrayList<Document> hits = null;
         try {
@@ -268,13 +341,17 @@ public class searchPanel extends javax.swing.JPanel {
     private javax.swing.JTextField findTextField;
     private javax.swing.JComboBox<String> findTypeBox;
     private mathInterface.hitsTable hitsTable1;
+    private javax.swing.JComboBox<String> idioma_select;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private mathInterface.searchInfo searchInfo1;
+    private javax.swing.JComboBox<String> tipo_select;
     // End of variables declaration//GEN-END:variables
 }

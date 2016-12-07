@@ -24,13 +24,15 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
-
+import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
 /**
  *
  * @author lot94
@@ -54,13 +56,20 @@ public class MathIndexer {
         return newText;
     }
     
-    public void readAndIndex(String fileName,String indexPath) throws FileNotFoundException, IOException{
+    public void readAndIndex(String fileName,String indexPath,String taxoPath) throws FileNotFoundException, IOException{
         Path path = FileSystems.getDefault().getPath(indexPath);
+        Path taxo = FileSystems.getDefault().getPath(taxoPath);
         Directory dir = FSDirectory.open(path);
+        Directory taxoDir = FSDirectory.open(taxo);
+        
+        FacetsConfig config = new FacetsConfig();
+        
         Analyzer analyzer = new StandardAnalyzer();
         IndexWriterConfig writerConf = new IndexWriterConfig(analyzer);
         writerConf.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
         IndexWriter writer = new IndexWriter(dir, writerConf);
+        
+        DirectoryTaxonomyWriter taxoWriter = new DirectoryTaxonomyWriter(taxoDir);
         
         File file = new File(fileName);
         Scanner inputStream = new Scanner(file);
@@ -144,10 +153,13 @@ public class MathIndexer {
                         doc.add(new StringField("Referencias", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
                     case 17: 
-                        doc.add(new StringField("Idioma", parts[i].toLowerCase(), Field.Store.YES)); 
+                        doc.add(new StringField("Idioma", parts[i].toLowerCase(), Field.Store.YES));
+                        doc.add(new FacetField("Idioma",parts[i].toLowerCase()));
                         break; 
                     case 12: 
                         doc.add(new StringField("Tipo de documento", parts[i].toLowerCase(), Field.Store.YES));
+                        doc.add(new FacetField("Tipo de documento", parts[i].toLowerCase()));
+                       
                         break;
                     case 13: 
                         doc.add(new TextField("Abstract", parts[i], Field.Store.YES)); 
@@ -156,11 +168,14 @@ public class MathIndexer {
                         break;                                                                
                 } 
             }
-            writer.addDocument(doc); 
+            //writer.addDocument(doc);
+            writer.addDocument(config.build(taxoWriter,doc));
         }
         
         writer.close();
+        taxoWriter.close();
         dir.close();
+        taxoDir.close();
         inputStream.close();   
     }
     
@@ -169,7 +184,7 @@ public class MathIndexer {
      */
     public static void main(String[] args) throws IOException, ParseException {
         MathIndexer test = new MathIndexer();
-        test.readAndIndex("../Data/Fourier.csv","../Index");
+        test.readAndIndex("../Data/Fourier.csv","../Index","../Index/taxo");
     }
     
 }

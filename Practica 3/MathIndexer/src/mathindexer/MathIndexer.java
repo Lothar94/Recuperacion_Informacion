@@ -6,11 +6,8 @@
 package mathindexer;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -43,10 +40,18 @@ public class MathIndexer {
         this.version = Version.LUCENE_6_2_1;
     }
     
-    public String remove(String t, String regexp) {
+    /**
+     * Método para eliminar una expresión regular de un String
+     * @param text Texto a tratar
+     * @param regexp Expresión regular en forma de String
+     * @return Texto modificado
+     */
+    public String remove(String text, String regexp) {
+        // Creamos el nuevo String.
         String newText = new String();
+        // Tomamos la expresión regular y buscamos coincidencias.
         Pattern p = Pattern.compile(regexp);
-        Matcher m = p.matcher(t);
+        Matcher m = p.matcher(text);
         // Reemplaza lo que coincida con la expresión regular por vacío. 
         newText = m.replaceAll(" ");
         // Eliminamos mayúsculas. 
@@ -54,7 +59,16 @@ public class MathIndexer {
         return newText;
     }
     
-    public void readAndIndex(String fileName,String indexPath) throws FileNotFoundException, IOException{
+    /**
+     * Método para leer un archivo CSV con datos y crear un índice. 
+     * El tipo de archivo debe ser el específico para esta práctica, con las columnas de la forma adecuada.
+     * @param fileName
+     * @param indexPath
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
+    public void readAndIndex(String fileName, String indexPath) throws FileNotFoundException, IOException{
+        // Creamos variables iniciales
         Path path = FileSystems.getDefault().getPath(indexPath);
         Directory dir = FSDirectory.open(path);
         Analyzer analyzer = new StandardAnalyzer();
@@ -67,28 +81,33 @@ public class MathIndexer {
         // Saltamos la primera línea. 
         inputStream.nextLine(); 
         
+        // Documento que iremos añadiendo en el bucle, uno para cada línea que leamos
         Document doc;
         
+        // Continuamos mientras haya líneas en el CSV
         while(inputStream.hasNext()){
             String data = inputStream.nextLine();
+            // Separamos las columnas del CSV mediante una expresión regular
             String[] parts = data.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); 
             // Creamos nuevo documento vacío
             doc = new Document(); 
             
+            // Iteramos para asignar a cada columna su atributo y tipo de campo de Lucene correspondiente
+            // Hecho de forma manual, conociendo la estructura del CSV
             for(int i = 0; i < parts.length; i++){
                 
-                // Eliminamos comillas para aquellos que no se tokenicen. 
+                // Eliminamos comillas para aquellos campos que no se tokenicen. 
                 parts[i] = parts[i].replace("\"", ""); 
                       
                 // Switch - case que distingue los campos almacenados en el índice. 
                 switch (i) {
-                    case 0: 
+                    case 0: // Autor
                         doc.add(new StringField("Autor", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
-                    case 1:  
+                    case 1:  // Título
                         doc.add(new TextField("Titulo", parts[i], Field.Store.YES)); 
                         break;
-                    case 2:  
+                    case 2:  // Año
                         // ParseInt no funciona con el string vacío, así que distinguimos casos. 
                         int year; 
                             if (!"".equals(parts[i]))
@@ -98,16 +117,16 @@ public class MathIndexer {
                         doc.add(new IntPoint("Año", year)); 
                         
                         break;
-                    case 3: 
+                    case 3: // Fuente
                         doc.add(new StringField("Fuente", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
-                    case 4: 
+                    case 4: // Página inicio
                         int pageS; 
                         parts[i] = remove(parts[i],"[^0-9]");
                         if(parts[i].contains(" "))
                             parts[i] = parts[i].substring(0, parts[i].lastIndexOf(" "));
                         parts[i] = parts[i].replaceAll("\\s", "");                        
-                      
+                        // Si no tenemos el string vacío, convertimos a int. Si no, tomamos 0. 
                         if (!"".equals(parts[i])){
                             pageS = Integer.parseInt(parts[i]); 
                         }
@@ -115,7 +134,7 @@ public class MathIndexer {
                             pageS = 0; 
                         doc.add(new IntPoint("Página inicio", pageS)); 
                         break; 
-                    case 5: 
+                    case 5: // Página Fin
                         int pageE; 
                         parts[i] = remove(parts[i],"[^0-9]");
                         if(parts[i].contains(" "))
@@ -128,13 +147,13 @@ public class MathIndexer {
                             pageE = 0; 
                         doc.add(new IntPoint("Página fin", pageE)); 
                         break; 
-                    case 6: 
+                    case 6: // Enlace
                         doc.add(new StringField("Link", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
-                    case 7: 
+                    case 7: // Abstract
                         doc.add(new TextField("Abstract", parts[i], Field.Store.YES)); 
                         break; 
-                    case 8: 
+                    case 8: // Author Keywords
                         doc.add(new TextField("Palabras clave autor", parts[i], Field.Store.YES));
                         break;
                     case 9: 

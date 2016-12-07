@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -24,7 +25,9 @@ import org.apache.lucene.facet.taxonomy.FastTaxonomyFacetCounts;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.MultiFields;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -222,6 +225,24 @@ public class MathSearcher {
         taxoReader.close();
         return result;
     }
+    
+    public ArrayList<String> getFields() throws IOException{
+        Path path = FileSystems.getDefault().getPath(indexPath);
+        Directory dir = FSDirectory.open(path);
+        ArrayList<String> fields = new ArrayList();
+        
+        IndexReader iReader = DirectoryReader.open(dir);
+                
+        Fields f = MultiFields.getFields(iReader);
+        
+        Iterator itr = f.iterator();
+        itr.next();
+        
+        while(itr.hasNext())
+            fields.add((String) itr.next());
+        
+        return fields;
+    }
 
     /**
      * @param args the command line arguments
@@ -244,6 +265,7 @@ public class MathSearcher {
         }
         ArrayList<FacetResult> test = searcher.searchFacets(new TermQuery(new Term("Abstract", "fourier")), 500);
 
+        searcher.getFields();
     }
 
 }

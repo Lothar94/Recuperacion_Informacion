@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import mathsearcher.MathSearcher;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.DrillDownQuery;
@@ -28,6 +30,8 @@ public class searchPanel extends javax.swing.JPanel {
     MathSearcher mainSearcher;
     String findType;
     String field;
+    Object[] fields;
+    String[] intpoints = {"Año", "Página inicio", "Página fin"};
     
     /**
      * Creates new form searchPanel
@@ -35,6 +39,12 @@ public class searchPanel extends javax.swing.JPanel {
     public searchPanel() {
         initComponents();
         mainSearcher = new MathSearcher("../Index","../Index/taxo");
+        try {
+            fields = mainSearcher.getFields().toArray();
+            updateFields(fields);
+        } catch (IOException ex) {
+            Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         field = fieldTypeBox.getSelectedItem().toString();
         findType = findTypeBox.getSelectedItem().toString();
     }
@@ -265,11 +275,19 @@ public class searchPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void findTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTypeBoxActionPerformed
+        if(findTypeBox.getSelectedItem().toString().equals("Numérica")){
+           fieldTypeBox.setModel(new DefaultComboBoxModel(intpoints));
+           field = fieldTypeBox.getSelectedItem().toString();
+        }
+        else{
+           fieldTypeBox.setModel(new DefaultComboBoxModel(fields));
+           field = fieldTypeBox.getSelectedItem().toString();
+        }
         findType = findTypeBox.getSelectedItem().toString();
     }//GEN-LAST:event_findTypeBoxActionPerformed
 
     private void fieldTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTypeBoxActionPerformed
-        field =fieldTypeBox.getSelectedItem().toString();
+        field = fieldTypeBox.getSelectedItem().toString();
     }//GEN-LAST:event_fieldTypeBoxActionPerformed
 
     private void findTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextFieldKeyPressed
@@ -332,6 +350,10 @@ public class searchPanel extends javax.swing.JPanel {
         searchInfo1.updateInfo(findTextField.getText() , (String) findTypeBox.getSelectedItem(), hits);
         hitsTable1.refreshTable();
         hitsTable1.updateTable(hits);
+    }
+    
+    public void updateFields(Object[] f) throws IOException{
+        fieldTypeBox.setModel(new DefaultComboBoxModel(f));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

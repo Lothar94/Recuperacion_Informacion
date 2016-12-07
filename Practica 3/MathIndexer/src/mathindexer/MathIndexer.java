@@ -166,24 +166,20 @@ public class MathIndexer {
                     case 8: // Author Keywords
                         doc.add(new TextField("Palabras clave autor", parts[i], Field.Store.YES));
                         break;
-                    case 9: 
+                    case 9: // Index Keywords
                         doc.add(new TextField("Palabras clave índice", parts[i], Field.Store.YES));
                         break;
-                    case 10: 
+                    case 10: // Referencias
                         doc.add(new StringField("Referencias", parts[i].toLowerCase(), Field.Store.YES)); 
                         break; 
-                    case 17: 
+                    case 11: // Idioma 
                         doc.add(new StringField("Idioma", parts[i].toLowerCase(), Field.Store.YES));
                         doc.add(new FacetField("Idioma",parts[i].toLowerCase()));
                         break; 
-                    case 12: 
+                    case 12: // Tipo de documento
                         doc.add(new StringField("Tipo de documento", parts[i].toLowerCase(), Field.Store.YES));
                         doc.add(new FacetField("Tipo de documento", parts[i].toLowerCase()));
-                       
                         break;
-                    case 13: 
-                        doc.add(new TextField("Abstract", parts[i], Field.Store.YES)); 
-                        break; 
                     default: 
                         break;                                                                
                 } 

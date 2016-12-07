@@ -10,20 +10,24 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.IntPoint;
-/*import org.apache.lucene.facet.FacetResult;
+import org.apache.lucene.facet.DrillDownQuery;
+import org.apache.lucene.facet.FacetResult;
 import org.apache.lucene.facet.Facets;
 import org.apache.lucene.facet.FacetsCollector;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.facet.taxonomy.FastTaxonomyFacetCounts;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
-import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;*/
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.MultiFields;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -41,14 +45,16 @@ import org.apache.lucene.store.FSDirectory;
  * @author lot94
  */
 public class MathSearcher {
+
     private String indexPath;
     private String taxoPath;
-    
-    public MathSearcher(String indexPath){
-        this.indexPath=indexPath;
+
+    public MathSearcher(String indexPath, String taxoPath) {
+        this.indexPath = indexPath;
+        this.taxoPath = taxoPath;
     }
-    
-    public ArrayList<Document> searchString(String field,String value,int nDocuments) throws FileNotFoundException, IOException, ParseException{
+
+    public ArrayList<Document> searchString(String field, String value, int nDocuments) throws FileNotFoundException, IOException, ParseException {
         Path path = FileSystems.getDefault().getPath(indexPath);
         Directory dir = FSDirectory.open(path);
         IndexReader ireader = DirectoryReader.open(dir);
@@ -57,162 +63,209 @@ public class MathSearcher {
         QueryParser parser = new QueryParser(field, analyzer);
         Query query = parser.parse(value);
         ScoreDoc[] hits = isearcher.search(query, nDocuments).scoreDocs;
-        ArrayList<Document> resultado=new ArrayList();
+        ArrayList<Document> resultado = new ArrayList();
         for (int i = 0; i < hits.length; i++) {
-           resultado.add(isearcher.doc(hits[i].doc));
+            resultado.add(isearcher.doc(hits[i].doc));
         }
         ireader.close();
         dir.close();
         return resultado;
     }
-    public ArrayList<Document> searchIntExact(String field,int value,int nDocuments) throws FileNotFoundException, IOException, ParseException{
+
+    public ArrayList<Document> searchIntExact(String field, int value, int nDocuments) throws FileNotFoundException, IOException, ParseException {
         Path path = FileSystems.getDefault().getPath(indexPath);
         Directory dir = FSDirectory.open(path);
         IndexReader ireader = DirectoryReader.open(dir);
         IndexSearcher isearcher = new IndexSearcher(ireader);
-        Query query2=IntPoint.newExactQuery(field, value);
+        Query query2 = IntPoint.newExactQuery(field, value);
         ScoreDoc[] hits = isearcher.search(query2, nDocuments).scoreDocs;
-         ArrayList<Document> resultado=new ArrayList();
+        ArrayList<Document> resultado = new ArrayList();
         for (int i = 0; i < hits.length; i++) {
-           resultado.add(isearcher.doc(hits[i].doc));
+            resultado.add(isearcher.doc(hits[i].doc));
         }
         ireader.close();
         dir.close();
         return resultado;
     }
-    public ArrayList<Document> searchIntRange(String field,int lowerValue,int upperValue,int nDocuments) throws FileNotFoundException, IOException, ParseException{
+
+    public ArrayList<Document> searchIntRange(String field, int lowerValue, int upperValue, int nDocuments) throws FileNotFoundException, IOException, ParseException {
         Path path = FileSystems.getDefault().getPath(indexPath);
         Directory dir = FSDirectory.open(path);
         IndexReader ireader = DirectoryReader.open(dir);
         IndexSearcher isearcher = new IndexSearcher(ireader);
-        Query query2=IntPoint.newRangeQuery(field,lowerValue,upperValue);
+        Query query2 = IntPoint.newRangeQuery(field, lowerValue, upperValue);
         ScoreDoc[] hits = isearcher.search(query2, nDocuments).scoreDocs;
-        ArrayList<Document> resultado=new ArrayList();
+        ArrayList<Document> resultado = new ArrayList();
         for (int i = 0; i < hits.length; i++) {
-           resultado.add(isearcher.doc(hits[i].doc));
+            resultado.add(isearcher.doc(hits[i].doc));
         }
         ireader.close();
         dir.close();
         return resultado;
     }
-    
-    public ArrayList<Document> searchBoolean(String field, String value,int nDocuments) throws FileNotFoundException, IOException, ParseException{
+
+    public ArrayList<Document> searchBoolean(String field, String value, int nDocuments) throws FileNotFoundException, IOException, ParseException {
         Path path = FileSystems.getDefault().getPath(indexPath);
-        
+
         Directory dir = FSDirectory.open(path);
-        
+
         IndexReader ireader = DirectoryReader.open(dir);
         IndexSearcher isearcher = new IndexSearcher(ireader);
-                
+
         StringTokenizer tokens = new StringTokenizer(value);
-                
+
         BooleanQuery.Builder boolConstructor = new BooleanQuery.Builder();
-                
+
         String word = tokens.nextToken();
         Query termquery = null;
-        if(!word.equals("not")){
+        if (!word.equals("not")) {
             termquery = new TermQuery(new Term(field, word));
             boolConstructor.add(termquery, BooleanClause.Occur.MUST);
-        }
-        else{
+        } else {
             word = tokens.nextToken();
             termquery = new TermQuery(new Term(field, word));
-            boolConstructor.add(termquery, BooleanClause.Occur.MUST_NOT);   
+            boolConstructor.add(termquery, BooleanClause.Occur.MUST_NOT);
         }
-        
+
         BooleanClause.Occur clause = null;
-        while(tokens.hasMoreTokens()){
+        while (tokens.hasMoreTokens()) {
             word = tokens.nextToken();
-            if(word.equals("and")){
+            if (word.equals("and")) {
                 clause = BooleanClause.Occur.MUST;
-            }
-            else if(word.equals("or")){
+            } else if (word.equals("or")) {
                 clause = BooleanClause.Occur.SHOULD;
-            }
-            else if(word.equals("not")){
+            } else if (word.equals("not")) {
                 clause = BooleanClause.Occur.MUST_NOT;
-            }
-            else{
+            } else {
                 termquery = new TermQuery(new Term(field, word));
-                boolConstructor.add(termquery, clause); 
+                boolConstructor.add(termquery, clause);
             }
         }
-        
+
         Query query = boolConstructor.build();
         ScoreDoc[] hits = isearcher.search(query, nDocuments).scoreDocs;
-        ArrayList<Document> resultado=new ArrayList();
+        ArrayList<Document> resultado = new ArrayList();
         for (int i = 0; i < hits.length; i++) {
-           resultado.add(isearcher.doc(hits[i].doc));
+            resultado.add(isearcher.doc(hits[i].doc));
         }
         ireader.close();
         dir.close();
-        
+
         return resultado;
     }
-    
-    public ArrayList<Document> searchTerm(String field, String value,int nDocuments) throws FileNotFoundException, IOException, ParseException{
+
+    public ArrayList<Document> searchTerm(String field, String value, int nDocuments) throws FileNotFoundException, IOException, ParseException {
         Path path = FileSystems.getDefault().getPath(indexPath);
-        
+
         Directory dir = FSDirectory.open(path);
-        
+
         IndexReader ireader = DirectoryReader.open(dir);
         IndexSearcher isearcher = new IndexSearcher(ireader);
-        
+
         Query query = new TermQuery(new Term(field, value));
-        
+
         ScoreDoc[] hits = isearcher.search(query, nDocuments).scoreDocs;
-        ArrayList<Document> resultado=new ArrayList();
+        ArrayList<Document> resultado = new ArrayList();
         for (int i = 0; i < hits.length; i++) {
-           resultado.add(isearcher.doc(hits[i].doc));
+            resultado.add(isearcher.doc(hits[i].doc));
         }
         ireader.close();
         dir.close();
-        
+
         return resultado;
     }
-   /*public ArrayList<FacetResult> searchFacets(String field,String value, int ndocs) throws IOException{
+
+    public ArrayList<FacetResult> searchFacets(Query q, int ndocs) throws IOException {
         Path path = FileSystems.getDefault().getPath(indexPath);
-        Path path2 = FileSystems.getDefault().getPath(taxoPath);
+        Path taxo = FileSystems.getDefault().getPath(taxoPath);
         Directory dir = FSDirectory.open(path);
-        Directory taxo_dir = FSDirectory.open(path2);
-        
-        IndexReader iReader= DirectoryReader.open(dir);
+        Directory taxo_dir = FSDirectory.open(taxo);
+
+        IndexReader iReader = DirectoryReader.open(dir);
         IndexSearcher isearcher = new IndexSearcher(iReader);
-        
+
         TaxonomyReader taxoReader = new DirectoryTaxonomyReader(taxo_dir);
-        
-        Query query = new TermQuery(new Term(field, value));
-        
+
         FacetsCollector fc = new FacetsCollector();
-        FacetsCollector.search(isearcher, query, ndocs, fc);
+        FacetsCollector.search(isearcher, q, ndocs, fc);
         ArrayList<FacetResult> results = new ArrayList<>();
+
         Facets facets = new FastTaxonomyFacetCounts(taxoReader, new FacetsConfig(), fc);
         results.add(facets.getTopChildren(ndocs, "Idioma"));
+        results.add(facets.getTopChildren(ndocs, "Tipo de documento"));
 
         iReader.close();
         taxoReader.close();
         return results;
-    } */
+    }
+
+    public ArrayList<Document> drillDown(Query baseQuery, String faceta, String value, int ndocs) throws IOException {
+        Path path = FileSystems.getDefault().getPath(indexPath);
+        Path taxo = FileSystems.getDefault().getPath(taxoPath);
+        Directory dir = FSDirectory.open(path);
+        Directory taxo_dir = FSDirectory.open(taxo);
+
+        IndexReader iReader = DirectoryReader.open(dir);
+        IndexSearcher isearcher = new IndexSearcher(iReader);
+
+        TaxonomyReader taxoReader = new DirectoryTaxonomyReader(taxo_dir);
+
+        DrillDownQuery query = new DrillDownQuery(new FacetsConfig(), baseQuery);
+        query.add(faceta, value);
+        FacetsCollector fc = new FacetsCollector();
+        ScoreDoc[] hits = FacetsCollector.search(isearcher, query, ndocs, fc).scoreDocs;
+
+        ArrayList<Document> result = new ArrayList<>();
+
+        for (int i = 0; i < hits.length; i++) {
+            result.add(isearcher.doc(hits[i].doc));
+        }
+
+        iReader.close();
+        taxoReader.close();
+        return result;
+    }
+    
+    public ArrayList<String> getFields() throws IOException{
+        Path path = FileSystems.getDefault().getPath(indexPath);
+        Directory dir = FSDirectory.open(path);
+        ArrayList<String> fields = new ArrayList();
+        
+        IndexReader iReader = DirectoryReader.open(dir);
+                
+        Fields f = MultiFields.getFields(iReader);
+        
+        Iterator itr = f.iterator();
+        itr.next();
+        
+        while(itr.hasNext())
+            fields.add((String) itr.next());
+        
+        return fields;
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, FileNotFoundException, ParseException {
-        MathSearcher searcher=new MathSearcher("../Index");
-        ArrayList<Document> hits=searcher.searchIntExact("Año", 2016, 20);
+        MathSearcher searcher = new MathSearcher("../Index", "../Index/taxo");
+        ArrayList<Document> hits = searcher.searchIntExact("Año", 2016, 20);
         for (int i = 0; i < hits.size(); i++) {
             Document hitDoc = hits.get(i);
-            System.out.println("salida "+hitDoc.get("Autor").toString());
-            System.out.println("salida "+hitDoc.toString());
-         }
+            System.out.println("salida " + hitDoc.get("Autor").toString());
+            System.out.println("salida " + hitDoc.toString());
+        }
         // TODO code application logic here
-        
+
         hits = searcher.searchBoolean("Titulo", "estimation and spectral", 20);
         for (int i = 0; i < hits.size(); i++) {
             Document hitDoc = hits.get(i);
-            System.out.println("salida "+hitDoc.get("Autor").toString());
-            System.out.println("salida "+hitDoc.toString());
-         }
+            System.out.println("salida " + hitDoc.get("Autor").toString());
+            System.out.println("salida " + hitDoc.toString());
+        }
+        ArrayList<FacetResult> test = searcher.searchFacets(new TermQuery(new Term("Abstract", "fourier")), 500);
+
+        searcher.getFields();
     }
-    
+
 }

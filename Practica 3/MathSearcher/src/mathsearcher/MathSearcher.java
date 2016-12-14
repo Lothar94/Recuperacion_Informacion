@@ -124,39 +124,34 @@ public class MathSearcher {
         return query;
     }
     
-    public ArrayList<Document> search(String searchType,String field, String value,String[] facetas, String[] values,String fieldRange,ArrayList<String> range, int nDocuments) throws FileNotFoundException, IOException, ParseException {
+    public ArrayList<Document> search(String field, String value,String[] facetas, String[] values,String fieldRange,ArrayList<String> range, int nDocuments) throws FileNotFoundException, IOException, ParseException {
         Path path = FileSystems.getDefault().getPath(indexPath);
         Path taxo = FileSystems.getDefault().getPath(taxoPath);
         Directory dir = FSDirectory.open(path);
         Directory taxo_dir = FSDirectory.open(taxo);
-
+        
         IndexReader iReader = DirectoryReader.open(dir);
         TaxonomyReader taxoReader = new DirectoryTaxonomyReader(taxo_dir);
         IndexSearcher isearcher = new IndexSearcher(iReader);
         
         Query baseQuery=null;
+        
         if(!value.equals("")){
-            switch(searchType){
-                case "Términos":
-                    baseQuery = this.BuilderTermQuery(field,value);
-                    break;
-                case "Booleana":
-                    baseQuery = this.BuilderBooleanQuery(field,value);
-                    break;
-                case "Numérica":
-                    int intireValue = Integer.parseInt(value);
-                    baseQuery = this.BuilderIntExactQuery(field, intireValue);
-                    break;
-                default:
-                    return null; 
+            if (field == "Año" || field == "Página inicio" || field == "Página fin"){
+                int intireValue = Integer.parseInt(value);
+                baseQuery = this.BuilderIntExactQuery(field, intireValue);
             }
+            else 
+                baseQuery = this.BuilderBooleanQuery(field,value);
+
             if(!range.get(0).equals("") || !range.get(1).equals("")){
                 BooleanQuery.Builder boolConstructor = new BooleanQuery.Builder();
                 boolConstructor.add(BuilderIntRangeQuery(fieldRange, range.get(0), range.get(1)), BooleanClause.Occur.MUST);
                 boolConstructor.add(baseQuery, BooleanClause.Occur.MUST);
                 baseQuery = boolConstructor.build();
             }
-        }else{
+        }
+        else{
             if(!range.get(0).equals("") || !range.get(1).equals("")){
                 baseQuery = BuilderIntRangeQuery(fieldRange, range.get(0), range.get(1));
             }

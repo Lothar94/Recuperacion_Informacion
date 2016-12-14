@@ -326,7 +326,7 @@ public class searchPanel extends javax.swing.JPanel {
             String value = findTextField.getText();
             String[] fieldNames={"Idioma","Tipo de documento"};
             String[] fieldValues={idioma_select.getSelectedItem().toString().toLowerCase(),tipo_select.getSelectedItem().toString().toLowerCase()};
-            hits=mainSearcher.search(findType, field, value, fieldNames, fieldValues,advancedPanel1.GetField(),advancedPanel1.GetRange(), 5000);
+            hits=mainSearcher.search(field, value, fieldNames, fieldValues,advancedPanel1.GetField(),advancedPanel1.GetRange(), 5000);
         } catch (IOException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {

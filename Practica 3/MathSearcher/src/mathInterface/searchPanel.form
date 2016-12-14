@@ -45,27 +45,39 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="findButton" min="-2" pref="112" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="advancedButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="findTextField" alignment="0" pref="295" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="findTypeBox" pref="136" max="32767" attributes="0"/>
+                              <Component id="fieldTypeBox" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Component id="advancedPanel1" pref="324" max="32767" attributes="0"/>
+                      <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+                  </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="findButton" min="-2" pref="112" max="-2" attributes="0"/>
+                      <Component id="distanceLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="advancedButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="distanceBox" min="-2" pref="95" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="findTextField" alignment="0" pref="295" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="findTypeBox" pref="136" max="32767" attributes="0"/>
-                          <Component id="fieldTypeBox" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
+<<<<<<< HEAD
                   <Component id="advancedPanel1" pref="328" max="32767" attributes="0"/>
                   <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+=======
+>>>>>>> d0739bb5a09385948118e1fb3e7c12b5fcb21c7d
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel3" max="32767" attributes="0"/>
@@ -82,10 +94,15 @@
               <Component id="findTextField" min="-2" pref="36" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="distanceBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="distanceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="findTypeBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="fieldTypeBox" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -283,10 +300,12 @@
     <Component class="javax.swing.JComboBox" name="findTypeBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
+          <StringArray count="5">
             <StringItem index="0" value="T&#xe9;rminos"/>
             <StringItem index="1" value="Booleana"/>
             <StringItem index="2" value="Num&#xe9;rica"/>
+            <StringItem index="3" value="Proximidad"/>
+            <StringItem index="4" value="Exacta"/>
           </StringArray>
         </Property>
       </Properties>
@@ -319,6 +338,16 @@
       </Properties>
     </Component>
     <Component class="mathInterface.advancedPanel" name="advancedPanel1">
+    </Component>
+    <Component class="javax.swing.JTextField" name="distanceBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="distanceLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Distancia:"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

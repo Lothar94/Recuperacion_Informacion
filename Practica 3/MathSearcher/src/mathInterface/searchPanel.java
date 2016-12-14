@@ -49,6 +49,8 @@ public class searchPanel extends javax.swing.JPanel {
         }
         field = fieldTypeBox.getSelectedItem().toString();
         findType = findTypeBox.getSelectedItem().toString();
+        distanceBox.setVisible(false);
+        distanceLabel.setVisible(false);
     }
 
     /**
@@ -79,6 +81,8 @@ public class searchPanel extends javax.swing.JPanel {
         fieldTypeBox = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         advancedPanel1 = new mathInterface.advancedPanel();
+        distanceBox = new javax.swing.JTextField();
+        distanceLabel = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -198,7 +202,7 @@ public class searchPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Tipo de búsqueda:");
 
-        findTypeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Términos", "Booleana", "Numérica" }));
+        findTypeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Términos", "Booleana", "Numérica", "Proximidad", "Exacta" }));
         findTypeBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 findTypeBoxActionPerformed(evt);
@@ -214,29 +218,38 @@ public class searchPanel extends javax.swing.JPanel {
 
         jLabel4.setText("Campo de Búsqueda:");
 
+        distanceBox.setText("0");
+
+        distanceLabel.setText("Distancia:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(findButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(advancedButton))
+                        .addComponent(jLabel1)
+                        .addComponent(findTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel3))
+                            .addGap(57, 57, 57)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(findTypeBox, 0, 136, Short.MAX_VALUE)
+                                .addComponent(fieldTypeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(advancedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(findButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(distanceLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(advancedButton))
-                    .addComponent(jLabel1)
-                    .addComponent(findTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3))
-                        .addGap(57, 57, 57)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(findTypeBox, 0, 136, Short.MAX_VALUE)
-                            .addComponent(fieldTypeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(advancedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(distanceBox, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -250,9 +263,13 @@ public class searchPanel extends javax.swing.JPanel {
                 .addComponent(findTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(distanceBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(distanceLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(findTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(fieldTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -300,6 +317,15 @@ public class searchPanel extends javax.swing.JPanel {
            field = fieldTypeBox.getSelectedItem().toString();
         }
         findType = findTypeBox.getSelectedItem().toString();
+        
+        if(findTypeBox.getSelectedItem().toString().equals("Proximidad")){
+            distanceBox.setVisible(true);
+            distanceLabel.setVisible(true);
+        }
+        else{
+            distanceBox.setVisible(false);
+            distanceLabel.setVisible(false);
+        }        
     }//GEN-LAST:event_findTypeBoxActionPerformed
 
     private void fieldTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTypeBoxActionPerformed
@@ -326,7 +352,17 @@ public class searchPanel extends javax.swing.JPanel {
             String value = findTextField.getText();
             String[] fieldNames={"Idioma","Tipo de documento"};
             String[] fieldValues={idioma_select.getSelectedItem().toString().toLowerCase(),tipo_select.getSelectedItem().toString().toLowerCase()};
-            hits=mainSearcher.search(field, value, fieldNames, fieldValues,advancedPanel1.GetField(),advancedPanel1.GetRange(), 5000);
+
+            if(findTypeBox.getSelectedItem().toString().equals("Proximidad")){
+                hits=mainSearcher.search(Integer.parseInt(distanceBox.getText()), field, value, fieldNames, fieldValues,advancedPanel1.GetField(),advancedPanel1.GetRange(), 5000);
+            }
+            else if(findTypeBox.getSelectedItem().toString().equals("Exacta")){
+                hits=mainSearcher.search(0, field, value, fieldNames, fieldValues,advancedPanel1.GetField(),advancedPanel1.GetRange(), 5000);
+            }
+            else{
+                hits=mainSearcher.search(-1, field, value, fieldNames, fieldValues,advancedPanel1.GetField(),advancedPanel1.GetRange(), 5000);
+            }
+
         } catch (IOException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
@@ -344,6 +380,8 @@ public class searchPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton advancedButton;
     private mathInterface.advancedPanel advancedPanel1;
+    private javax.swing.JTextField distanceBox;
+    private javax.swing.JLabel distanceLabel;
     private javax.swing.JComboBox<String> fieldTypeBox;
     private javax.swing.JButton findButton;
     private javax.swing.JTextField findTextField;

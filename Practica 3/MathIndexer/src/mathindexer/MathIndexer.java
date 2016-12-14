@@ -158,7 +158,7 @@ public class MathIndexer {
                         doc.add(new IntPoint("Página fin", pageE)); 
                         break; 
                     case 6: // Enlace
-                        doc.add(new StringField("Link", parts[i].toLowerCase(), Field.Store.YES)); 
+                        doc.add(new StringField("Link", parts[i], Field.Store.YES)); 
                         break; 
                     case 7: // Abstract
                         doc.add(new TextField("Abstract", parts[i], Field.Store.YES)); 
@@ -170,13 +170,18 @@ public class MathIndexer {
                         doc.add(new TextField("Palabras clave índice", parts[i], Field.Store.YES));
                         break;
                     case 10: // Referencias
-                        doc.add(new StringField("Referencias", parts[i].toLowerCase(), Field.Store.YES)); 
+                        String str=parts[i].toLowerCase();
+                        if(str.length()>32000){
+                             str=str.substring(0, 32000);
+                        }
+                        doc.add(new StringField("Referencias",str, Field.Store.YES)); 
                         break; 
                     case 11: // Idioma 
                         doc.add(new StringField("Idioma", parts[i].toLowerCase(), Field.Store.YES));
                         doc.add(new FacetField("Idioma",parts[i].toLowerCase()));
                         break; 
                     case 12: // Tipo de documento
+                        System.out.println(parts[i]);
                         doc.add(new StringField("Tipo de documento", parts[i].toLowerCase(), Field.Store.YES));
                         doc.add(new FacetField("Tipo de documento", parts[i].toLowerCase()));
                         break;
@@ -200,7 +205,7 @@ public class MathIndexer {
      */
     public static void main(String[] args) throws IOException, ParseException {
         MathIndexer test = new MathIndexer();
-        test.readAndIndex("../Data/Fourier.csv","../Index","../Index/taxo");
+        test.readAndIndex("../Data/FourierCortado.csv","../Index","../Index/taxo");
     }
     
 }

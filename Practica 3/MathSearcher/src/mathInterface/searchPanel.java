@@ -13,6 +13,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import mathsearcher.MathSearcher;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.facet.DrillDownQuery;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.index.Term;
@@ -38,6 +39,7 @@ public class searchPanel extends javax.swing.JPanel {
      */
     public searchPanel() {
         initComponents();
+        advancedPanel1.setVisible(false);
         mainSearcher = new MathSearcher("../Index","../Index/taxo");
         try {
             fields = mainSearcher.getFields().toArray();
@@ -76,6 +78,7 @@ public class searchPanel extends javax.swing.JPanel {
         findTypeBox = new javax.swing.JComboBox<>();
         fieldTypeBox = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
+        advancedPanel1 = new mathInterface.advancedPanel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -89,6 +92,7 @@ public class searchPanel extends javax.swing.JPanel {
         );
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        setMinimumSize(new java.awt.Dimension(877, 400));
 
         findButton.setText("Buscar");
         findButton.addActionListener(new java.awt.event.ActionListener() {
@@ -108,7 +112,7 @@ public class searchPanel extends javax.swing.JPanel {
 
         jLabel2.setText("Opciones de búsqueda:");
 
-        idioma_select.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "english", "spanish","russian","chinese" }));
+        idioma_select.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos","English", "Spanish","Russian","Chinese" }));
         idioma_select.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 idioma_selectActionPerformed(evt);
@@ -117,9 +121,9 @@ public class searchPanel extends javax.swing.JPanel {
 
         jLabel5.setText("Idioma:");
 
-        jLabel6.setText("Tipo de documento");
+        jLabel6.setText("Tipo de documento:");
 
-        tipo_select.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Article", "conference paper", "Book Chapter","article in press","review","conference review","book","erratum"}));
+        tipo_select.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos","Article", "Conference paper", "Book Chapter","Article in press","Review","Conference review","Book","Erratum"}));
         tipo_select.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tipo_selectActionPerformed(evt);
@@ -130,36 +134,35 @@ public class searchPanel extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addContainerGap(83, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(idioma_select, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tipo_select, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tipo_select, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(idioma_select, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(idioma_select, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(idioma_select, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tipo_select, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addContainerGap(181, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         findTextField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -180,7 +183,7 @@ public class searchPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(searchInfo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(hitsTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE))
+                    .addComponent(hitsTable1, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -217,22 +220,23 @@ public class searchPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(findButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(advancedButton))
                     .addComponent(jLabel1)
-                    .addComponent(findTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(findTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fieldTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(findTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3))
+                        .addGap(57, 57, 57)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(findTypeBox, 0, 136, Short.MAX_VALUE)
+                            .addComponent(fieldTypeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(advancedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -248,13 +252,15 @@ public class searchPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(findTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(fieldTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(advancedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(findButton)
                     .addComponent(advancedButton))
@@ -268,9 +274,19 @@ public class searchPanel extends javax.swing.JPanel {
 
     private void advancedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_advancedButtonActionPerformed
         // TODO add your handling code here:
+        if(!advancedButton.getText().equals("Ocultar búsqueda por rango")){
+            advancedPanel1.setVisible(true);
+            advancedButton.setText("Ocultar búsqueda por rango");
+        }else{
+            advancedPanel1.Clear();
+            advancedPanel1.setVisible(false);
+            advancedButton.setText("Búsqueda por rango");
+        }
     }//GEN-LAST:event_advancedButtonActionPerformed
 
     private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
+        tipo_select.setSelectedIndex(0);
+        idioma_select.setSelectedIndex(0);
         search();
     }//GEN-LAST:event_findButtonActionPerformed
 
@@ -297,58 +313,27 @@ public class searchPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_findTextFieldKeyPressed
 
     private void idioma_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idioma_selectActionPerformed
-        Query base = new TermQuery(new Term(field, findTextField.getText()));
-         ArrayList<Document> hits = null;
-        try {
-            hits = mainSearcher.drillDown(base,"Idioma",idioma_select.getSelectedItem().toString(),5000);
-        } catch (IOException ex) {
-            Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        searchInfo1.updateInfo(findTextField.getText() , (String) findTypeBox.getSelectedItem(), hits);
-        hitsTable1.refreshTable();
-        hitsTable1.updateTable(hits);
+        search();
     }//GEN-LAST:event_idioma_selectActionPerformed
 
     private void tipo_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipo_selectActionPerformed
-          Query base = new TermQuery(new Term(field, findTextField.getText()));
-         ArrayList<Document> hits = null;
-        try {
-            hits = mainSearcher.drillDown(base,"Tipo de documento",tipo_select.getSelectedItem().toString().toLowerCase(),5000);
-        } catch (IOException ex) {
-            Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        searchInfo1.updateInfo(findTextField.getText() , (String) findTypeBox.getSelectedItem(), hits);
-        hitsTable1.refreshTable();
-        hitsTable1.updateTable(hits);
+        search();
     }//GEN-LAST:event_tipo_selectActionPerformed
 
     public void search(){
         ArrayList<Document> hits = null;
         try {
             String value = findTextField.getText();
-            if(findType.equals("Términos"))
-                hits = mainSearcher.searchTerm(field, value, 5000);
-            else if(findType.equals("Booleana"))
-                hits = mainSearcher.searchBoolean(field, value, 5000);
-            else if(findType.equals("Numérica")){
-                int intireValue = Integer.parseInt(value);
-                hits = mainSearcher.searchIntExact(field, intireValue, 5000);
-            }
+            String[] fieldNames={"Idioma","Tipo de documento"};
+            String[] fieldValues={idioma_select.getSelectedItem().toString().toLowerCase(),tipo_select.getSelectedItem().toString().toLowerCase()};
+            hits=mainSearcher.search(findType, field, value, fieldNames, fieldValues,advancedPanel1.GetField(),advancedPanel1.GetRange(), 5000);
         } catch (IOException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        /*System.out.println("Búsquedas:");
-        for (int i = 0; i < hits.size(); i++) {
-            Document hitDoc = hits.get(i);
-            System.out.println("salida "+hitDoc.get("Abstract").toString());
-            System.out.println("salida "+hitDoc.toString());
-         }*/
-        
         searchInfo1.updateInfo(findTextField.getText() , (String) findTypeBox.getSelectedItem(), hits);
-        hitsTable1.refreshTable();
         hitsTable1.updateTable(hits);
     }
     
@@ -358,6 +343,7 @@ public class searchPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton advancedButton;
+    private mathInterface.advancedPanel advancedPanel1;
     private javax.swing.JComboBox<String> fieldTypeBox;
     private javax.swing.JButton findButton;
     private javax.swing.JTextField findTextField;

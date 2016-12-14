@@ -181,7 +181,6 @@ public class MathIndexer {
                         doc.add(new FacetField("Idioma",parts[i].toLowerCase()));
                         break; 
                     case 12: // Tipo de documento
-                        System.out.println(parts[i]);
                         doc.add(new StringField("Tipo de documento", parts[i].toLowerCase(), Field.Store.YES));
                         doc.add(new FacetField("Tipo de documento", parts[i].toLowerCase()));
                         break;

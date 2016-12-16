@@ -49,10 +49,12 @@ public class MathSearcher {
 
     private String indexPath;
     private String taxoPath;
-
+    ArrayList<FacetResult> facetResults;
+    
     public MathSearcher(String indexPath, String taxoPath) {
         this.indexPath = indexPath;
         this.taxoPath = taxoPath;
+        facetResults = new ArrayList<>();
     }
     private Query BuilderStringQuery(String field, String value) throws FileNotFoundException, IOException, ParseException {
         Analyzer analyzer = new StandardAnalyzer();
@@ -193,42 +195,27 @@ public class MathSearcher {
         }
         FacetsCollector fc = new FacetsCollector();
         ScoreDoc[] hits = FacetsCollector.search(isearcher, query, nDocuments, fc).scoreDocs;
+        
 
+        Facets facets = new FastTaxonomyFacetCounts(taxoReader, new FacetsConfig(), fc);
+        
+        
         ArrayList<Document> result = new ArrayList<>();
-
+        facetResults.clear();
+        
         for (int i = 0; i < hits.length; i++) {
             result.add(isearcher.doc(hits[i].doc));
         }
-
+        
+        for (int i = 0; i < facetas.length ; i++)
+            facetResults.add(facets.getTopChildren(nDocuments,facetas[i]));
         iReader.close();
         taxoReader.close();
         dir.close();
         return result;
     }
     
-    public ArrayList<FacetResult> searchFacets(Query q, int ndocs) throws IOException {
-        Path path = FileSystems.getDefault().getPath(indexPath);
-        Path taxo = FileSystems.getDefault().getPath(taxoPath);
-        Directory dir = FSDirectory.open(path);
-        Directory taxo_dir = FSDirectory.open(taxo);
-
-        IndexReader iReader = DirectoryReader.open(dir);
-        IndexSearcher isearcher = new IndexSearcher(iReader);
-
-        TaxonomyReader taxoReader = new DirectoryTaxonomyReader(taxo_dir);
-
-        FacetsCollector fc = new FacetsCollector();
-        FacetsCollector.search(isearcher, q, ndocs, fc);
-        ArrayList<FacetResult> results = new ArrayList<>();
-
-        Facets facets = new FastTaxonomyFacetCounts(taxoReader, new FacetsConfig(), fc);
-        results.add(facets.getTopChildren(ndocs, "Idioma"));
-        results.add(facets.getTopChildren(ndocs, "Tipo de documento"));
-
-        iReader.close();
-        taxoReader.close();
-        return results;
-    }
+    
     
     public ArrayList<String> getFields() throws IOException{
         Path path = FileSystems.getDefault().getPath(indexPath);
@@ -247,7 +234,10 @@ public class MathSearcher {
         
         return fields;
     }
-
+    
+    public ArrayList<FacetResult> getFacets(){
+        return facetResults;
+    }
     /**
      * @param args the command line arguments
      */

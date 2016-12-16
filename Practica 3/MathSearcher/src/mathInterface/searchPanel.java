@@ -15,6 +15,7 @@ import mathsearcher.MathSearcher;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.facet.DrillDownQuery;
+import org.apache.lucene.facet.FacetResult;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -33,14 +34,14 @@ public class searchPanel extends javax.swing.JPanel {
     String field;
     Object[] fields;
     String[] intpoints = {"Año", "Página inicio", "Página fin"};
-    
+
     /**
      * Creates new form searchPanel
      */
     public searchPanel() {
         initComponents();
         advancedPanel1.setVisible(false);
-        mainSearcher = new MathSearcher("../Index","../Index/taxo");
+        mainSearcher = new MathSearcher("../Index", "../Index/taxo");
         try {
             fields = mainSearcher.getFields().toArray();
             updateFields(fields);
@@ -291,10 +292,10 @@ public class searchPanel extends javax.swing.JPanel {
 
     private void advancedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_advancedButtonActionPerformed
         // TODO add your handling code here:
-        if(!advancedButton.getText().equals("Ocultar búsqueda por rango")){
+        if (!advancedButton.getText().equals("Ocultar búsqueda por rango")) {
             advancedPanel1.setVisible(true);
             advancedButton.setText("Ocultar búsqueda por rango");
-        }else{
+        } else {
             advancedPanel1.Clear();
             advancedPanel1.setVisible(false);
             advancedButton.setText("Búsqueda por rango");
@@ -305,27 +306,27 @@ public class searchPanel extends javax.swing.JPanel {
         tipo_select.setSelectedIndex(0);
         idioma_select.setSelectedIndex(0);
         search();
+        updateFacetas("idioma");
+        updateFacetas("tipo");
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void findTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTypeBoxActionPerformed
-        if(findTypeBox.getSelectedItem().toString().equals("Numérica")){
-           fieldTypeBox.setModel(new DefaultComboBoxModel(intpoints));
-           field = fieldTypeBox.getSelectedItem().toString();
-        }
-        else{
-           fieldTypeBox.setModel(new DefaultComboBoxModel(fields));
-           field = fieldTypeBox.getSelectedItem().toString();
+        if (findTypeBox.getSelectedItem().toString().equals("Numérica")) {
+            fieldTypeBox.setModel(new DefaultComboBoxModel(intpoints));
+            field = fieldTypeBox.getSelectedItem().toString();
+        } else {
+            fieldTypeBox.setModel(new DefaultComboBoxModel(fields));
+            field = fieldTypeBox.getSelectedItem().toString();
         }
         findType = findTypeBox.getSelectedItem().toString();
-        
-        if(findTypeBox.getSelectedItem().toString().equals("Proximidad")){
+
+        if (findTypeBox.getSelectedItem().toString().equals("Proximidad")) {
             distanceBox.setVisible(true);
             distanceLabel.setVisible(true);
-        }
-        else{
+        } else {
             distanceBox.setVisible(false);
             distanceLabel.setVisible(false);
-        }        
+        }
     }//GEN-LAST:event_findTypeBoxActionPerformed
 
     private void fieldTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTypeBoxActionPerformed
@@ -333,34 +334,40 @@ public class searchPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_fieldTypeBoxActionPerformed
 
     private void findTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextFieldKeyPressed
-        if(evt.getKeyCode() == 10){
+        if (evt.getKeyCode() == 10) {
             search();
+            updateFacetas("idioma");
+            updateFacetas("tipo");
         }
     }//GEN-LAST:event_findTextFieldKeyPressed
 
     private void idioma_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idioma_selectActionPerformed
         search();
+        updateFacetas("tipo");
+        
     }//GEN-LAST:event_idioma_selectActionPerformed
 
     private void tipo_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipo_selectActionPerformed
         search();
+        updateFacetas("idioma");
     }//GEN-LAST:event_tipo_selectActionPerformed
 
-    public void search(){
+    public void search() {
         ArrayList<Document> hits = null;
         try {
             String value = findTextField.getText();
-            String[] fieldNames={"Idioma","Tipo de documento"};
-            String[] fieldValues={idioma_select.getSelectedItem().toString().toLowerCase(),tipo_select.getSelectedItem().toString().toLowerCase()};
+            String[] fieldNames = {"Idioma", "Tipo de documento"};
+            String idioma = idioma_select.getSelectedItem().toString().toLowerCase().split("[(]")[0];
+            String tipo = tipo_select.getSelectedItem().toString().toLowerCase().split("[(]")[0];
 
-            if(findTypeBox.getSelectedItem().toString().equals("Proximidad")){
-                hits=mainSearcher.search(Integer.parseInt(distanceBox.getText()), field, value, fieldNames, fieldValues,advancedPanel1.GetField(),advancedPanel1.GetRange(), 5000);
-            }
-            else if(findTypeBox.getSelectedItem().toString().equals("Exacta")){
-                hits=mainSearcher.search(0, field, value, fieldNames, fieldValues,advancedPanel1.GetField(),advancedPanel1.GetRange(), 5000);
-            }
-            else{
-                hits=mainSearcher.search(-1, field, value, fieldNames, fieldValues,advancedPanel1.GetField(),advancedPanel1.GetRange(), 5000);
+            String[] fieldValues = {idioma, tipo};
+
+            if (findTypeBox.getSelectedItem().toString().equals("Proximidad")) {
+                hits = mainSearcher.search(Integer.parseInt(distanceBox.getText()), field, value, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
+            } else if (findTypeBox.getSelectedItem().toString().equals("Exacta")) {
+                hits = mainSearcher.search(0, field, value, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
+            } else {
+                hits = mainSearcher.search(-1, field, value, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
             }
 
         } catch (IOException ex) {
@@ -368,15 +375,42 @@ public class searchPanel extends javax.swing.JPanel {
         } catch (ParseException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        searchInfo1.updateInfo(findTextField.getText() , (String) findTypeBox.getSelectedItem(), hits);
+
+        searchInfo1.updateInfo(findTextField.getText(), (String) findTypeBox.getSelectedItem(), hits);
+
         hitsTable1.updateTable(hits);
+
     }
-    
-    public void updateFields(Object[] f) throws IOException{
+
+    public void updateFields(Object[] f) throws IOException {
         fieldTypeBox.setModel(new DefaultComboBoxModel(f));
     }
 
+    // actualiza la faceta indicada
+    public void updateFacetas(String faceta) {
+        ArrayList<FacetResult> facetas = mainSearcher.getFacets();
+
+        if (faceta.equals("idioma")) {
+            String[] idiomas = new String[facetas.get(0).labelValues.length + 1];
+            idiomas[0] = "Todos";
+            for (int i = 0; i < facetas.get(0).labelValues.length; i++) {
+                idiomas[i + 1] = facetas.get(0).labelValues[i].label + "(" + facetas.get(0).labelValues[i].value + ")";
+                idioma_select.setModel(new DefaultComboBoxModel(idiomas));
+            }
+        }    
+         else  if (faceta.equals("tipo")) {
+                String[] tipo = new String[facetas.get(1).labelValues.length + 1];
+                tipo[0] = "Todos";
+
+                for (int i = 0; i < facetas.get(1).labelValues.length; i++) {
+                    tipo[i + 1] = facetas.get(1).labelValues[i].label + "(" + facetas.get(1).labelValues[i].value + ")";
+                }
+
+                tipo_select.setModel(new DefaultComboBoxModel(tipo));
+            }
+
+        }
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton advancedButton;
     private mathInterface.advancedPanel advancedPanel1;

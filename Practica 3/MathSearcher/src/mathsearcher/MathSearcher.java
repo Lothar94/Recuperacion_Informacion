@@ -130,6 +130,7 @@ public class MathSearcher {
                 } else {
                     termquery = new TermQuery(new Term(field.get(i), word));
                     boolConstructor.add(termquery, clause);
+                    clause = BooleanClause.Occur.MUST;
                 }
             }
         }

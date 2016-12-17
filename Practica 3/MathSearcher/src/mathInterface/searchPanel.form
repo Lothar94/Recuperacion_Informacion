@@ -73,11 +73,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="distanceBox" min="-2" pref="95" max="-2" attributes="0"/>
                   </Group>
-<<<<<<< HEAD
                   <Component id="advancedPanel1" pref="328" max="32767" attributes="0"/>
                   <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
-=======
->>>>>>> d0739bb5a09385948118e1fb3e7c12b5fcb21c7d
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel3" max="32767" attributes="0"/>

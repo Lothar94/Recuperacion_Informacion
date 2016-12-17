@@ -118,7 +118,7 @@ public class MathSearcher {
                 boolConstructor.add(termquery, BooleanClause.Occur.MUST_NOT);
             }
 
-            BooleanClause.Occur clause = null;
+            BooleanClause.Occur clause = BooleanClause.Occur.MUST;
             while (tokens.hasMoreTokens()) {
                 word = tokens.nextToken();
                 if (word.equals("and")) {

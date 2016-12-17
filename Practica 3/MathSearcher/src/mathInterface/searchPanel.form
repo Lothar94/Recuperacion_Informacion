@@ -65,7 +65,7 @@
                               <Component id="fieldTypeBox" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="advancedPanel1" pref="324" max="32767" attributes="0"/>
+                      <Component id="advancedPanel1" pref="328" max="32767" attributes="0"/>
                       <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -73,8 +73,6 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="distanceBox" min="-2" pref="95" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="advancedPanel1" pref="328" max="32767" attributes="0"/>
-                  <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel3" max="32767" attributes="0"/>

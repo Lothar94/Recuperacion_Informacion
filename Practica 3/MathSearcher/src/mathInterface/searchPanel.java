@@ -245,7 +245,7 @@ public class searchPanel extends javax.swing.JPanel {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(findTypeBox, 0, 136, Short.MAX_VALUE)
                                 .addComponent(fieldTypeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addComponent(advancedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                        .addComponent(advancedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(distanceLabel)
@@ -388,28 +388,31 @@ public class searchPanel extends javax.swing.JPanel {
 
     // actualiza la faceta indicada
     public void updateFacetas(String faceta) {
-        ArrayList<FacetResult> facetas = mainSearcher.getFacets();
+        if (! mainSearcher.getFacets().isEmpty()){
+            ArrayList<FacetResult> facetas = mainSearcher.getFacets();
 
-        if (faceta.equals("idioma")) {
-            String[] idiomas = new String[facetas.get(0).labelValues.length + 1];
-            idiomas[0] = "Todos";
-            for (int i = 0; i < facetas.get(0).labelValues.length; i++) {
-                idiomas[i + 1] = facetas.get(0).labelValues[i].label + "(" + facetas.get(0).labelValues[i].value + ")";
-                idioma_select.setModel(new DefaultComboBoxModel(idiomas));
-            }
-        }    
-         else  if (faceta.equals("tipo")) {
-                String[] tipo = new String[facetas.get(1).labelValues.length + 1];
-                tipo[0] = "Todos";
-
-                for (int i = 0; i < facetas.get(1).labelValues.length; i++) {
-                    tipo[i + 1] = facetas.get(1).labelValues[i].label + "(" + facetas.get(1).labelValues[i].value + ")";
+            if (faceta.equals("idioma")) {
+                String[] idiomas = new String[facetas.get(0).labelValues.length + 1];
+                idiomas[0] = "Todos";
+                for (int i = 0; i < facetas.get(0).labelValues.length; i++) {
+                    idiomas[i + 1] = facetas.get(0).labelValues[i].label + "(" + facetas.get(0).labelValues[i].value + ")";
+                    idioma_select.setModel(new DefaultComboBoxModel(idiomas));
                 }
+            }    
+            else{  
+                if (faceta.equals("tipo")) {
+                    String[] tipo = new String[facetas.get(1).labelValues.length + 1];
+                    tipo[0] = "Todos";
 
-                tipo_select.setModel(new DefaultComboBoxModel(tipo));
+                    for (int i = 0; i < facetas.get(1).labelValues.length; i++) {
+                        tipo[i + 1] = facetas.get(1).labelValues[i].label + "(" + facetas.get(1).labelValues[i].value + ")";
+                    }
+
+                    tipo_select.setModel(new DefaultComboBoxModel(tipo));
+                }
             }
-
         }
+    }
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton advancedButton;

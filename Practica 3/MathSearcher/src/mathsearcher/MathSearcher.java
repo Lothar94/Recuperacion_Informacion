@@ -189,7 +189,6 @@ public class MathSearcher {
         DrillDownQuery query = new DrillDownQuery(new FacetsConfig(), baseQuery);
         for(int i =0 ; i<facetas.length;i++){
             if(!values[i].equals("todos")){
-                System.out.println(facetas[i]+": "+values[i]);
                 query.add(facetas[i], values[i]);
             }
         }

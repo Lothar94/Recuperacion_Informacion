@@ -41,6 +41,7 @@ public class filterPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         filterRows = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -54,7 +55,14 @@ public class filterPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel1.setText("Añadir Filtro:");
+        jButton3.setText("-");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Añadir/Eliminar Filtro:");
 
         jLabel2.setText("Búsqueda:");
 
@@ -65,7 +73,7 @@ public class filterPanel extends javax.swing.JPanel {
             .addGroup(filterRowsLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(297, Short.MAX_VALUE))
         );
         filterRowsLayout.setVerticalGroup(
             filterRowsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -86,8 +94,10 @@ public class filterPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
-                        .addGap(0, 256, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -96,7 +106,8 @@ public class filterPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filterRows, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -117,6 +128,16 @@ public class filterPanel extends javax.swing.JPanel {
         
         updateFrame();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if(filterTextFields.size() > 0){
+            filterRows.remove(filterTextFields.get(filterTextFields.size()-1));
+            filterRows.remove(filterFields.get(filterFields.size()-1));
+            filterTextFields.remove(filterTextFields.size()-1);
+            filterFields.remove(filterFields.size()-1);
+            updateFrame();
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void updateFrame() {
         int pos_Y = 25;
@@ -146,6 +167,7 @@ public class filterPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel filterRows;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables

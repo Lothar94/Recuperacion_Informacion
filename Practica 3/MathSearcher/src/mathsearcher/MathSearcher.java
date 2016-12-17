@@ -101,38 +101,38 @@ public class MathSearcher {
         return query;
     }
 
-    private Query BuilderBooleanQuery(String field, String value) throws FileNotFoundException, IOException, ParseException {
-
-        StringTokenizer tokens = new StringTokenizer(value);
-
+    private Query BuilderBooleanQuery(ArrayList<String> field, ArrayList<String> value) throws FileNotFoundException, IOException, ParseException {
         BooleanQuery.Builder boolConstructor = new BooleanQuery.Builder();
 
-        String word = tokens.nextToken();
-        Query termquery = null;
-        if (!word.equals("not")) {
-            termquery = new TermQuery(new Term(field, word));
-            boolConstructor.add(termquery, BooleanClause.Occur.MUST);
-        } else {
-            word = tokens.nextToken();
-            termquery = new TermQuery(new Term(field, word));
-            boolConstructor.add(termquery, BooleanClause.Occur.MUST_NOT);
-        }
+        for(int i = 0; i < field.size(); i++){
+            StringTokenizer tokens = new StringTokenizer(value.get(i));
 
-        BooleanClause.Occur clause = null;
-        while (tokens.hasMoreTokens()) {
-            word = tokens.nextToken();
-            if (word.equals("and")) {
-                clause = BooleanClause.Occur.MUST;
-            } else if (word.equals("or")) {
-                clause = BooleanClause.Occur.SHOULD;
-            } else if (word.equals("not")) {
-                clause = BooleanClause.Occur.MUST_NOT;
+            String word = tokens.nextToken();
+            Query termquery = null;
+            if (!word.equals("not")) {
+                termquery = new TermQuery(new Term(field.get(i), word));
+                boolConstructor.add(termquery, BooleanClause.Occur.MUST);
             } else {
-                termquery = new TermQuery(new Term(field, word));
-                boolConstructor.add(termquery, clause);
+                word = tokens.nextToken();
+                termquery = new TermQuery(new Term(field.get(i), word));
+                boolConstructor.add(termquery, BooleanClause.Occur.MUST_NOT);
+            }
+
+            BooleanClause.Occur clause = null;
+            while (tokens.hasMoreTokens()) {
+                word = tokens.nextToken();
+                if (word.equals("and")) {
+                    clause = BooleanClause.Occur.MUST;
+                } else if (word.equals("or")) {
+                    clause = BooleanClause.Occur.SHOULD;
+                } else if (word.equals("not")) {
+                    clause = BooleanClause.Occur.MUST_NOT;
+                } else {
+                    termquery = new TermQuery(new Term(field.get(i), word));
+                    boolConstructor.add(termquery, clause);
+                }
             }
         }
-
         Query query = boolConstructor.build();
 
         return query;
@@ -143,7 +143,7 @@ public class MathSearcher {
         return query;
     }
     
-    public ArrayList<Document> search(int distance, String field, String value,String[] facetas, String[] values,String fieldRange,ArrayList<String> range, int nDocuments) throws FileNotFoundException, IOException, ParseException {
+    public ArrayList<Document> search(int distance, ArrayList<String> field, ArrayList<String> value, String[] facetas, String[] values,String fieldRange,ArrayList<String> range, int nDocuments) throws FileNotFoundException, IOException, ParseException {
 
         Path path = FileSystems.getDefault().getPath(indexPath);
         Path taxo = FileSystems.getDefault().getPath(taxoPath);
@@ -154,21 +154,22 @@ public class MathSearcher {
         TaxonomyReader taxoReader = new DirectoryTaxonomyReader(taxo_dir);
         IndexSearcher isearcher = new IndexSearcher(iReader);
         
-        value = value.toLowerCase();
+        for(int i = 0; i < value.size() ; i++)
+            value.set(i, value.get(i).toLowerCase());
         
         Query baseQuery=null;
         
         // Distinguimos casos. Primero, vemos que la consulta no es vacía
-        if(!value.equals("")){
+        if(!value.get(0).equals("")){
             // Si la distancia es mayor o igual que cero, tenemos una consulta por proximidad o exacta (distancia == 0)
             if (distance >= 0)
-                baseQuery = this.BuilderPhraseQuery(distance, field, value);
+                baseQuery = this.BuilderPhraseQuery(distance, field.get(0), value.get(0));
             // En otro caso, distinguimos entre búsqueda numérica o booleana dependiendo del campo
             else{   
                 // Numérica
-                if (field == "Año" || field == "Página inicio" || field == "Página fin"){
-                    int intireValue = Integer.parseInt(value);
-                    baseQuery = this.BuilderIntExactQuery(field, intireValue);
+                if (field.get(0) == "Año" || field.get(0) == "Página inicio" || field.get(0) == "Página fin"){
+                    int intireValue = Integer.parseInt(value.get(0));
+                    baseQuery = this.BuilderIntExactQuery(field.get(0), intireValue);
 
                 }
                 // Booleana

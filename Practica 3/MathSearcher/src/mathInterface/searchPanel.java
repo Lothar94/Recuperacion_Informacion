@@ -24,6 +24,8 @@ public class searchPanel extends javax.swing.JPanel {
     MathSearcher mainSearcher;
     String findType;
     String field;
+    ArrayList<String> filterFields;
+    ArrayList<String> filterFinds;
     Object[] fields;
     String[] intpoints = {"Año", "Página inicio", "Página fin"};
 
@@ -32,6 +34,8 @@ public class searchPanel extends javax.swing.JPanel {
      */
     public searchPanel() {
         initComponents();
+        filterFinds = new ArrayList<>();
+        filterFields = new ArrayList<>();
         advancedPanel1.setVisible(false);
         mainSearcher = new MathSearcher("../Index", "../Index/taxo");
         try {
@@ -354,7 +358,21 @@ public class searchPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_tipo_selectActionPerformed
 
     public void filter() {
+        ArrayList<javax.swing.JComboBox> fields = null;
+        ArrayList<javax.swing.JTextField> finds = null;
+
+        fields = filterPanel2.getFilterFields();
+        finds = filterPanel2.getFilterTextFields();
         
+        filterFields.add((String) fieldTypeBox.getSelectedItem());
+        for(int i = 0; i< fields.size(); i++)
+            if(!finds.get(i).getText().equals(""))
+                filterFields.add((String) fields.get(i).getSelectedItem());
+        
+        filterFinds.add(findTextField.getText()) ;
+        for(int i = 0; i< finds.size(); i++)
+            if(!finds.get(i).getText().equals(""))
+                filterFinds.add(finds.get(i).getText());       
     }
     
     private void findTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextFieldActionPerformed
@@ -364,7 +382,7 @@ public class searchPanel extends javax.swing.JPanel {
     public void search() {
         ArrayList<Document> hits = null;
         try {
-            String value = findTextField.getText();
+            filter();
             String[] fieldNames = {"Idioma", "Tipo de documento"};
             String idioma = idioma_select.getSelectedItem().toString().toLowerCase().split("[(]")[0];
             String tipo = tipo_select.getSelectedItem().toString().toLowerCase().split("[(]")[0];
@@ -372,11 +390,11 @@ public class searchPanel extends javax.swing.JPanel {
             String[] fieldValues = {idioma, tipo};
 
             if (findTypeBox.getSelectedItem().toString().equals("Proximidad")) {
-                hits = mainSearcher.search(Integer.parseInt(distanceBox.getText()), field, value, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
+                hits = mainSearcher.search(Integer.parseInt(distanceBox.getText()), filterFields, filterFinds, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
             } else if (findTypeBox.getSelectedItem().toString().equals("Exacta")) {
-                hits = mainSearcher.search(0, field, value, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
+                hits = mainSearcher.search(0, filterFields, filterFinds, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
             } else {
-                hits = mainSearcher.search(-1, field, value, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
+                hits = mainSearcher.search(-1, filterFields, filterFinds, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
             }
         } catch (IOException | ParseException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -385,7 +403,9 @@ public class searchPanel extends javax.swing.JPanel {
         searchInfo1.updateInfo(findTextField.getText(), (String) findTypeBox.getSelectedItem(), hits);
 
         hitsTable1.updateTable(hits);
-
+        
+       filterFinds.clear();
+       filterFields.clear();
     }
 
     public void updateFields(Object[] f) throws IOException {

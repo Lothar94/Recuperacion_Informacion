@@ -10,18 +10,10 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import mathsearcher.MathSearcher;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.IntPoint;
-import org.apache.lucene.facet.DrillDownQuery;
 import org.apache.lucene.facet.FacetResult;
-import org.apache.lucene.facet.FacetsConfig;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
 
 /**
  *
@@ -170,6 +162,11 @@ public class searchPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        findTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findTextFieldActionPerformed(evt);
+            }
+        });
         findTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 findTextFieldKeyPressed(evt);
@@ -352,6 +349,10 @@ public class searchPanel extends javax.swing.JPanel {
         updateFacetas("idioma");
     }//GEN-LAST:event_tipo_selectActionPerformed
 
+    private void findTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_findTextFieldActionPerformed
+
     public void search() {
         ArrayList<Document> hits = null;
         try {
@@ -369,10 +370,7 @@ public class searchPanel extends javax.swing.JPanel {
             } else {
                 hits = mainSearcher.search(-1, field, value, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
             }
-
-        } catch (IOException ex) {
-            Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
+        } catch (IOException | ParseException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 

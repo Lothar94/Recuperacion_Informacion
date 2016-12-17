@@ -158,15 +158,20 @@ public class MathSearcher {
         
         Query baseQuery=null;
         
+        // Distinguimos casos. Primero, vemos que la consulta no es vacía
         if(!value.equals("")){
+            // Si la distancia es mayor o igual que cero, tenemos una consulta por proximidad o exacta (distancia == 0)
             if (distance >= 0)
                 baseQuery = this.BuilderPhraseQuery(distance, field, value);
-            else{
+            // En otro caso, distinguimos entre búsqueda numérica o booleana dependiendo del campo
+            else{   
+                // Numérica
                 if (field == "Año" || field == "Página inicio" || field == "Página fin"){
                     int intireValue = Integer.parseInt(value);
                     baseQuery = this.BuilderIntExactQuery(field, intireValue);
 
                 }
+                // Booleana
                 else 
                     baseQuery = this.BuilderBooleanQuery(field,value);
             }
@@ -184,36 +189,33 @@ public class MathSearcher {
             }
         }
         
-        
-
         DrillDownQuery query = new DrillDownQuery(new FacetsConfig(), baseQuery);
+        
         for(int i =0 ; i<facetas.length;i++){
-            if(!values[i].equals("todos")){
+            if(!values[i].equals("todos"))
                 query.add(facetas[i], values[i]);
-            }
         }
+        // Obtenemos aciertos y facetas
         FacetsCollector fc = new FacetsCollector();
         ScoreDoc[] hits = FacetsCollector.search(isearcher, query, nDocuments, fc).scoreDocs;
-        
-
         Facets facets = new FastTaxonomyFacetCounts(taxoReader, new FacetsConfig(), fc);
-        
-        
+                
         ArrayList<Document> result = new ArrayList<>();
         facetResults.clear();
         
-        for (int i = 0; i < hits.length; i++) {
+        // Añadimos resultados
+        for (int i = 0; i < hits.length; i++) 
             result.add(isearcher.doc(hits[i].doc));
-        }
         
+        // Añadimos facetas
         for (int i = 0; i < facetas.length ; i++)
             facetResults.add(facets.getTopChildren(nDocuments,facetas[i]));
+        
         iReader.close();
         taxoReader.close();
         dir.close();
         return result;
     }
-    
     
     
     public ArrayList<String> getFields() throws IOException{

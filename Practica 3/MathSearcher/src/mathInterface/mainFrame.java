@@ -9,7 +9,10 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
- * @author lot94
+ * @author Lothar Soto Palma
+ * @author Daniel López García
+ * @author Iván Calle Gil
+ * @author José Carlos Entrena Jiménez
  */
 public class mainFrame extends javax.swing.JFrame {
 

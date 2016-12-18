@@ -6,11 +6,13 @@
 package mathInterface;
 
 import java.util.ArrayList;
-import javax.swing.ComboBoxModel;
 
 /**
  *
- * @author lot94
+ * @author Lothar Soto Palma
+ * @author Daniel López García
+ * @author Iván Calle Gil
+ * @author José Carlos Entrena Jiménez
  */
 public class filterPanel extends javax.swing.JPanel {
 

@@ -11,7 +11,10 @@ import org.apache.lucene.document.Document;
 
 /**
  *
- * @author dani
+ * @author Lothar Soto Palma
+ * @author Daniel López García
+ * @author Iván Calle Gil
+ * @author José Carlos Entrena Jiménez
  */
 public class advancedPanel extends javax.swing.JPanel {
 

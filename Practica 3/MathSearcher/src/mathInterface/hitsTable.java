@@ -21,12 +21,14 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
 import org.apache.lucene.document.Document;
 
 /**
  *
- * @author lot94
+ * @author Lothar Soto Palma
+ * @author Daniel López García
+ * @author Iván Calle Gil
+ * @author José Carlos Entrena Jiménez
  */
 public class hitsTable extends javax.swing.JPanel {
 

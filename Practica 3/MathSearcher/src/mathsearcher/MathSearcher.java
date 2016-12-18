@@ -43,9 +43,12 @@ import org.apache.lucene.store.FSDirectory;
 
 /**
  *
- * @author lot94
+ * @author Lothar Soto Palma
+ * @author Daniel López García
+ * @author Iván Calle Gil
+ * @author José Carlos Entrena Jiménez
  */
-public class MathSearcher {
+public class MathSearcher{
 
     private String indexPath;
     private String taxoPath;
@@ -55,12 +58,6 @@ public class MathSearcher {
         this.indexPath = indexPath;
         this.taxoPath = taxoPath;
         facetResults = new ArrayList<>();
-    }
-    private Query BuilderStringQuery(String field, String value) throws FileNotFoundException, IOException, ParseException {
-        Analyzer analyzer = new StandardAnalyzer();
-        QueryParser parser = new QueryParser(field, analyzer);
-        Query query = parser.parse(value);
-        return query;
     }
 
     private Query BuilderIntExactQuery(String field, int value) throws FileNotFoundException, IOException, ParseException {
@@ -121,16 +118,21 @@ public class MathSearcher {
             BooleanClause.Occur clause = BooleanClause.Occur.MUST;
             while (tokens.hasMoreTokens()) {
                 word = tokens.nextToken();
-                if (word.equals("and")) {
-                    clause = BooleanClause.Occur.MUST;
-                } else if (word.equals("or")) {
-                    clause = BooleanClause.Occur.SHOULD;
-                } else if (word.equals("not")) {
-                    clause = BooleanClause.Occur.MUST_NOT;
-                } else {
-                    termquery = new TermQuery(new Term(field.get(i), word));
-                    boolConstructor.add(termquery, clause);
-                    clause = BooleanClause.Occur.MUST;
+                switch (word) {
+                    case "and":
+                        clause = BooleanClause.Occur.MUST;
+                        break;
+                    case "or":
+                        clause = BooleanClause.Occur.SHOULD;
+                        break;
+                    case "not":
+                        clause = BooleanClause.Occur.MUST_NOT;
+                        break;
+                    default:
+                        termquery = new TermQuery(new Term(field.get(i), word));
+                        boolConstructor.add(termquery, clause);
+                        clause = BooleanClause.Occur.MUST;
+                        break;
                 }
             }
         }
@@ -139,10 +141,20 @@ public class MathSearcher {
         return query;
     }
 
+    /* Unused
+    
     private Query BuilderTermQuery(String field, String value) throws FileNotFoundException, IOException, ParseException {
         Query query = new TermQuery(new Term(field, value));
         return query;
     }
+    
+    private Query BuilderStringQuery(String field, String value) throws FileNotFoundException, IOException, ParseException {
+        Analyzer analyzer = new StandardAnalyzer();
+        QueryParser parser = new QueryParser(field, analyzer);
+        Query query = parser.parse(value);
+        return query;
+    }
+    */
     
     public ArrayList<Document> search(int distance, ArrayList<String> field, ArrayList<String> value, String[] facetas, String[] values,String fieldRange,ArrayList<String> range, int nDocuments) throws FileNotFoundException, IOException, ParseException {
 
@@ -158,7 +170,7 @@ public class MathSearcher {
         for(int i = 0; i < value.size() ; i++)
             value.set(i, value.get(i).toLowerCase());
         
-        Query baseQuery=null;
+        Query baseQuery = null;
         
         // Distinguimos casos. Primero, vemos que la consulta no es vacía
         if(!value.get(0).equals("")){

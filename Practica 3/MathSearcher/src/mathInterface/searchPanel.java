@@ -351,6 +351,7 @@ public class searchPanel extends javax.swing.JPanel {
         search();
         updateFacetas("tipo");
         
+        
     }//GEN-LAST:event_idioma_selectActionPerformed
 
     private void tipo_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipo_selectActionPerformed
@@ -421,21 +422,36 @@ public class searchPanel extends javax.swing.JPanel {
             if (faceta.equals("idioma")) {
                 String[] idiomas = new String[facetas.get(0).labelValues.length + 1];
                 idiomas[0] = "Todos";
+                
+                String idioma_actual = (String) idioma_select.getSelectedItem();
+                idioma_actual= idioma_actual.split("[(]")[0];
+                
                 for (int i = 0; i < facetas.get(0).labelValues.length; i++) {
                     idiomas[i + 1] = facetas.get(0).labelValues[i].label + "(" + facetas.get(0).labelValues[i].value + ")";
-                    idioma_select.setModel(new DefaultComboBoxModel(idiomas));
+                    if (facetas.get(0).labelValues[i].label.equals(idioma_actual))
+                            idioma_actual = idiomas[i+1];
                 }
+                idioma_select.setModel(new DefaultComboBoxModel(idiomas));
+                idioma_select.setSelectedItem(idioma_actual);
             }    
             else{  
                 if (faceta.equals("tipo")) {
                     String[] tipo = new String[facetas.get(1).labelValues.length + 1];
                     tipo[0] = "Todos";
+                    
+                    String tipo_actual = (String) tipo_select.getSelectedItem();
+                    tipo_actual= tipo_actual.split("[(]")[0];
+                    
 
                     for (int i = 0; i < facetas.get(1).labelValues.length; i++) {
                         tipo[i + 1] = facetas.get(1).labelValues[i].label + "(" + facetas.get(1).labelValues[i].value + ")";
+                        if (facetas.get(1).labelValues[i].label.equals(tipo_actual))
+                            tipo_actual = tipo[i+1];
                     }
+                    
 
                     tipo_select.setModel(new DefaultComboBoxModel(tipo));
+                    tipo_select.setSelectedItem(tipo_actual);
                 }
             }
         }

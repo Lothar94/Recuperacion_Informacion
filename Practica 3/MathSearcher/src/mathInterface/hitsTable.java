@@ -42,9 +42,10 @@ public class hitsTable extends javax.swing.JPanel {
     ArrayList<Document> hits;
     public hitsTable() {
         icono =new ImageIcon("./imgs/eyeSmall.png");
-        tiposColumnas = new Class[]{java.lang.String.class,java.lang.String.class,JButton.class};
+        tiposColumnas = new Class[]{java.lang.Integer.class,java.lang.String.class,JButton.class};
         columnas= new String[]{"Rank","Titulo","Ir"};
         initComponents();
+        Table.setAutoCreateRowSorter(true);
         Table.setModel(new javax.swing.table.DefaultTableModel(new Object [][] {},columnas) {
             Class[] tipos = tiposColumnas;
 
@@ -119,7 +120,7 @@ public class hitsTable extends javax.swing.JPanel {
         refreshTable();
         Object data[] = new Object[3];
         for(int i = 0; i < hits.size(); i++){
-            data[0] = String.valueOf(i+1);
+            data[0] = i+1;
             data[1] = hits.get(i).get("Titulo");
             JButton boton=new JButton();
             boton.setIcon(icono);
@@ -164,6 +165,10 @@ public class hitsTable extends javax.swing.JPanel {
         Table.setRowHeight(25);
         Table.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(Table);
+        if (Table.getColumnModel().getColumnCount() > 0) {
+            Table.getColumnModel().getColumn(0).setHeaderValue("Rank");
+            Table.getColumnModel().getColumn(1).setHeaderValue("Título");
+        }
 
         jLabel1.setText("Hits para la búsqueda:");
 

@@ -244,6 +244,10 @@ public class MathSearcher{
         while(itr.hasNext())
             fields.add((String) itr.next());
         
+        fields.add("Año");
+        fields.add("Página inicio");
+        fields.add("Página fin");
+        
         return fields;
     }
     

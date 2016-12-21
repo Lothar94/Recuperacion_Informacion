@@ -315,9 +315,12 @@ public class searchPanel extends javax.swing.JPanel {
     private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
         tipo_select.setSelectedIndex(0);
         idioma_select.setSelectedIndex(0);
-        search();
-        updateFacetas("idioma");
-        updateFacetas("tipo");
+        if (search()){
+            updateFacetas("idioma");
+            updateFacetas("tipo");
+        }
+        else 
+            clearFacetas(); 
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void findTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTypeBoxActionPerformed
@@ -341,22 +344,29 @@ public class searchPanel extends javax.swing.JPanel {
 
     private void findTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextFieldKeyPressed
         if (evt.getKeyCode() == 10) {
-            search();
-            updateFacetas("idioma");
-            updateFacetas("tipo");
+           if (search()){
+                updateFacetas("idioma");
+                updateFacetas("tipo");
+           }
+           else
+                clearFacetas(); 
         }
     }//GEN-LAST:event_findTextFieldKeyPressed
 
     private void idioma_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idioma_selectActionPerformed
-        search();
-        updateFacetas("tipo");
+        if (search())
+            updateFacetas("tipo");
+        else 
+            clearFacetas(); 
         
         
     }//GEN-LAST:event_idioma_selectActionPerformed
 
     private void tipo_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipo_selectActionPerformed
-        search();
-        updateFacetas("idioma");
+        if (search())
+            updateFacetas("idioma");
+        else 
+            clearFacetas(); 
     }//GEN-LAST:event_tipo_selectActionPerformed
 
     public void filter() {
@@ -381,7 +391,7 @@ public class searchPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_findTextFieldActionPerformed
 
-    public void search() {
+    public boolean search() {
         ArrayList<Document> hits = null;
         try {
             filter();
@@ -406,8 +416,10 @@ public class searchPanel extends javax.swing.JPanel {
 
         hitsTable1.updateTable(hits);
         
-       filterFinds.clear();
-       filterFields.clear();
+        filterFinds.clear();
+        filterFields.clear();
+        
+        return !hits.isEmpty();
     }
 
     public void updateFields(Object[] f) throws IOException {
@@ -455,6 +467,18 @@ public class searchPanel extends javax.swing.JPanel {
                 }
             }
         }
+    }
+    
+    public void clearFacetas(){
+        
+        String[] documentos = new String[1]; 
+        documentos[0] = "Todos"; 
+        tipo_select.setModel(new DefaultComboBoxModel(documentos)); 
+        
+        String[] idiomas = new String[1]; 
+        idiomas[0] = "Todos";
+        idioma_select.setModel(new DefaultComboBoxModel(idiomas));
+        
     }
         
     // Variables declaration - do not modify//GEN-BEGIN:variables

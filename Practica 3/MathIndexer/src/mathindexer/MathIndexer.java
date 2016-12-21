@@ -105,6 +105,10 @@ public class MathIndexer {
             String data = inputStream.nextLine();
             // Separamos las columnas del CSV mediante una expresión regular
             String[] parts = data.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+            System.out.println(parts.length);
+            
+            if (parts.length != 13)
+                continue; 
             // Creamos nuevo documento vacío
             doc = new Document();
 
@@ -194,20 +198,21 @@ public class MathIndexer {
             //writer.addDocument(doc);
             writer.addDocument(config.build(taxoWriter, doc));
 
-            // Cerramos writers, directorios y demás
-            writer.close();
-            taxoWriter.close();
-            dir.close();
-            taxoDir.close();
-            inputStream.close();
         }
+        
+        // Cerramos writers, directorios y demás
+        writer.close();
+        taxoWriter.close();
+        dir.close();
+        taxoDir.close();
+        inputStream.close();
     }
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, ParseException {
         MathIndexer test = new MathIndexer();
-        test.readAndIndex("../Data/FourierCortado.csv", "../Index", "../Index/taxo");
+        test.readAndIndex("../Data/GeometryCortado.csv", "../Index", "../Index/taxo");
     }
 
 }

@@ -24,9 +24,11 @@ public class searchInfo extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void updateInfo(String ls, String lt, ArrayList<Document> hits){
+    public void updateInfo(String ls, String lt, String li, String lr, ArrayList<Document> hits){
         lastSearch.setText(ls);
         lastType.setText(lt);
+        lastInfo.setText(li);
+        lastRange.setText(lr);
         nHits.setText(String.valueOf(hits.size()));
     }
     
@@ -46,6 +48,10 @@ public class searchInfo extends javax.swing.JPanel {
         lastSearch = new javax.swing.JLabel();
         lastType = new javax.swing.JLabel();
         nHits = new javax.swing.JLabel();
+        lastInfo = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        lastRange = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -63,6 +69,14 @@ public class searchInfo extends javax.swing.JPanel {
 
         nHits.setText("0");
 
+        lastInfo.setText("-null-");
+
+        jLabel5.setText("Filtros:");
+
+        lastRange.setText("-null-");
+
+        jLabel6.setText("Rango:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -71,19 +85,34 @@ public class searchInfo extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lastType))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lastType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(nHits, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lastRange))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lastInfo)))
+                        .addContainerGap(213, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lastSearch))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nHits))
-                    .addComponent(jLabel1))
-                .addContainerGap(102, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lastSearch)))
+                        .addGap(203, 203, 203))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -97,11 +126,15 @@ public class searchInfo extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(lastType))
+                    .addComponent(lastType)
+                    .addComponent(jLabel5)
+                    .addComponent(lastInfo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(nHits))
+                    .addComponent(nHits)
+                    .addComponent(jLabel6)
+                    .addComponent(lastRange))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -112,6 +145,10 @@ public class searchInfo extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel lastInfo;
+    private javax.swing.JLabel lastRange;
     private javax.swing.JLabel lastSearch;
     private javax.swing.JLabel lastType;
     private javax.swing.JLabel nHits;

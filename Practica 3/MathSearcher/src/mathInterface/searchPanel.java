@@ -413,8 +413,15 @@ public class searchPanel extends javax.swing.JPanel {
         } catch (IOException | ParseException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        searchInfo1.updateInfo(findTextField.getText(), (String) findTypeBox.getSelectedItem(), hits);
+        
+        StringBuilder sb =new StringBuilder();
+        for(int i=1;filterFields.size()>i;i++){
+            sb.append(filterFields.get(i));
+            sb.append("->");
+            sb.append(filterFinds.get(i));
+            sb.append(";");
+        }
+        searchInfo1.updateInfo(findTextField.getText(), (String) findTypeBox.getSelectedItem(),sb.toString(),advancedPanel1.GetInfo(), hits);
 
         hitsTable1.updateTable(hits);
         

@@ -138,23 +138,6 @@ public class MathSearcher{
     
     private Query BuilderAllFieldsQuery(String value) throws FileNotFoundException, IOException, ParseException {
         BooleanQuery.Builder boolConstructor = new BooleanQuery.Builder();
-
-               /* 
-                    try {  
-                        Integer.parseInt(filterFinds.get(i));   
-                    }finally{
-                        filterFields.add("Año");
-                        filterFinds.add(filterFinds.get(i));
-                        filterFields.add("Página inicio");
-                        filterFinds.add(filterFinds.get(i));
-                        filterFields.add("Página fin");
-                        filterFinds.add(filterFinds.get(i));
-                    }
-                    filterFields.remove(i);
-                    filterFinds.remove(i);
-                    i--;
-                }
-            }*/
         boolConstructor.add(this.BuilderBooleanQuery("Autor",value), BooleanClause.Occur.SHOULD);
         boolConstructor.add(this.BuilderBooleanQuery("Titulo",value), BooleanClause.Occur.SHOULD);
         boolConstructor.add(this.BuilderBooleanQuery("Fuente",value), BooleanClause.Occur.SHOULD);

@@ -31,7 +31,8 @@ public class searchPanel extends javax.swing.JPanel {
     ArrayList<String> filterFinds;
     Object[] fields;
     String[] intpoints = {"Año", "Página inicio", "Página fin"};
-
+    String[] fieldSet1 = {"Todos","Titulo","Abstract","Autor","Año","Fuente","Palabras clave autor","Página inicio", "Página fin"};
+    String[] fieldSet2 = {"Titulo","Abstract","Fuente"};
     /**
      * Creates new form searchPanel
      */
@@ -43,7 +44,7 @@ public class searchPanel extends javax.swing.JPanel {
         mainSearcher = new MathSearcher("../Index", "../Index/taxo");
         try {
             fields = mainSearcher.getFields().toArray();
-            updateFields(fields);
+            updateFields(fieldSet1);
         } catch (IOException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -52,6 +53,8 @@ public class searchPanel extends javax.swing.JPanel {
         distanceBox.setVisible(false);
         distanceLabel.setVisible(false);
         filterPanel2.setFieldsBox(fieldTypeBox);
+        idioma_select.setEnabled(false);
+        tipo_select.setEnabled(false);
     }
 
     /**
@@ -170,6 +173,12 @@ public class searchPanel extends javax.swing.JPanel {
                     .addComponent(jLabel6))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        findTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                findTextFieldKeyPressed(evt);
+            }
+        });
 
         jLabel1.setText("Introduzca la búsqueda:");
 
@@ -304,13 +313,15 @@ public class searchPanel extends javax.swing.JPanel {
     private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
         tipo_select.setSelectedIndex(0);
         idioma_select.setSelectedIndex(0);
-        search();
-        updateFacetas("idioma");
-        updateFacetas("tipo");
+        if (search()){
+            updateFacetas("idioma");
+            updateFacetas("tipo");
+        }
+        else 
+            clearFacetas(); 
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void findTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTypeBoxActionPerformed
-        
         fieldTypeBox.setModel(new DefaultComboBoxModel(fields));
         field = fieldTypeBox.getSelectedItem().toString();
         findType = findTypeBox.getSelectedItem().toString();
@@ -322,12 +333,20 @@ public class searchPanel extends javax.swing.JPanel {
             distanceBox.setVisible(false);
             distanceLabel.setVisible(false);
         }
+        try{
+            if (findTypeBox.getSelectedItem().toString().equals("Proximidad") || findTypeBox.getSelectedItem().toString().equals("Exacta")){
+                updateFields(fieldSet2);
+            }else{
+                updateFields(fieldSet1);
+            }
+        }catch (IOException ex) {
+            Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_findTypeBoxActionPerformed
 
     private void fieldTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTypeBoxActionPerformed
         field = fieldTypeBox.getSelectedItem().toString();
     }//GEN-LAST:event_fieldTypeBoxActionPerformed
-
     public void filter() {
         ArrayList<javax.swing.JComboBox> fields = null;
         ArrayList<javax.swing.JTextField> finds = null;
@@ -347,19 +366,34 @@ public class searchPanel extends javax.swing.JPanel {
     }
     
     private void idioma_selectItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_idioma_selectItemStateChanged
-        // TODO add your handling code here:
-        search();
-        System.out.println("entra viene de idioma");
+        System.out.println("idioma");
+        if(evt.getStateChange()==1)
+            search();
     }//GEN-LAST:event_idioma_selectItemStateChanged
 
     private void tipo_selectItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_tipo_selectItemStateChanged
-        // TODO add your handling code here:
-        search();
-        System.out.println("entra viene de tipo");
+        System.out.println("tipo"+evt.getStateChange());
+        if(evt.getStateChange()==1)
+            search();
     }//GEN-LAST:event_tipo_selectItemStateChanged
 
-    public void search() {
-        System.out.println("entra en search");
+    private void findTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextFieldKeyPressed
+        if (evt.getKeyCode() == 10) {
+            tipo_select.setSelectedIndex(0);
+            idioma_select.setSelectedIndex(0);
+           if (search()){
+                updateFacetas("idioma");
+                updateFacetas("tipo");
+           }
+           else
+                clearFacetas(); 
+        }
+    }//GEN-LAST:event_findTextFieldKeyPressed
+
+    public boolean search() {
+        idioma_select.setEnabled(true);
+        tipo_select.setEnabled(true);
+        System.out.println("search");
         ArrayList<Document> hits = null;
         try {
             filter();
@@ -384,8 +418,9 @@ public class searchPanel extends javax.swing.JPanel {
 
         hitsTable1.updateTable(hits);
         
-       filterFinds.clear();
-       filterFields.clear();
+        filterFinds.clear();
+        filterFields.clear();
+        return !hits.isEmpty();
     }
 
     public void updateFields(Object[] f) throws IOException {
@@ -433,6 +468,18 @@ public class searchPanel extends javax.swing.JPanel {
                 }
             }
         }
+    }
+    
+    public void clearFacetas(){
+        
+        String[] documentos = new String[1]; 
+        documentos[0] = "Todos"; 
+        tipo_select.setModel(new DefaultComboBoxModel(documentos)); 
+        
+        String[] idiomas = new String[1]; 
+        idiomas[0] = "Todos";
+        idioma_select.setModel(new DefaultComboBoxModel(idiomas));
+        
     }
         
     // Variables declaration - do not modify//GEN-BEGIN:variables

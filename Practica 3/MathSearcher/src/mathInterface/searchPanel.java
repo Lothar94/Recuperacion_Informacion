@@ -31,7 +31,8 @@ public class searchPanel extends javax.swing.JPanel {
     ArrayList<String> filterFinds;
     Object[] fields;
     String[] intpoints = {"Año", "Página inicio", "Página fin"};
-
+    String[] fieldSet1 = {"Todos","Titulo","Abstract","Autor","Año","Fuente","Palabras clave autor","Página inicio", "Página fin"};
+    String[] fieldSet2 = {"Titulo","Abstract","Fuente"};
     /**
      * Creates new form searchPanel
      */
@@ -43,7 +44,7 @@ public class searchPanel extends javax.swing.JPanel {
         mainSearcher = new MathSearcher("../Index", "../Index/taxo");
         try {
             fields = mainSearcher.getFields().toArray();
-            updateFields(fields);
+            updateFields(fieldSet1);
         } catch (IOException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -52,6 +53,8 @@ public class searchPanel extends javax.swing.JPanel {
         distanceBox.setVisible(false);
         distanceLabel.setVisible(false);
         filterPanel2.setFieldsBox(fieldTypeBox);
+        idioma_select.setEnabled(false);
+        tipo_select.setEnabled(false);
     }
 
     /**
@@ -119,9 +122,9 @@ public class searchPanel extends javax.swing.JPanel {
         jLabel2.setText("Opciones de búsqueda:");
 
         idioma_select.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos","English", "Spanish","Russian","Chinese" }));
-        idioma_select.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                idioma_selectActionPerformed(evt);
+        idioma_select.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                idioma_selectItemStateChanged(evt);
             }
         });
 
@@ -130,9 +133,9 @@ public class searchPanel extends javax.swing.JPanel {
         jLabel6.setText("Tipo de documento:");
 
         tipo_select.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos","Article", "Conference paper", "Book Chapter","Article in press","Review","Conference review","Book","Erratum"}));
-        tipo_select.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tipo_selectActionPerformed(evt);
+        tipo_select.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                tipo_selectItemStateChanged(evt);
             }
         });
 
@@ -171,11 +174,6 @@ public class searchPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        findTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                findTextFieldActionPerformed(evt);
-            }
-        });
         findTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 findTextFieldKeyPressed(evt);
@@ -252,7 +250,7 @@ public class searchPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(findTypeBox, 0, 136, Short.MAX_VALUE)
                             .addComponent(fieldTypeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(advancedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                    .addComponent(advancedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(distanceLabel)
@@ -324,7 +322,6 @@ public class searchPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void findTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTypeBoxActionPerformed
-        
         fieldTypeBox.setModel(new DefaultComboBoxModel(fields));
         field = fieldTypeBox.getSelectedItem().toString();
         findType = findTypeBox.getSelectedItem().toString();
@@ -336,39 +333,20 @@ public class searchPanel extends javax.swing.JPanel {
             distanceBox.setVisible(false);
             distanceLabel.setVisible(false);
         }
+        try{
+            if (findTypeBox.getSelectedItem().toString().equals("Proximidad") || findTypeBox.getSelectedItem().toString().equals("Exacta")){
+                updateFields(fieldSet2);
+            }else{
+                updateFields(fieldSet1);
+            }
+        }catch (IOException ex) {
+            Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_findTypeBoxActionPerformed
 
     private void fieldTypeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTypeBoxActionPerformed
         field = fieldTypeBox.getSelectedItem().toString();
     }//GEN-LAST:event_fieldTypeBoxActionPerformed
-
-    private void findTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextFieldKeyPressed
-        if (evt.getKeyCode() == 10) {
-           if (search()){
-                updateFacetas("idioma");
-                updateFacetas("tipo");
-           }
-           else
-                clearFacetas(); 
-        }
-    }//GEN-LAST:event_findTextFieldKeyPressed
-
-    private void idioma_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idioma_selectActionPerformed
-        if (search())
-            updateFacetas("tipo");
-        else 
-            clearFacetas(); 
-        
-        
-    }//GEN-LAST:event_idioma_selectActionPerformed
-
-    private void tipo_selectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipo_selectActionPerformed
-        if (search())
-            updateFacetas("idioma");
-        else 
-            clearFacetas(); 
-    }//GEN-LAST:event_tipo_selectActionPerformed
-
     public void filter() {
         ArrayList<javax.swing.JComboBox> fields = null;
         ArrayList<javax.swing.JTextField> finds = null;
@@ -387,11 +365,35 @@ public class searchPanel extends javax.swing.JPanel {
                 filterFinds.add(finds.get(i).getText());       
     }
     
-    private void findTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_findTextFieldActionPerformed
+    private void idioma_selectItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_idioma_selectItemStateChanged
+        System.out.println("idioma");
+        if(evt.getStateChange()==1)
+            search();
+    }//GEN-LAST:event_idioma_selectItemStateChanged
+
+    private void tipo_selectItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_tipo_selectItemStateChanged
+        System.out.println("tipo"+evt.getStateChange());
+        if(evt.getStateChange()==1)
+            search();
+    }//GEN-LAST:event_tipo_selectItemStateChanged
+
+    private void findTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_findTextFieldKeyPressed
+        if (evt.getKeyCode() == 10) {
+            tipo_select.setSelectedIndex(0);
+            idioma_select.setSelectedIndex(0);
+           if (search()){
+                updateFacetas("idioma");
+                updateFacetas("tipo");
+           }
+           else
+                clearFacetas(); 
+        }
+    }//GEN-LAST:event_findTextFieldKeyPressed
 
     public boolean search() {
+        idioma_select.setEnabled(true);
+        tipo_select.setEnabled(true);
+        System.out.println("search");
         ArrayList<Document> hits = null;
         try {
             filter();
@@ -400,7 +402,7 @@ public class searchPanel extends javax.swing.JPanel {
             String tipo = tipo_select.getSelectedItem().toString().toLowerCase().split("[(]")[0];
 
             String[] fieldValues = {idioma, tipo};
-
+            
             if (findTypeBox.getSelectedItem().toString().equals("Proximidad")) {
                 hits = mainSearcher.search(Integer.parseInt(distanceBox.getText()), filterFields, filterFinds, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
             } else if (findTypeBox.getSelectedItem().toString().equals("Exacta")) {
@@ -411,14 +413,20 @@ public class searchPanel extends javax.swing.JPanel {
         } catch (IOException | ParseException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        searchInfo1.updateInfo(findTextField.getText(), (String) findTypeBox.getSelectedItem(), hits);
+        
+        StringBuilder sb =new StringBuilder();
+        for(int i=1;filterFields.size()>i;i++){
+            sb.append(filterFields.get(i));
+            sb.append("->");
+            sb.append(filterFinds.get(i));
+            sb.append(";");
+        }
+        searchInfo1.updateInfo(findTextField.getText(), (String) findTypeBox.getSelectedItem(),sb.toString(),advancedPanel1.GetInfo(), hits);
 
         hitsTable1.updateTable(hits);
         
         filterFinds.clear();
         filterFields.clear();
-        
         return !hits.isEmpty();
     }
 

@@ -34,6 +34,30 @@ public class advancedPanel extends javax.swing.JPanel {
     public String GetField(){
         return jComboBox1.getSelectedItem().toString();
     }
+    public String GetInfo(){
+        String info;
+        if(range_bottom.getText().equals("") && range_top.getText().equals("")){
+            info="No hay rango";
+        }else{
+            StringBuilder sb =new StringBuilder();
+            sb.append(GetField());
+            sb.append("->");
+            if(range_top.getText().equals("")){
+                sb.append("mayor que ");
+                sb.append(range_bottom.getText());
+            }else if(range_bottom.getText().equals("")){
+                sb.append("menor que ");
+                sb.append(range_top.getText());
+            }else{
+                sb.append(range_bottom.getText());
+                sb.append("-");
+                sb.append(range_top.getText());
+            }
+            info=sb.toString();
+            
+        }
+        return info;
+    }
     public void Clear(){
         range_bottom.setText("");
         range_top.setText("");
@@ -77,11 +101,11 @@ public class advancedPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(range_bottom, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(range_bottom, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(range_top, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, 0, 85, Short.MAX_VALUE))
+                .addComponent(range_top, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, 0, 55, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)

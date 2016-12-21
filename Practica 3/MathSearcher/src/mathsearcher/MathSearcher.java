@@ -95,20 +95,19 @@ public class MathSearcher{
         return query;
     }
 
-    private Query BuilderBooleanQuery(ArrayList<String> field, ArrayList<String> value) throws FileNotFoundException, IOException, ParseException {
+    private Query BuilderBooleanQuery(String field, String value) throws FileNotFoundException, IOException, ParseException {
         BooleanQuery.Builder boolConstructor = new BooleanQuery.Builder();
 
-        for(int i = 0; i < field.size(); i++){
-            StringTokenizer tokens = new StringTokenizer(value.get(i));
+            StringTokenizer tokens = new StringTokenizer(value);
 
             String word = tokens.nextToken();
             Query termquery = null;
             if (!word.equals("not")) {
-                termquery = new TermQuery(new Term(field.get(i), word));
+                termquery = new TermQuery(new Term(field, word));
                 boolConstructor.add(termquery, BooleanClause.Occur.MUST);
             } else {
                 word = tokens.nextToken();
-                termquery = new TermQuery(new Term(field.get(i), word));
+                termquery = new TermQuery(new Term(field, word));
                 boolConstructor.add(termquery, BooleanClause.Occur.MUST_NOT);
             }
 
@@ -126,32 +125,37 @@ public class MathSearcher{
                         clause = BooleanClause.Occur.MUST_NOT;
                         break;
                     default:
-                        termquery = new TermQuery(new Term(field.get(i), word));
+                        termquery = new TermQuery(new Term(field, word));
                         boolConstructor.add(termquery, clause);
                         clause = BooleanClause.Occur.MUST;
                         break;
                 }
             }
-        }
         Query query = boolConstructor.build();
 
         return query;
     }
-
-    /* Unused
     
-    private Query BuilderTermQuery(String field, String value) throws FileNotFoundException, IOException, ParseException {
-        Query query = new TermQuery(new Term(field, value));
-        return query;
+    private Query BuilderAllFieldsQuery(String value) throws FileNotFoundException, IOException, ParseException {
+        BooleanQuery.Builder boolConstructor = new BooleanQuery.Builder();
+        boolConstructor.add(this.BuilderBooleanQuery("Autor",value), BooleanClause.Occur.SHOULD);
+        boolConstructor.add(this.BuilderBooleanQuery("Titulo",value), BooleanClause.Occur.SHOULD);
+        boolConstructor.add(this.BuilderBooleanQuery("Fuente",value), BooleanClause.Occur.SHOULD);
+        boolConstructor.add(this.BuilderBooleanQuery("Abstract",value), BooleanClause.Occur.SHOULD);
+        boolConstructor.add(this.BuilderBooleanQuery("Palabras clave autor",value), BooleanClause.Occur.SHOULD);
+        int valueInt;
+        try {  
+            valueInt=Integer.parseInt(value);
+            boolConstructor.add(this.BuilderIntExactQuery("Año",valueInt), BooleanClause.Occur.SHOULD);
+            boolConstructor.add(this.BuilderIntExactQuery("Página inicio",valueInt), BooleanClause.Occur.SHOULD);
+            boolConstructor.add(this.BuilderIntExactQuery("Página fin",valueInt), BooleanClause.Occur.SHOULD);
+        }catch(Exception e){}
+        finally{
+            Query query = boolConstructor.build();
+            return query;
+        }
+        
     }
-    
-    private Query BuilderStringQuery(String field, String value) throws FileNotFoundException, IOException, ParseException {
-        Analyzer analyzer = new StandardAnalyzer();
-        QueryParser parser = new QueryParser(field, analyzer);
-        Query query = parser.parse(value);
-        return query;
-    }
-    */
     
     public ArrayList<Document> search(int distance, ArrayList<String> field, ArrayList<String> value, String[] facetas, String[] values,String fieldRange,ArrayList<String> range, int nDocuments) throws FileNotFoundException, IOException, ParseException {
 
@@ -171,28 +175,39 @@ public class MathSearcher{
         
         // Distinguimos casos. Primero, vemos que la consulta no es vacía
         if(!value.get(0).equals("")){
-            // Si la distancia es mayor o igual que cero, tenemos una consulta por proximidad o exacta (distancia == 0)
-            if (distance >= 0)
-                baseQuery = this.BuilderPhraseQuery(distance, field.get(0), value.get(0));
-            // En otro caso, distinguimos entre búsqueda numérica o booleana dependiendo del campo
-            else{   
-                // Numérica
-                if (field.get(0) == "Año" || field.get(0) == "Página inicio" || field.get(0) == "Página fin"){
-                    int intireValue = Integer.parseInt(value.get(0));
-                    baseQuery = this.BuilderIntExactQuery(field.get(0), intireValue);
-
+            BooleanQuery.Builder boolConstructor = new BooleanQuery.Builder();
+            Boolean first=true;
+            for(int i = 0; i < value.size() ; i++){
+                // Si la distancia es mayor o igual que cero, tenemos una consulta por proximidad o exacta (distancia == 0) y solo al primer campo
+                if (distance >= 0 && first){
+                    baseQuery = this.BuilderPhraseQuery(distance, field.get(i), value.get(i));
+                    first=false;
                 }
-                // Booleana
-                else 
-                    baseQuery = this.BuilderBooleanQuery(field,value);
-            }
-                    
-            if(!range.get(0).equals("") || !range.get(1).equals("")){
-                BooleanQuery.Builder boolConstructor = new BooleanQuery.Builder();
-                boolConstructor.add(BuilderIntRangeQuery(fieldRange, range.get(0), range.get(1)), BooleanClause.Occur.MUST);
+                // En otro caso, distinguimos entre búsqueda numérica o booleana dependiendo del campo
+                else{   
+                    // Numérica
+                    if (field.get(i) == "Año" || field.get(i) == "Página inicio" || field.get(i) == "Página fin"){
+                        System.out.println("entra en año");
+                        int intireValue = Integer.parseInt(value.get(i));
+                        baseQuery = this.BuilderIntExactQuery(field.get(i), intireValue);
+
+                    }
+                    // Todos los campos
+                    else if(field.get(i) == "Todos"){
+                        baseQuery = this.BuilderAllFieldsQuery(value.get(i));
+                    }
+                    // Booleana
+                    else{
+                        System.out.println("entra en bolean");
+                        baseQuery = this.BuilderBooleanQuery(field.get(i),value.get(i));
+                    }
+                }
                 boolConstructor.add(baseQuery, BooleanClause.Occur.MUST);
-                baseQuery = boolConstructor.build();
+            }        
+            if(!range.get(0).equals("") || !range.get(1).equals("")){
+                boolConstructor.add(BuilderIntRangeQuery(fieldRange, range.get(0), range.get(1)), BooleanClause.Occur.MUST);
             }
+            baseQuery = boolConstructor.build();
         }
         else{
             if(!range.get(0).equals("") || !range.get(1).equals("")){
@@ -240,7 +255,7 @@ public class MathSearcher{
         
         Iterator itr = f.iterator();
         itr.next();
-        
+        fields.add("Todos");
         while(itr.hasNext())
             fields.add((String) itr.next());
         

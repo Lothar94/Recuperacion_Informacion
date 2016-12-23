@@ -187,7 +187,6 @@ public class MathSearcher{
                 else{   
                     // Numérica
                     if (field.get(i) == "Año" || field.get(i) == "Página inicio" || field.get(i) == "Página fin"){
-                        System.out.println("entra en año");
                         int intireValue = Integer.parseInt(value.get(i));
                         baseQuery = this.BuilderIntExactQuery(field.get(i), intireValue);
 
@@ -197,10 +196,9 @@ public class MathSearcher{
                         baseQuery = this.BuilderAllFieldsQuery(value.get(i));
                     }
                     // Booleana
-                    else{
-                        System.out.println("entra en bolean");
+                    else
                         baseQuery = this.BuilderBooleanQuery(field.get(i),value.get(i));
-                    }
+                   
                 }
                 boolConstructor.add(baseQuery, BooleanClause.Occur.MUST);
             }        

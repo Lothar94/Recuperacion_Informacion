@@ -105,7 +105,6 @@ public class MathIndexer {
             String data = inputStream.nextLine();
             // Separamos las columnas del CSV mediante una expresión regular
             String[] parts = data.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-            System.out.println(parts.length);
             
             if (parts.length != 13)
                 continue; 
@@ -212,7 +211,7 @@ public class MathIndexer {
      */
     public static void main(String[] args) throws IOException, ParseException {
         MathIndexer test = new MathIndexer();
-        test.readAndIndex("../Data/GeometryCortado.csv", "../Index", "../Index/taxo");
+        test.readAndIndex("../Data/Data.csv", "../Index", "../Index/taxo");
     }
 
 }

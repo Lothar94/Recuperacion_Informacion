@@ -366,13 +366,11 @@ public class searchPanel extends javax.swing.JPanel {
     }
     
     private void idioma_selectItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_idioma_selectItemStateChanged
-        System.out.println("idioma");
         if(evt.getStateChange()==1)
             search();
     }//GEN-LAST:event_idioma_selectItemStateChanged
 
     private void tipo_selectItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_tipo_selectItemStateChanged
-        System.out.println("tipo"+evt.getStateChange());
         if(evt.getStateChange()==1)
             search();
     }//GEN-LAST:event_tipo_selectItemStateChanged
@@ -393,7 +391,6 @@ public class searchPanel extends javax.swing.JPanel {
     public boolean search() {
         idioma_select.setEnabled(true);
         tipo_select.setEnabled(true);
-        System.out.println("search");
         ArrayList<Document> hits = null;
         try {
             filter();
@@ -404,11 +401,11 @@ public class searchPanel extends javax.swing.JPanel {
             String[] fieldValues = {idioma, tipo};
             
             if (findTypeBox.getSelectedItem().toString().equals("Proximidad")) {
-                hits = mainSearcher.search(Integer.parseInt(distanceBox.getText()), filterFields, filterFinds, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
+                hits = mainSearcher.search(Integer.parseInt(distanceBox.getText()), filterFields, filterFinds, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 50000);
             } else if (findTypeBox.getSelectedItem().toString().equals("Exacta")) {
-                hits = mainSearcher.search(0, filterFields, filterFinds, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
+                hits = mainSearcher.search(0, filterFields, filterFinds, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 50000);
             } else {
-                hits = mainSearcher.search(-1, filterFields, filterFinds, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 5000);
+                hits = mainSearcher.search(-1, filterFields, filterFinds, fieldNames, fieldValues, advancedPanel1.GetField(), advancedPanel1.GetRange(), 50000);
             }
         } catch (IOException | ParseException ex) {
             Logger.getLogger(searchPanel.class.getName()).log(Level.SEVERE, null, ex);

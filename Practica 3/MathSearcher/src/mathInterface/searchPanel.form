@@ -267,7 +267,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="hitsTable1" pref="511" max="32767" attributes="0"/>
+                      <Component id="hitsTable1" max="32767" attributes="0"/>
                       <Component id="searchInfo1" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>

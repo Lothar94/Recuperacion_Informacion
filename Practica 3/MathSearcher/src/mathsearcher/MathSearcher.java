@@ -97,14 +97,22 @@ public class MathSearcher{
 
     private Query BuilderBooleanQuery(String field, String value) throws FileNotFoundException, IOException, ParseException {
         BooleanQuery.Builder boolConstructor = new BooleanQuery.Builder();
-
+        Boolean first = false;
             StringTokenizer tokens = new StringTokenizer(value);
 
             String word = tokens.nextToken();
             Query termquery = null;
+                     
             if (!word.equals("not")) {
                 termquery = new TermQuery(new Term(field, word));
-                boolConstructor.add(termquery, BooleanClause.Occur.MUST);
+                if(tokens.hasMoreTokens()){
+                    word = tokens.nextToken();
+                    if(word.equals("or"))
+                        boolConstructor.add(termquery, BooleanClause.Occur.SHOULD);
+                    else
+                        boolConstructor.add(termquery, BooleanClause.Occur.MUST);
+                } else
+                    boolConstructor.add(termquery, BooleanClause.Occur.MUST);
             } else {
                 word = tokens.nextToken();
                 termquery = new TermQuery(new Term(field, word));
@@ -113,7 +121,9 @@ public class MathSearcher{
 
             BooleanClause.Occur clause = BooleanClause.Occur.MUST;
             while (tokens.hasMoreTokens()) {
-                word = tokens.nextToken();
+                if(first){
+                    word = tokens.nextToken();
+                }
                 switch (word) {
                     case "and":
                         clause = BooleanClause.Occur.MUST;
@@ -130,6 +140,7 @@ public class MathSearcher{
                         clause = BooleanClause.Occur.MUST;
                         break;
                 }
+                first = true;
             }
         Query query = boolConstructor.build();
 

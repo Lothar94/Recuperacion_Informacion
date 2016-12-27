@@ -109,8 +109,15 @@ public class MathSearcher{
                     word = tokens.nextToken();
                     if(word.equals("or"))
                         boolConstructor.add(termquery, BooleanClause.Occur.SHOULD);
-                    else
-                        boolConstructor.add(termquery, BooleanClause.Occur.MUST);
+                    else{
+                        if(word.equals("and"))
+                            boolConstructor.add(termquery, BooleanClause.Occur.MUST);
+                        else{
+                            boolConstructor.add(termquery, BooleanClause.Occur.MUST);
+                            termquery = new TermQuery(new Term(field, word));
+                            boolConstructor.add(termquery, BooleanClause.Occur.MUST);
+                        }
+                    }
                 } else
                     boolConstructor.add(termquery, BooleanClause.Occur.MUST);
             } else {
@@ -118,7 +125,7 @@ public class MathSearcher{
                 termquery = new TermQuery(new Term(field, word));
                 boolConstructor.add(termquery, BooleanClause.Occur.MUST_NOT);
             }
-
+            
             BooleanClause.Occur clause = BooleanClause.Occur.MUST;
             while (tokens.hasMoreTokens()) {
                 if(first){
